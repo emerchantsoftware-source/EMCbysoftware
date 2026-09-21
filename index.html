@@ -480,7 +480,7 @@
       <a href="serial-activate.html">Serial Activate</a>
       <a href="equipment.html" data-th="อุปกรณ์" data-en="Equipment">อุปกรณ์</a>
       <a href="#customers" data-th="ลูกค้า" data-en="Customers">ลูกค้า</a>
-      <a href="#business">ธุรกิจ</a>
+      <a href="#business" data-th="ธุรกิจ" data-en="Business">ธุรกิจ</a>
       <a href="#teams" data-th="ทีมงาน" data-en="Team">ทีมงาน</a>
     </div>
     <div class="nav-utils">
@@ -756,6 +756,7 @@
       document.documentElement.lang = lang === 'en' ? 'en' : 'th';
       if (btn) btn.textContent = lang === 'en' ? 'TH' : 'EN';
       try{ localStorage.setItem('lang', lang); } catch(e){}
+      if (typeof window.__onLangChange === 'function') window.__onLangChange(lang);
     }
     let lang = 'th';
     try{ lang = localStorage.getItem('lang') || 'th'; } catch(e){}

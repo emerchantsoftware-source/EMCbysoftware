@@ -726,17 +726,17 @@
     <div class="pos-sim">
       <div class="pos-sim-header">
         <div class="pos-sim-logo">Lotus's</div>
-        <div class="pos-sim-meta">รัตนาวดี | POS: 003<br><span id="pos-clock"></span></div>
-        <div class="pos-sim-status">ออนไลน์</div>
+        <div class="pos-sim-meta"><span data-th="รัตนาวดี" data-en="Rattanawadee">รัตนาวดี</span> | POS: 003<br><span id="pos-clock"></span></div>
+        <div class="pos-sim-status" data-th="ออนไลน์" data-en="Online">ออนไลน์</div>
       </div>
       <div class="pos-sim-body">
         <div class="pos-sim-list" id="pos-sim-list">
-          <div style="color:#999; text-align:center; margin-top:100px;">ยังไม่มีรายการสินค้า</div>
+          <div style="color:#999; text-align:center; margin-top:100px;" data-th="ยังไม่มีรายการสินค้า" data-en="No items yet">ยังไม่มีรายการสินค้า</div>
         </div>
         <div class="pos-sim-right">
-          <div class="pos-sim-msg">คุณมีสมาชิกมายโลตัสหรือไม่ 🛒</div>
+          <div class="pos-sim-msg" data-th="คุณมีสมาชิกมายโลตัสหรือไม่ 🛒" data-en="Are you a Lotus's member? 🛒">คุณมีสมาชิกมายโลตัสหรือไม่ 🛒</div>
           <div class="pos-sim-current" id="pos-sim-current">0</div>
-          <div class="pos-sim-hint">พิมพ์ตัวเลขแทน "ราคาสินค้า" แล้วกด OK เพื่อเพิ่มรายการ (เดโม)</div>
+          <div class="pos-sim-hint" data-th="พิมพ์ตัวเลขแทน &quot;ราคาสินค้า&quot; แล้วกด OK เพื่อเพิ่มรายการ (เดโม)" data-en="Type a number to represent an item's price, then press OK to add it (demo)">พิมพ์ตัวเลขแทน "ราคาสินค้า" แล้วกด OK เพื่อเพิ่มรายการ (เดโม)</div>
           <div class="pos-sim-keypad">
             <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button><button data-k="back">&laquo;</button>
             <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button><button disabled>X</button>
@@ -751,11 +751,11 @@
         </div>
       </div>
       <div class="pos-sim-footer">
-        <span id="pos-sim-count">0 รายการ</span>
+        <span id="pos-sim-count" data-th="0 รายการ" data-en="0 items">0 รายการ</span>
         <span id="pos-sim-total">฿0.00</span>
       </div>
       <div class="pos-sim-bottombar">
-        <button data-demo="มายโลตัส">มายโลตัส</button>
+        <button data-demo="มายโลตัส" data-th="มายโลตัส" data-en="My Lotus's">มายโลตัส</button>
         <button data-demo="Bill Payment">Bill Payment</button>
         <button data-demo="Banking Agent">Banking Agent</button>
         <button data-demo="Recall">Recall</button>
@@ -776,14 +776,14 @@
         <div class="scale-sim-field"><span>TOTAL PRICE<span class="unit">฿</span></span><div class="scale-sim-value" id="scale-total">0.00</div></div>
       </div>
       <div class="scale-sim-date mono" id="scale-clock"></div>
-      <div class="scale-sim-msgbar" id="scale-msg">เลือกสินค้าเพื่อจำลองการชั่งน้ำหนัก</div>
+      <div class="scale-sim-msgbar" id="scale-msg" data-th="เลือกสินค้าเพื่อจำลองการชั่งน้ำหนัก" data-en="Select an item to simulate weighing">เลือกสินค้าเพื่อจำลองการชั่งน้ำหนัก</div>
       <div class="scale-sim-body">
         <div class="scale-sim-grid" id="scale-item-grid"></div>
         <div class="scale-sim-cats">
-          <button class="active" data-cat="pork">หมู 1/2</button>
-          <button data-cat="chicken">ไก่</button>
-          <button data-cat="seafood">ทะเล</button>
-          <button data-cat="veg">ผัก,ผลไม้</button>
+          <button class="active" data-cat="pork" data-th="หมู 1/2" data-en="Pork 1/2">หมู 1/2</button>
+          <button data-cat="chicken" data-th="ไก่" data-en="Chicken">ไก่</button>
+          <button data-cat="seafood" data-th="ทะเล" data-en="Seafood">ทะเล</button>
+          <button data-cat="veg" data-th="ผัก,ผลไม้" data-en="Vegetables &amp; Fruit">ผัก,ผลไม้</button>
         </div>
       </div>
       <div class="scale-sim-bottombar">
@@ -900,8 +900,8 @@
       if (id === 'mobile-pos') initMobileSimulator(item.image);
     }
   } else {
-    document.getElementById('detail-name').textContent = 'ไม่พบอุปกรณ์นี้';
-    document.getElementById('detail-desc').textContent = 'กลับไปหน้าอุปกรณ์ทั้งหมดแล้วเลือกใหม่อีกครั้ง';
+    document.getElementById('detail-name').textContent = L('ไม่พบอุปกรณ์นี้', 'Equipment not found');
+    document.getElementById('detail-desc').textContent = L('กลับไปหน้าอุปกรณ์ทั้งหมดแล้วเลือกใหม่อีกครั้ง', 'Please go back to the equipment page and choose again');
   }
 
   if (new Date().getDay() === 3){
@@ -909,6 +909,9 @@
   }
 
   // ---- Shared toast helper ----
+  function L(th, en){
+    return document.documentElement.lang === 'en' ? en : th;
+  }
   function showToast(msg){
     const t = document.getElementById('sim-toast');
     if (!t) return;
@@ -953,9 +956,9 @@
             if (count === 1) listEl.innerHTML = '';
             const row = document.createElement('div');
             row.className = 'pos-sim-list-row';
-            row.innerHTML = '<span>สินค้า #' + count + '</span><span>฿' + amount.toFixed(2) + '</span>';
+            row.innerHTML = '<span>' + L('สินค้า #', 'Item #') + count + '</span><span>฿' + amount.toFixed(2) + '</span>';
             listEl.appendChild(row);
-            countEl.textContent = count + ' รายการ';
+            countEl.textContent = count + L(' รายการ', ' items');
             totalEl.textContent = '฿' + total.toFixed(2);
           }
           current = '0';
@@ -969,7 +972,10 @@
     });
 
     document.querySelectorAll('#sim-pos-terminal [data-demo]').forEach(btn => {
-      btn.addEventListener('click', () => showToast('ฟังก์ชัน "' + btn.getAttribute('data-demo') + '" เป็นเดโมเท่านั้น'));
+      btn.addEventListener('click', () => {
+        const label = L(btn.getAttribute('data-demo'), btn.getAttribute('data-en') || btn.getAttribute('data-demo'));
+        showToast(L('ฟังก์ชัน "' + label + '" เป็นเดโมเท่านั้น', '"' + label + '" is demo only'));
+      });
     });
   }
 
@@ -988,25 +994,37 @@
     setInterval(updateClock, 30000);
 
     const items = [
-      { plu: '1242', name: 'ซีพี หมูบดปนมัน 30% กก.ละ', price: 129, emoji: '🥩' },
-      { plu: '464',  name: 'ซีพี สะโพกแต่งตัดชิ้น กก.ละ', price: 149, emoji: '🍖' },
-      { plu: '465',  name: 'ซีพี สามชั้นตัดเส้น กก.ละ', price: 189, emoji: '🥓' },
-      { plu: '463',  name: 'ซีพี สันนอกแต่งตัดชิ้น กก.ละ', price: 159, emoji: '🍗' },
-      { plu: '3626', name: 'ซีพี เนื้อหมูหั่นชิ้น กก.ละ', price: 139, emoji: '🥩' },
-      { plu: '459',  name: 'ซีพี ซี่โครงแข็งตัดเส้น กก.ละ', price: 175, emoji: '🍖' },
-      { plu: '424',  name: 'ซีพี เนื้อแดงแต่งตัดชิ้น กก.ละ', price: 165, emoji: '🥩' },
-      { plu: '4444', name: 'ซีพี สามชั้นสไลซ์ กก.ละ', price: 199, emoji: '🥓' },
-      { plu: '471',  name: 'ซีพี กระดูกซุป กก.ละ', price: 89, emoji: '🍖' },
+      { plu: '1242', name_th: 'ซีพี หมูบดปนมัน 30% กก.ละ', name_en: 'CP Ground Pork 30% Fat /kg', price: 129, emoji: '🥩' },
+      { plu: '464',  name_th: 'ซีพี สะโพกแต่งตัดชิ้น กก.ละ', name_en: 'CP Trimmed Pork Leg, Cut /kg', price: 149, emoji: '🍖' },
+      { plu: '465',  name_th: 'ซีพี สามชั้นตัดเส้น กก.ละ', name_en: 'CP Pork Belly, Sliced /kg', price: 189, emoji: '🥓' },
+      { plu: '463',  name_th: 'ซีพี สันนอกแต่งตัดชิ้น กก.ละ', name_en: 'CP Trimmed Pork Loin, Cut /kg', price: 159, emoji: '🍗' },
+      { plu: '3626', name_th: 'ซีพี เนื้อหมูหั่นชิ้น กก.ละ', name_en: 'CP Pork, Diced /kg', price: 139, emoji: '🥩' },
+      { plu: '459',  name_th: 'ซีพี ซี่โครงแข็งตัดเส้น กก.ละ', name_en: 'CP Hard Rib, Sliced /kg', price: 175, emoji: '🍖' },
+      { plu: '424',  name_th: 'ซีพี เนื้อแดงแต่งตัดชิ้น กก.ละ', name_en: 'CP Trimmed Lean Pork, Cut /kg', price: 165, emoji: '🥩' },
+      { plu: '4444', name_th: 'ซีพี สามชั้นสไลซ์ กก.ละ', name_en: 'CP Pork Belly, Thin-Sliced /kg', price: 199, emoji: '🥓' },
+      { plu: '471',  name_th: 'ซีพี กระดูกซุป กก.ละ', name_en: 'CP Soup Bones /kg', price: 89, emoji: '🍖' },
     ];
 
+    function itemName(it){ return L(it.name_th, it.name_en); }
+
     const grid = document.getElementById('scale-item-grid');
-    grid.innerHTML = items.map((it, i) =>
-      '<div class="scale-sim-item" data-i="' + i + '">' +
-        '<div class="plu">' + it.plu + '</div>' +
-        '<div class="emoji">' + it.emoji + '</div>' +
-        '<div class="iname">' + it.name + '</div>' +
-      '</div>'
-    ).join('');
+    function renderGrid(){
+      grid.innerHTML = items.map((it, i) =>
+        '<div class="scale-sim-item" data-i="' + i + '">' +
+          '<div class="plu">' + it.plu + '</div>' +
+          '<div class="emoji">' + it.emoji + '</div>' +
+          '<div class="iname">' + itemName(it) + '</div>' +
+        '</div>'
+      ).join('');
+      grid.querySelectorAll('.scale-sim-item').forEach(el => {
+        el.addEventListener('click', () => {
+          grid.querySelectorAll('.scale-sim-item').forEach(x => x.classList.remove('active'));
+          el.classList.add('active');
+          weigh(items[+el.getAttribute('data-i')]);
+        });
+      });
+    }
+    renderGrid();
 
     const tareEl = document.getElementById('scale-tare');
     const weightEl = document.getElementById('scale-weight');
@@ -1025,7 +1043,7 @@
     function weigh(item){
       clearInterval(weighTimer);
       priceEl.textContent = item.price.toFixed(2);
-      msgEl.textContent = 'กำลังชั่งน้ำหนัก: ' + item.name + ' (ราคาเดโม)';
+      msgEl.textContent = L('กำลังชั่งน้ำหนัก: ', 'Weighing: ') + itemName(item) + L(' (ราคาเดโม)', ' (demo price)');
       const target = +(0.15 + Math.random() * 0.75).toFixed(3);
       let current = 0;
       weighTimer = setInterval(() => {
@@ -1033,27 +1051,19 @@
         if (current >= target){
           current = target;
           clearInterval(weighTimer);
-          msgEl.textContent = 'น้ำหนักนิ่งแล้ว: ' + item.name;
+          msgEl.textContent = L('น้ำหนักนิ่งแล้ว: ', 'Weight settled: ') + itemName(item);
         }
         weightEl.textContent = current.toFixed(3);
         totalEl.textContent = (current * item.price).toFixed(2);
       }, 90);
     }
 
-    grid.querySelectorAll('.scale-sim-item').forEach(el => {
-      el.addEventListener('click', () => {
-        grid.querySelectorAll('.scale-sim-item').forEach(x => x.classList.remove('active'));
-        el.classList.add('active');
-        weigh(items[+el.getAttribute('data-i')]);
-      });
-    });
-
     document.querySelectorAll('#sim-weight-scale .scale-sim-cats button').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('#sim-weight-scale .scale-sim-cats button').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         if (btn.getAttribute('data-cat') !== 'pork'){
-          showToast('หมวดนี้เป็นเดโม ยังไม่มีสินค้าให้ลอง');
+          showToast(L('หมวดนี้เป็นเดโม ยังไม่มีสินค้าให้ลอง', 'This category is demo only — no items yet'));
         }
       });
     });
@@ -1066,41 +1076,53 @@
     });
     document.getElementById('scale-ir-stop').addEventListener('click', () => {
       resetScale();
-      msgEl.textContent = 'หยุดการชั่ง — น้ำหนักถูกรีเซ็ต';
+      msgEl.textContent = L('หยุดการชั่ง — น้ำหนักถูกรีเซ็ต', 'Weighing stopped — weight reset');
     });
     document.querySelectorAll('#sim-weight-scale [data-demo]').forEach(btn => {
-      btn.addEventListener('click', () => showToast('ฟังก์ชัน "' + btn.getAttribute('data-demo') + '" เป็นเดโมเท่านั้น'));
+      btn.addEventListener('click', () => {
+        const label = btn.getAttribute('data-en') || btn.getAttribute('data-demo');
+        showToast(L('ฟังก์ชัน "' + btn.getAttribute('data-demo') + '" เป็นเดโมเท่านั้น', '"' + label + '" is demo only'));
+      });
     });
+
+    window.__scaleRenderGrid = renderGrid;
   }
 
   // ---- Mobile POS simulator (real screenshot + tap hotspots) ----
   function initMobileSimulator(imageSrc){
     const wrap = document.getElementById('mobile-hotspot-wrap');
     const icons = [
-      { label: 'จับสินค้า (Receive Goods)', top: 26.5, left: 16, w: 28, h: 9 },
-      { label: 'Price reduction', top: 26.5, left: 44, w: 28, h: 9 },
-      { label: 'สแกนช่องว่าง (Scan Empty Shelf)', top: 26.5, left: 72, w: 28, h: 9 },
-      { label: 'ปรับสต็อค (Adjust Stock)', top: 36.5, left: 16, w: 28, h: 9 },
-      { label: 'ย้ายราคาสินค้า (Move Price Tag)', top: 36.5, left: 44, w: 28, h: 9 },
-      { label: 'Product Profile', top: 36.5, left: 72, w: 28, h: 9 },
-      { label: 'นับสต็อคประจำปี (Annual Stock Count)', top: 46.5, left: 16, w: 28, h: 9 },
-      { label: 'PCS_Picking', top: 46.5, left: 44, w: 28, h: 9 },
-      { label: 'RFID application', top: 46.5, left: 72, w: 28, h: 9 },
-      { label: 'นับสต็อค B2B', top: 57, left: 16, w: 28, h: 9 },
-      { label: 'Store format', top: 57, left: 44, w: 28, h: 9 },
-      { label: 'Urovo Scan', top: 57, left: 72, w: 28, h: 9 },
-      { label: 'Instore order', top: 67.5, left: 16, w: 28, h: 9 },
-      { label: 'SmartOne', top: 67.5, left: 44, w: 28, h: 9 },
-      { label: 'Cainiao', top: 67.5, left: 72, w: 28, h: 9 },
+      { label_th: 'จับสินค้า', label_en: 'Receive Goods', top: 26.5, left: 16, w: 28, h: 9 },
+      { label_th: 'Price reduction', label_en: 'Price reduction', top: 26.5, left: 44, w: 28, h: 9 },
+      { label_th: 'สแกนช่องว่าง', label_en: 'Scan Empty Shelf', top: 26.5, left: 72, w: 28, h: 9 },
+      { label_th: 'ปรับสต็อค', label_en: 'Adjust Stock', top: 36.5, left: 16, w: 28, h: 9 },
+      { label_th: 'ย้ายราคาสินค้า', label_en: 'Move Price Tag', top: 36.5, left: 44, w: 28, h: 9 },
+      { label_th: 'Product Profile', label_en: 'Product Profile', top: 36.5, left: 72, w: 28, h: 9 },
+      { label_th: 'นับสต็อคประจำปี', label_en: 'Annual Stock Count', top: 46.5, left: 16, w: 28, h: 9 },
+      { label_th: 'PCS_Picking', label_en: 'PCS_Picking', top: 46.5, left: 44, w: 28, h: 9 },
+      { label_th: 'RFID application', label_en: 'RFID application', top: 46.5, left: 72, w: 28, h: 9 },
+      { label_th: 'นับสต็อค B2B', label_en: 'B2B Stock Count', top: 57, left: 16, w: 28, h: 9 },
+      { label_th: 'Store format', label_en: 'Store format', top: 57, left: 44, w: 28, h: 9 },
+      { label_th: 'Urovo Scan', label_en: 'Urovo Scan', top: 57, left: 72, w: 28, h: 9 },
+      { label_th: 'Instore order', label_en: 'Instore order', top: 67.5, left: 16, w: 28, h: 9 },
+      { label_th: 'SmartOne', label_en: 'SmartOne', top: 67.5, left: 44, w: 28, h: 9 },
+      { label_th: 'Cainiao', label_en: 'Cainiao', top: 67.5, left: 72, w: 28, h: 9 },
     ];
-    const hotspotsHtml = icons.map(ic =>
-      '<button class="mobile-hotspot" style="top:' + ic.top + '%; left:' + ic.left + '%; width:' + ic.w + '%; height:' + ic.h + '%;" data-label="' + ic.label + '"></button>'
+    const hotspotsHtml = icons.map((ic, i) =>
+      '<button class="mobile-hotspot" style="top:' + ic.top + '%; left:' + ic.left + '%; width:' + ic.w + '%; height:' + ic.h + '%;" data-i="' + i + '"></button>'
     ).join('');
     wrap.innerHTML = '<img src="' + imageSrc + '" alt="Mobile POS app"> ' + hotspotsHtml;
-    wrap.querySelectorAll('.mobile-hotspot').forEach(el => {
-      el.addEventListener('click', () => showToast('เปิดฟังก์ชัน: ' + el.getAttribute('data-label') + ' (เดโม)'));
+    wrap.querySelectorAll('.mobile-hotspot').forEach((el, i) => {
+      el.addEventListener('click', () => {
+        const ic = icons[i];
+        showToast(L('เปิดฟังก์ชัน: ', 'Opening: ') + L(ic.label_th, ic.label_en) + L(' (เดโม)', ' (demo)'));
+      });
     });
   }
+
+  window.__onLangChange = function(){
+    if (typeof window.__scaleRenderGrid === 'function') window.__scaleRenderGrid();
+  };
 
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
@@ -1145,6 +1167,7 @@
       document.documentElement.lang = lang === 'en' ? 'en' : 'th';
       if (btn) btn.textContent = lang === 'en' ? 'TH' : 'EN';
       try{ localStorage.setItem('lang', lang); } catch(e){}
+      if (typeof window.__onLangChange === 'function') window.__onLangChange(lang);
     }
     let lang = 'th';
     try{ lang = localStorage.getItem('lang') || 'th'; } catch(e){}

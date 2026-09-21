@@ -444,7 +444,7 @@
       <a href="serial-activate.html" class="active">Serial Activate</a>
       <a href="equipment.html" data-th="อุปกรณ์" data-en="Equipment">อุปกรณ์</a>
       <a href="index.html#customers" data-th="ลูกค้า" data-en="Customers">ลูกค้า</a>
-      <a href="index.html#business">ธุรกิจ</a>
+      <a href="index.html#business" data-th="ธุรกิจ" data-en="Business">ธุรกิจ</a>
       <a href="index.html#teams" data-th="ทีมงาน" data-en="Team">ทีมงาน</a>
     </div>
     <div class="nav-utils">
@@ -473,7 +473,7 @@
   <div class="section-head reveal">
     <h2 data-th="ค้นหา Activation Code" data-en="Search Activation Code">ค้นหา Activation Code</h2>
     <div class="dash-controls">
-      <span class="count mono" id="record-count">0 รายการในระบบ</span>
+      <span class="count mono" id="record-count" data-th="0 รายการในระบบ" data-en="0 records in system">0 รายการในระบบ</span>
       <button class="btn-import mono" id="import-btn" data-th="นำเข้าไฟล์ Excel" data-en="Import Excel File">นำเข้าไฟล์ Excel</button>
       <input type="file" id="excel-input" accept=".xlsx,.xls" style="display:none">
     </div>
@@ -486,7 +486,7 @@
 
   <div id="search-result"></div>
 
-  <p class="dash-note mono" id="import-note">* ยังไม่มีข้อมูล — กด "นำเข้าไฟล์ Excel" เพื่อโหลดตาราง Serial-Code (คอลัมน์แรก = Serial, คอลัมน์ที่สอง = Code)</p>
+  <p class="dash-note mono" id="import-note" data-th="* ยังไม่มีข้อมูล — กด &quot;นำเข้าไฟล์ Excel&quot; เพื่อโหลดตาราง Serial-Code (คอลัมน์แรก = Serial, คอลัมน์ที่สอง = Code)" data-en="* No data yet — click &quot;Import Excel File&quot; to load a Serial-Code table (first column = Serial, second column = Code)">* ยังไม่มีข้อมูล — กด "นำเข้าไฟล์ Excel" เพื่อโหลดตาราง Serial-Code (คอลัมน์แรก = Serial, คอลัมน์ที่สอง = Code)</p>
 
   <div class="dash-link-row">
     <input type="text" id="excel-link-input" class="mono" data-i18n-placeholder data-th="หรือวางลิงก์แชร์ไฟล์ Excel (Anyone with the link can view)" data-en="Or paste the Excel share link (Anyone with the link can view)" placeholder="หรือวางลิงก์แชร์ไฟล์ Excel (Anyone with the link can view)">
@@ -499,16 +499,16 @@
   <div class="footer-grid">
     <div class="footer-col">
       <div class="brand mono" style="margin-bottom:10px;">E-Merchant // by software</div>
-      <p>ทีม Software ดูแลระบบ IT เครื่องบันทึกเงินสด เครื่องชั่งดิจิทัล และระบบบริหารร้านค้าให้ลูกค้าทุกสาขา</p>
+      <p data-th="ทีม Software ดูแลระบบ IT เครื่องบันทึกเงินสด เครื่องชั่งดิจิทัล และระบบบริหารร้านค้าให้ลูกค้าทุกสาขา" data-en="Our Software team manages IT systems, cash registers, digital scales, and store management systems for customers nationwide.">ทีม Software ดูแลระบบ IT เครื่องบันทึกเงินสด เครื่องชั่งดิจิทัล และระบบบริหารร้านค้าให้ลูกค้าทุกสาขา</p>
     </div>
     <div class="footer-col">
-      <h4 class="mono">ศูนย์บริการ (นนทบุรี)</h4>
+      <h4 class="mono" data-th="ศูนย์บริการ (นนทบุรี)" data-en="Service Center (Nonthaburi)">ศูนย์บริการ (นนทบุรี)</h4>
       <p data-th="168-169 หมู่ที่ 2 ถ.กาญจนาภิเษก" data-en="168-169 Moo 2, Kanchanaphisek Rd.">168-169 หมู่ที่ 2 ถ.กาญจนาภิเษก</p>
       <p data-th="ต.บางคูเวียง อ.บางกรวย" data-en="Bang Khu Wiang, Bang Kruai">ต.บางคูเวียง อ.บางกรวย</p>
       <p data-th="จ.นนทบุรี 11130" data-en="Nonthaburi 11130">จ.นนทบุรี 11130</p>
     </div>
     <div class="footer-col">
-      <h4 class="mono">ติดต่อทีม</h4>
+      <h4 class="mono" data-th="ติดต่อทีม" data-en="Contact Us">ติดต่อทีม</h4>
       <p><a href="tel:0202662990072" data-th="02-026-6299 ต่อ 0072" data-en="02-026-6299 ext. 0072">02-026-6299 ต่อ 0072</a></p>
       <p><a href="mailto:software-team@company.internal">software-team@company.internal</a></p>
     </div>
@@ -541,7 +541,8 @@
   function updateRecordCount(){
     const el = document.getElementById('record-count');
     const uniqueSerials = new Set(serialData.map(r => r.serial)).size;
-    if (el) el.textContent = uniqueSerials + ' รายการในระบบ';
+    const isEn = document.documentElement.lang === 'en';
+    if (el) el.textContent = uniqueSerials + (isEn ? ' records in system' : ' รายการในระบบ');
   }
 
   function setSerialData(rows){
@@ -551,7 +552,7 @@
     } catch(e){ /* ignore */ }
     updateRecordCount();
     const note = document.getElementById('import-note');
-    if (note) note.textContent = '* นำเข้าข้อมูลสำเร็จ (' + new Set(serialData.map(r=>r.serial)).size + ' Serial) — ค้นหาได้เลย';
+    if (note) note.textContent = L('* นำเข้าข้อมูลสำเร็จ (', '* Imported successfully (') + new Set(serialData.map(r=>r.serial)).size + L(' Serial) — ค้นหาได้เลย', ' serials) — you can search now');
   }
 
   // Load: prefer a previously-imported file for this browser, otherwise use the
@@ -562,7 +563,7 @@
     serialData = buildSerialData(rows);
     if (!saved){
       const note = document.getElementById('import-note');
-      if (note) note.textContent = '* ใช้ข้อมูลตั้งต้นจากไฟล์ One_for_All_Serial_Activate_Fingerscan (' + new Set(serialData.map(r=>r.serial)).size + ' Serial) — นำเข้าไฟล์ใหม่เมื่อมีการอัปเดต';
+      if (note) note.textContent = L('* ใช้ข้อมูลตั้งต้นจากไฟล์ One_for_All_Serial_Activate_Fingerscan (', '* Using the default dataset from One_for_All_Serial_Activate_Fingerscan (') + new Set(serialData.map(r=>r.serial)).size + L(' Serial) — นำเข้าไฟล์ใหม่เมื่อมีการอัปเดต', ' serials) — import a new file whenever it is updated');
     }
   } catch(e){
     serialData = buildSerialData(DEFAULT_SERIAL_DATA);
@@ -572,6 +573,16 @@
   function escapeHtml(str){
     return str.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   }
+
+  function L(th, en){
+    return document.documentElement.lang === 'en' ? en : th;
+  }
+
+  window.__onLangChange = function(){
+    updateRecordCount();
+    const input = document.getElementById('serial-input');
+    if (input && input.value.trim()) renderResult(input.value);
+  };
 
   function renderResult(query){
     const box = document.getElementById('search-result');
@@ -588,22 +599,24 @@
               '<div class="r-serial mono">' + escapeHtml(matches[0].serial) + '</div>' +
               '<div class="r-code">' + escapeHtml(uniqueCodes[0]) + '</div>' +
             '</div>' +
-            '<button class="btn btn-primary" id="copy-btn">คัดลอกโค้ด</button>' +
+            '<button class="btn btn-primary" id="copy-btn">' + L('คัดลอกโค้ด', 'Copy Code') + '</button>' +
           '</div>';
         const copyBtn = document.getElementById('copy-btn');
         if (copyBtn){
           copyBtn.addEventListener('click', () => {
             if (navigator.clipboard && navigator.clipboard.writeText){
               navigator.clipboard.writeText(uniqueCodes[0]).then(() => {
-                copyBtn.textContent = 'คัดลอกแล้ว ✓';
-                setTimeout(() => { copyBtn.textContent = 'คัดลอกโค้ด'; }, 1500);
+                const copiedLabel = L('คัดลอกแล้ว ✓', 'Copied ✓');
+                const defaultLabel = L('คัดลอกโค้ด', 'Copy Code');
+                copyBtn.textContent = copiedLabel;
+                setTimeout(() => { copyBtn.textContent = defaultLabel; }, 1500);
               }).catch(() => {});
             }
           });
         }
       } else {
         box.innerHTML =
-          '<div class="result-empty">⚠ พบ Activate code มากกว่า 1 รหัสสำหรับ Serial นี้ กรุณาตรวจสอบให้แน่ใจก่อนใช้งาน:</div>' +
+          '<div class="result-empty">⚠ ' + L('พบ Activate code มากกว่า 1 รหัสสำหรับ Serial นี้ กรุณาตรวจสอบให้แน่ใจก่อนใช้งาน:', 'More than one Activate code was found for this Serial. Please double-check before using it:') + '</div>' +
           uniqueCodes.map(code =>
             '<div class="result-card"><div>' +
               '<div class="r-serial mono">' + escapeHtml(matches[0].serial) + '</div>' +
@@ -617,7 +630,7 @@
     const partial = serialData.filter(r => r.serial.toLowerCase().includes(q)).slice(0, 5);
     if (partial.length){
       box.innerHTML =
-        '<div class="result-empty">ไม่พบ Serial ที่ตรงเป๊ะ แต่พบใกล้เคียง:</div>' +
+        '<div class="result-empty">' + L('ไม่พบ Serial ที่ตรงเป๊ะ แต่พบใกล้เคียง:', 'No exact match, but found similar Serials:') + '</div>' +
         partial.map(r =>
           '<div class="result-card"><div>' +
             '<div class="r-serial mono">' + escapeHtml(r.serial) + '</div>' +
@@ -627,7 +640,7 @@
       return;
     }
 
-    box.innerHTML = '<div class="result-empty">ไม่พบ Serial นี้ในระบบ ลองตรวจสอบตัวสะกดอีกครั้ง</div>';
+    box.innerHTML = '<div class="result-empty">' + L('ไม่พบ Serial นี้ในระบบ ลองตรวจสอบตัวสะกดอีกครั้ง', 'This Serial was not found. Please check the spelling and try again.') + '</div>';
   }
 
   const searchBtn = document.getElementById('search-btn');
@@ -677,11 +690,11 @@
       const sheet = wb.Sheets[wb.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }).filter(r => r.length);
       setSerialData(rows);
-      if (statusEl) statusEl.textContent = 'เชื่อมต่อสำเร็จ (' + serialData.length + ' รายการ) — รีเฟรชอัตโนมัติทุก 5 นาที';
+      if (statusEl) statusEl.textContent = L('เชื่อมต่อสำเร็จ (', 'Connected successfully (') + serialData.length + L(' รายการ) — รีเฟรชอัตโนมัติทุก 5 นาที', ' records) — auto-refreshes every 5 minutes');
       return true;
     } catch(err){
       if (!silent && statusEl){
-        statusEl.textContent = 'เชื่อมต่อลิงก์นี้อัตโนมัติไม่สำเร็จ (มักเกิดกับไฟล์ในองค์กรที่จำกัดสิทธิ์การเข้าถึง) — ใช้ปุ่ม "นำเข้าไฟล์ Excel" ด้านบนแทนได้เลย';
+        statusEl.textContent = L('เชื่อมต่อลิงก์นี้อัตโนมัติไม่สำเร็จ (มักเกิดกับไฟล์ในองค์กรที่จำกัดสิทธิ์การเข้าถึง) — ใช้ปุ่ม "นำเข้าไฟล์ Excel" ด้านบนแทนได้เลย', 'Could not connect to this link automatically (common with access-restricted organization files) — use the "Import Excel File" button above instead');
       }
       return false;
     }
@@ -700,7 +713,7 @@
       const url = linkInput.value.trim();
       if (!url) return;
       const statusEl = document.getElementById('link-status');
-      if (statusEl) statusEl.textContent = 'กำลังเชื่อมต่อ...';
+      if (statusEl) statusEl.textContent = L('กำลังเชื่อมต่อ...', 'Connecting...');
       const ok = await fetchAndApplyFromLink(url);
       if (ok){
         localStorage.setItem('serialExcelLink', url);
@@ -779,6 +792,7 @@
       document.documentElement.lang = lang === 'en' ? 'en' : 'th';
       if (btn) btn.textContent = lang === 'en' ? 'TH' : 'EN';
       try{ localStorage.setItem('lang', lang); } catch(e){}
+      if (typeof window.__onLangChange === 'function') window.__onLangChange(lang);
     }
     let lang = 'th';
     try{ lang = localStorage.getItem('lang') || 'th'; } catch(e){}
