@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<script>
+  (function(){
+    try{
+      // TEMP PREVIEW BYPASS: set to false (or delete this line) to bring the login gate back
+      var PREVIEW_BYPASS_LOGIN = true;
+      if (PREVIEW_BYPASS_LOGIN){ document.documentElement.classList.add('authed'); }
+
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)){
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+      if (localStorage.getItem('authed') === 'true'){
+        document.documentElement.classList.add('authed');
+      }
+    } catch(e){ /* ignore */ }
+  })();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAS — E-Merchant by Software</title>
+<meta name="description" content="ค้นหา Store No. เพื่อดู URL เข้าเครื่อง NAS ประจำสาขา">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNCIgZmlsbD0iIzBFMjExQSIvPgogIDxyZWN0IHg9IjIwIiB5PSIxNiIgd2lkdGg9IjciIGhlaWdodD0iMzIiIHJ4PSIzLjUiIGZpbGw9IiMyRkJFNzMiLz4KICA8cmVjdCB4PSIyMCIgeT0iMTYiIHdpZHRoPSIyNiIgaGVpZ2h0PSI3IiByeD0iMy41IiBmaWxsPSIjMkZCRTczIi8+CiAgPHJlY3QgeD0iMjAiIHk9IjI4LjUiIHdpZHRoPSIxOSIgaGVpZ2h0PSI3IiByeD0iMy41IiBmaWxsPSIjOUFEODRCIi8+CiAgPHJlY3QgeD0iMjAiIHk9IjQxIiB3aWR0aD0iMjYiIGhlaWdodD0iNyIgcng9IjMuNSIgZmlsbD0iIzJGQkU3MyIvPgo8L3N2Zz4K">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --ink:#0E211A;
+    --panel:#15332A;
+    --paper:#F4F7F2;
+    --paper-dim:#E6ECE1;
+    --green:#2FBE73;
+    --lime:#9AD84B;
+    --line:rgba(14,33,26,0.12);
+    --line-dark:rgba(244,247,242,0.14);
+    --ink-fixed:#0E211A;
+    --paper-fixed:#F4F7F2;
+    --muted:#6B7268;
+    --header-bg:rgba(244,247,242,0.85);
+  }
+  :root[data-theme="dark"]{
+    --ink:#E9F2EC;
+    --paper:#0F1D17;
+    --paper-dim:#182A21;
+    --line:rgba(233,242,236,0.14);
+    --muted:#93A398;
+    --header-bg:rgba(15,29,23,0.85);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'IBM Plex Sans Thai', sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  .mono{font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  header{
+    position:sticky; top:0; z-index:50;
+    background:var(--header-bg);
+    backdrop-filter:blur(10px);
+    transition:background .3s ease;
+    border-bottom:1px solid var(--line);
+    padding:18px 6vw;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .brand{font-weight:700; font-size:20px; letter-spacing:-0.01em; text-decoration:none; color:var(--ink); display:flex; align-items:center; gap:12px;}
+  .brand span{color:var(--green); font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace;}
+  nav{display:flex; gap:28px; align-items:center;}
+  .nav-links{display:flex; align-items:center; gap:28px;}
+  .nav-utils{display:flex; align-items:center; gap:14px;}
+  .util-row{display:flex; align-items:center; gap:14px;}
+  .nav-toggle{
+    display:none; background:none; border:none; padding:6px; color:var(--ink);
+    cursor:pointer; align-items:center; justify-content:center; border-radius:8px;
+  }
+  .nav-toggle:hover{color:var(--green);}
+
+  @media (max-width:820px){
+    header{position:sticky;}
+    .nav-toggle{display:flex;}
+    #site-nav{
+      position:absolute; top:100%; left:0; right:0;
+      background:var(--paper); border-bottom:1px solid var(--line);
+      flex-direction:column; align-items:stretch; gap:0;
+      max-height:0; overflow:hidden; transition:max-height .3s ease;
+      box-shadow:0 16px 30px rgba(0,0,0,0.1);
+    }
+    #site-nav.open{max-height:600px;}
+    .nav-links{flex-direction:column; align-items:stretch; gap:0;}
+    .nav-links a{padding:16px 6vw; border-bottom:1px solid var(--line); opacity:1;}
+    .nav-utils{flex-direction:column; align-items:stretch; gap:12px; padding:16px 6vw;}
+    .nav-utils .nav-cta{width:100%; text-align:center; border-radius:8px; padding:14px;}
+  }
+  nav a{color:var(--ink); text-decoration:none; font-size:14px; font-weight:500; opacity:0.75; transition:opacity .2s;}
+  nav a:hover, nav a.active{opacity:1;}
+  .nav-cta{
+    background:var(--ink-fixed); color:var(--paper-fixed) !important; opacity:1 !important;
+    padding:9px 18px; border-radius:999px; font-size:13px !important; font-weight:600 !important;
+    transition:transform .2s ease, background .2s ease !important;
+  }
+  .nav-cta:hover{background:var(--green); transform:translateY(-2px);}
+  .theme-toggle{
+    width:36px; height:36px; border-radius:999px; border:1px solid var(--line);
+    background:transparent; color:var(--ink); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:border-color .2s ease, color .2s ease, transform .2s ease;
+  }
+  .theme-toggle:hover{border-color:var(--green); color:var(--green); transform:translateY(-2px);}
+
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(47,190,115,0.55);}
+    70%{box-shadow:0 0 0 9px rgba(47,190,115,0);}
+    100%{box-shadow:0 0 0 0 rgba(47,190,115,0);}
+  }
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(16px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  @keyframes drift1{
+    0%,100%{transform:translate(0,0) scale(1);}
+    50%{transform:translate(-40px, 40px) scale(1.12);}
+  }
+  @keyframes drift2{
+    0%,100%{transform:translate(0,0) scale(1);}
+    50%{transform:translate(30px, -30px) scale(1.08);}
+  }
+  @keyframes slideDown{
+    from{opacity:0; transform:translateY(-8px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  /* ---------- Hero (landing) ---------- */
+  .hero{
+    background:var(--ink-fixed); color:var(--paper-fixed);
+    padding:11vw 6vw 8vw; position:relative; overflow:hidden; isolation:isolate;
+  }
+  .hero::before, .hero::after{
+    content:''; position:absolute; border-radius:50%; filter:blur(70px);
+    z-index:-1; opacity:0.55;
+  }
+  .hero::before{
+    width:520px; height:520px; background:radial-gradient(circle, var(--green), transparent 70%);
+    top:-220px; right:-120px; animation:drift1 16s ease-in-out infinite;
+  }
+  .hero::after{
+    width:380px; height:380px; background:radial-gradient(circle, var(--lime), transparent 70%);
+    bottom:-180px; left:10%; animation:drift2 18s ease-in-out infinite;
+  }
+  .hero-grid{display:grid; grid-template-columns: 1.35fr 1fr; gap:60px; align-items:end;}
+  .hero-tag{
+    font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:13px; color:var(--green);
+    margin-bottom:22px; display:flex; align-items:center; gap:10px;
+    opacity:0; animation:fadeUp .7s ease .1s forwards;
+  }
+  .hero-tag::before{
+    content:''; width:8px; height:8px; border-radius:50%; background:var(--green); display:inline-block;
+    box-shadow:0 0 0 0 rgba(47,190,115,0.6); animation:pulse 2.4s ease-in-out infinite;
+  }
+  .hero h1{
+    font-size:clamp(32px, 4.3vw, 54px); font-weight:700; letter-spacing:-0.01em; line-height:1.42;
+    max-width:14ch; opacity:0; animation:fadeUp .7s ease .22s forwards;
+  }
+  .hero p.lead{
+    margin-top:22px; font-size:17px; color:rgba(244,247,242,0.72); max-width:52ch;
+    opacity:0; animation:fadeUp .7s ease .34s forwards;
+  }
+  .hero-actions{margin-top:32px; display:flex; gap:14px; flex-wrap:wrap; opacity:0; animation:fadeUp .7s ease .46s forwards;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:13px 24px; border-radius:999px;
+    font-size:14px; font-weight:600; text-decoration:none; transition:transform .2s ease, box-shadow .2s ease;
+    border:none; cursor:pointer;
+  }
+  .btn-primary{background:var(--green); color:var(--ink-fixed);}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(47,190,115,0.35);}
+  .btn-ghost{border:1px solid rgba(244,247,242,0.3); color:var(--paper-fixed); background:transparent;}
+  .btn-ghost:hover{border-color:var(--green); color:var(--green); transform:translateY(-2px);}
+  .hero-stats{
+    display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line-dark); border:1px solid var(--line-dark);
+    opacity:0; animation:fadeUp .7s ease .3s forwards;
+  }
+  .stat{background:var(--ink-fixed); padding:20px 18px;}
+  .stat .num{font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:30px; color:var(--lime);}
+  .stat .label{font-size:13px; color:rgba(244,247,242,0.6); margin-top:4px;}
+
+  /* ---------- Page hero (tool pages) ---------- */
+  .page-hero{
+    background:var(--ink-fixed); color:var(--paper-fixed);
+    padding:7vw 6vw 5vw; position:relative; overflow:hidden; isolation:isolate;
+  }
+  .page-hero::before{
+    content:''; position:absolute; border-radius:50%; filter:blur(70px); z-index:-1; opacity:0.5;
+    width:420px; height:420px; background:radial-gradient(circle, var(--green), transparent 70%);
+    top:-180px; right:-100px; animation:drift1 16s ease-in-out infinite;
+  }
+  .page-hero h1{
+    font-size:clamp(28px, 3.6vw, 42px); font-weight:700; letter-spacing:-0.01em; line-height:1.4;
+    opacity:0; animation:fadeUp .6s ease .12s forwards;
+  }
+  .page-hero p{
+    margin-top:14px; color:rgba(244,247,242,0.72); max-width:58ch; font-size:15px;
+    opacity:0; animation:fadeUp .6s ease .22s forwards;
+  }
+
+  /* ---------- Wednesday banner ---------- */
+  .wed-banner{
+    background:var(--paper-dim); border-left:3px solid var(--green);
+    padding:12px 6vw; display:flex; align-items:center; gap:10px;
+    font-size:14px; color:var(--ink); animation:slideDown .5s ease;
+  }
+  .wed-dot{width:7px; height:7px; border-radius:50%; background:var(--green); flex-shrink:0; animation:pulse 3.2s ease-in-out infinite;}
+
+  /* ---------- Shared controls ---------- */
+  .dash-controls{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  .btn-import{
+    background:transparent; border:1px solid var(--line); color:var(--ink);
+    padding:8px 16px; border-radius:999px; font-size:12px; cursor:pointer;
+    transition:border-color .2s ease, color .2s ease, transform .2s ease;
+  }
+  .btn-import:hover{border-color:var(--green); color:#1B6B44; transform:translateY(-1px);}
+  .dash-note{font-size:11px; color:var(--muted); margin-top:16px;}
+  .dash-link-row{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;}
+  .dash-link-row input{
+    flex:1; min-width:240px; padding:10px 14px; border-radius:8px;
+    border:1px solid var(--line); background:var(--paper); color:var(--ink); font-size:12px;
+  }
+  .dash-link-row input:focus{outline:none; border-color:var(--green);}
+
+  /* ---------- Customers ---------- */
+  .customer-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .customer-card{background:var(--paper); padding:28px 22px; transition:background .25s ease, transform .25s ease;}
+  .customer-card:hover{background:var(--paper-dim); transform:translateY(-3px);}
+  .logo-badge{
+    width:64px; height:64px; border-radius:12px;
+    background:var(--paper-fixed); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:16px; padding:10px; transition:transform .25s ease, border-color .25s ease;
+  }
+  .logo-badge img{max-width:100%; max-height:100%; object-fit:contain; display:block;}
+  .customer-card:hover .logo-badge{transform:translateY(-2px); border-color:var(--green);}
+  .customer-card h3{font-size:16px; font-weight:600; margin-bottom:6px;}
+  .customer-card p{font-size:13px; color:var(--muted);}
+
+  /* ---------- Dashboard ---------- */
+  .dash-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:18px; overflow:hidden;}
+  .dash-card{background:var(--paper); padding:26px 22px; transition:background .25s ease, transform .25s ease;}
+  .dash-card:hover{background:var(--paper-dim); transform:translateY(-3px);}
+  .dash-top{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px;}
+  .dash-top h3{font-size:15px; font-weight:600;}
+  .dash-desc{font-size:13px; color:var(--muted); margin-bottom:16px;}
+  .dash-meta{font-size:12px; color:var(--muted);}
+  .status-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:11px;
+    padding:4px 9px; border-radius:999px; white-space:nowrap;
+  }
+  .status-badge .status-dot{width:6px; height:6px; border-radius:50%;}
+  .status-badge.ok{background:rgba(47,190,115,0.16); color:#1B6B44;}
+  .status-badge.ok .status-dot{background:var(--green); animation:pulse 2.6s ease-in-out infinite;}
+  .status-badge.check{background:rgba(154,216,75,0.22); color:#5C7A1E;}
+  .status-badge.check .status-dot{background:var(--lime); animation:pulse 1.6s ease-in-out infinite;}
+  .status-badge.warn{background:rgba(214,88,55,0.15); color:#A6412A;}
+  .status-badge.warn .status-dot{background:#D65837; animation:pulse 1.2s ease-in-out infinite;}
+
+  /* ---------- Serial lookup ---------- */
+  .search-box{display:flex; gap:12px; margin-bottom:28px; flex-wrap:wrap;}
+  .search-box input{
+    flex:1; min-width:240px; padding:14px 18px; border-radius:10px;
+    border:1px solid var(--line); font-size:15px; background:var(--paper); color:var(--ink);
+  }
+  .search-box input:focus{outline:none; border-color:var(--green);}
+  .result-card{
+    border:1px solid var(--line); border-radius:14px; padding:24px 26px; background:var(--paper);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;
+    animation:fadeUp .4s ease; margin-bottom:12px;
+  }
+  .result-card .r-serial{font-size:12px; color:var(--muted);}
+  .result-card .r-code{font-family:'IBM Plex Mono','IBM Plex Sans Thai',monospace; font-size:22px; font-weight:600; color:#1B6B44; margin-top:4px;}
+  .result-card .r-name{font-size:15px; font-weight:600; margin-top:2px;}
+  .result-card .r-type{
+    display:inline-block; font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:10px;
+    padding:2px 8px; border-radius:999px; margin-top:8px; background:rgba(154,216,75,0.22); color:#5C7A1E;
+  }
+  .result-card .r-url{font-family:'IBM Plex Mono','IBM Plex Sans Thai',monospace; font-size:16px; font-weight:600; color:#1B6B44; margin-top:6px; word-break:break-all;}
+  .result-card .r-url a{color:inherit; text-decoration:none;}
+  .result-card .r-url a:hover{text-decoration:underline;}
+  .result-empty{color:var(--muted); font-size:14px; padding:16px 0;}
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in-view{opacity:1; transform:translateY(0);}
+
+  section{padding:80px 6vw;}
+  .section-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    border-bottom:1px solid var(--line); padding-bottom:18px; margin-bottom:38px; flex-wrap:wrap; gap:12px;
+  }
+  .section-head h2{font-size:28px; font-weight:700; letter-spacing:-0.01em;}
+  .section-head .count{font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:13px; color:var(--muted);}
+
+  /* ---------- Team grid ---------- */
+  .team-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .member{background:var(--paper); padding:26px 22px; position:relative; transition:background .25s ease, transform .25s ease;}
+  .member:hover{background:var(--paper-dim); transform:translateY(-3px);}
+  .avatar{
+    width:52px; height:52px; border-radius:10px; background:var(--ink-fixed); color:var(--paper-fixed);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-weight:500; font-size:16px;
+    margin-bottom:16px; transition:background .25s ease;
+  }
+  .member:hover .avatar{background:var(--green); color:var(--ink-fixed);}
+  .member h3{font-size:16px; font-weight:600;}
+  .member .role{font-size:13px; color:var(--muted); margin-top:2px;}
+  .member .team-badge{
+    display:inline-block; margin-top:14px; font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace;
+    font-size:11px; padding:4px 8px; border:1px solid var(--line); border-radius:4px; color:var(--muted);
+  }
+
+  /* ---------- Business / services ---------- */
+  .service-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .service{background:var(--paper); padding:26px 22px; transition:background .25s ease, transform .25s ease;}
+  .service:hover{background:var(--paper-dim); transform:translateY(-3px);}
+  .service .idx{font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:12px; color:var(--green); margin-bottom:14px; display:block;}
+  .service h3{font-size:15px; font-weight:600; line-height:1.4;}
+
+  /* ---------- Team group ---------- */
+  .team-group{margin-bottom:52px;}
+  .team-group:last-child{margin-bottom:0;}
+  .team-group-head{display:flex; align-items:baseline; gap:14px; margin-bottom:20px;}
+  .team-group-head h3{font-size:19px; font-weight:700;}
+  .team-group-head .n{font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:12px; color:var(--muted);}
+  .role-tag{
+    display:inline-block; font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:10px;
+    padding:2px 7px; border-radius:4px; margin-top:10px; margin-right:6px;
+  }
+  .role-tag.sup{background:rgba(154,216,75,0.25); color:#5C7A1E;}
+  .role-tag.sen{background:rgba(47,190,115,0.18); color:#1B6B44;}
+  .role-tag.intern{background:rgba(14,33,26,0.08); color:var(--muted);}
+
+  /* ---------- CTA ---------- */
+  .cta{
+    background:var(--ink-fixed); color:var(--paper-fixed); border-radius:20px; padding:60px 6vw; text-align:center;
+    margin:0 6vw 0; position:relative; overflow:hidden;
+  }
+  .cta h2{font-size:clamp(24px,3vw,34px); font-weight:700; max-width:22ch; margin:0 auto 16px; line-height:1.4;}
+  .cta p{color:rgba(244,247,242,0.7); max-width:48ch; margin:0 auto 28px;}
+
+  footer{
+    background:var(--ink-fixed); color:rgba(244,247,242,0.65);
+    padding:48px 6vw 32px; font-size:13px; margin-top:70px;
+  }
+  .footer-grid{
+    display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:32px;
+    padding-bottom:28px; border-bottom:1px solid rgba(244,247,242,0.12);
+  }
+  .footer-col h4{
+    font-size:12px; font-weight:600; letter-spacing:0.03em; text-transform:uppercase;
+    color:rgba(244,247,242,0.45); margin-bottom:12px;
+  }
+  .footer-col p{margin:0 0 4px; line-height:1.6;}
+  .footer-col a{color:rgba(244,247,242,0.75); text-decoration:none;}
+  .footer-col a:hover{color:var(--green);}
+  .footer-bottom{
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:12px; padding-top:20px;
+  }
+  footer .brand{color:var(--paper-fixed);}
+  @media (max-width:820px){
+    .footer-grid{grid-template-columns:1fr;}
+  }
+
+  @media (max-width:1100px){
+    .service-grid{grid-template-columns:repeat(2,1fr);}
+    .customer-grid{grid-template-columns:repeat(2,1fr);}
+  }
+
+  @media (max-width:820px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hero h1{max-width:none;}
+    .service-grid{grid-template-columns:repeat(2,1fr);}
+    .customer-grid{grid-template-columns:repeat(2,1fr);}
+    .dash-grid{grid-template-columns:1fr;}
+
+  }
+
+
+
+  /* ---------- Login gate ---------- */
+  #login-gate{
+    position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center;
+    background:var(--ink-fixed); padding:24px;
+  }
+  html.authed #login-gate{display:none;}
+  .login-card{
+    width:100%; max-width:340px; background:rgba(244,247,242,0.05);
+    border:1px solid rgba(244,247,242,0.14); border-radius:18px; padding:32px 28px;
+    backdrop-filter:blur(8px); text-align:center;
+  }
+  .login-brand{color:var(--green); font-size:13px; margin-bottom:18px;}
+  .login-card h2{color:var(--paper-fixed); font-size:20px; font-weight:700; margin-bottom:20px;}
+  .login-card input{
+    width:100%; padding:12px 14px; margin-bottom:12px; border-radius:8px;
+    border:1px solid rgba(244,247,242,0.2); background:rgba(244,247,242,0.06); color:var(--paper-fixed);
+    font-size:14px;
+  }
+  .login-card input::placeholder{color:rgba(244,247,242,0.4);}
+  .login-card input:focus{outline:none; border-color:var(--green);}
+  .login-card .btn-primary{width:100%; justify-content:center; margin-top:6px;}
+  .login-error{color:#ff8a75; font-size:12px; margin-top:12px;}
+  .login-note{color:rgba(244,247,242,0.4); font-size:11px; margin-top:18px; line-height:1.5;}
+
+  /* ---------- Language toggle ---------- */
+  .lang-toggle{
+    width:36px; height:36px; border-radius:999px; border:1px solid var(--line);
+    background:transparent; color:var(--ink); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:border-color .2s ease, color .2s ease, transform .2s ease;
+    font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:11px; font-weight:600;
+  }
+  .lang-toggle:hover{border-color:var(--green); color:var(--green); transform:translateY(-2px);}
+</style>
+</head>
+<body>
+
+<div id="login-gate">
+  <form id="login-form" class="login-card">
+    <div class="login-brand mono">E-MERCHANT // BY SOFTWARE</div>
+    <h2 data-th="เข้าสู่ระบบ" data-en="Sign in">เข้าสู่ระบบ</h2>
+    <input type="text" id="login-user" autocomplete="username" data-i18n-placeholder data-th="ชื่อผู้ใช้" data-en="Username" placeholder="ชื่อผู้ใช้">
+    <input type="password" id="login-pass" autocomplete="current-password" data-i18n-placeholder data-th="รหัสผ่าน" data-en="Password" placeholder="รหัสผ่าน">
+    <button type="submit" class="btn btn-primary" data-th="เข้าสู่ระบบ" data-en="Sign in">เข้าสู่ระบบ</button>
+    <div id="login-error" class="login-error" style="display:none;" data-th="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" data-en="Incorrect username or password">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</div>
+    <div class="login-note mono" data-th="สำหรับพนักงานภายในทีม Software เท่านั้น" data-en="For internal Software team members only">สำหรับพนักงานภายในทีม Software เท่านั้น</div>
+  </form>
+</div>
+
+
+<header>
+  <a href="index.html" class="brand"><svg width="36" height="36" viewBox="0 0 64 64" style="border-radius:8px; flex-shrink:0;"><rect width="64" height="64" rx="14" fill="#0E211A"/><rect x="20" y="16" width="7" height="32" rx="3.5" fill="#2FBE73"/><rect x="20" y="16" width="26" height="7" rx="3.5" fill="#2FBE73"/><rect x="20" y="28.5" width="19" height="7" rx="3.5" fill="#9AD84B"/><rect x="20" y="41" width="26" height="7" rx="3.5" fill="#2FBE73"/></svg>E-Merchant</a>
+  <button id="nav-toggle" class="nav-toggle" aria-label="Menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+  <nav id="site-nav">
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="serial-activate.html">Serial Activate</a>
+      <a href="nas.html" class="active">NAS</a>
+      <a href="equipment.html" data-th="อุปกรณ์" data-en="Equipment">อุปกรณ์</a>
+      <a href="index.html#customers" data-th="ลูกค้า" data-en="Customers">ลูกค้า</a>
+      <a href="index.html#business" data-th="ธุรกิจ" data-en="Business">ธุรกิจ</a>
+      <a href="index.html#teams" data-th="ทีมงาน" data-en="Team">ทีมงาน</a>
+    </div>
+    <div class="nav-utils">
+      <div class="util-row">
+        <button id="lang-toggle" class="lang-toggle" aria-label="Switch language" title="EN / TH">EN</button>
+        <button id="theme-toggle" class="theme-toggle" aria-label="สลับโหมดมืด/สว่าง" title="สลับโหมดมืด/สว่าง"><svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg></button>
+        <button id="logout-btn" class="theme-toggle" aria-label="Logout" title="ออกจากระบบ / Logout"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+      </div>
+      <a href="index.html#contact" class="nav-cta" data-th="ติดต่อทีม" data-en="Contact Us">ติดต่อทีม</a>
+    </div>
+  </nav>
+</header>
+
+<div id="wed-banner" class="wed-banner" style="display:none;">
+  <span class="wed-dot"></span>
+  <span data-th="วันนี้วันพุธ — อย่าลืมส่ง Report ประจำสัปดาห์" data-en="It's Wednesday — don't forget to send the weekly report">วันนี้วันพุธ — อย่าลืมส่ง Report ประจำสัปดาห์</span>
+</div>
+
+<section class="page-hero">
+  <div class="hero-tag mono">internal.nas.lookup</div>
+  <h1 data-th="ค้นหา NAS ประจำสาขา" data-en="Search Branch NAS">ค้นหา NAS ประจำสาขา</h1>
+  <p data-th="พิมพ์ Store No. เพื่อค้นหา URL สำหรับเข้าเครื่อง NAS ของสาขานั้น ข้อมูลทั้งหมดประมวลผลอยู่ในเบราว์เซอร์ของคุณเท่านั้น ไม่ถูกส่งออกไปที่ใด" data-en="Enter a Store No. to find the URL for that branch's NAS. All data is processed in your browser only and never sent anywhere.">พิมพ์ Store No. เพื่อค้นหา URL สำหรับเข้าเครื่อง NAS ของสาขานั้น ข้อมูลทั้งหมดประมวลผลอยู่ในเบราว์เซอร์ของคุณเท่านั้น ไม่ถูกส่งออกไปที่ใด</p>
+</section>
+
+<section id="lookup">
+  <div class="section-head reveal">
+    <h2 data-th="ค้นหา NAS URL" data-en="Search NAS URL">ค้นหา NAS URL</h2>
+    <div class="dash-controls">
+      <span class="count mono" id="record-count" data-th="0 สาขาในระบบ" data-en="0 stores in system">0 สาขาในระบบ</span>
+      <button class="btn-import mono" id="import-btn" data-th="นำเข้าไฟล์ Excel" data-en="Import Excel File">นำเข้าไฟล์ Excel</button>
+      <input type="file" id="excel-input" accept=".xlsx,.xls" style="display:none">
+    </div>
+  </div>
+
+  <div class="search-box reveal">
+    <input type="text" id="serial-input" class="mono" data-i18n-placeholder data-th="พิมพ์ Store No. แล้วกด Enter หรือกดปุ่มค้นหา" data-en="Type a Store No. and press Enter, or click Search" placeholder="พิมพ์ Store No. แล้วกด Enter หรือกดปุ่มค้นหา">
+    <button id="search-btn" class="btn btn-primary" data-th="ค้นหา" data-en="Search">ค้นหา</button>
+  </div>
+
+  <div id="search-result"></div>
+
+  <p class="dash-note mono" id="import-note" data-th="* ยังไม่มีข้อมูล — กด &quot;นำเข้าไฟล์ Excel&quot; เพื่อโหลดตาราง Store-Url (คอลัมน์: Store No., Store Name, Type, Url)" data-en="* No data yet — click &quot;Import Excel File&quot; to load a Store-Url table (columns: Store No., Store Name, Type, Url)">* ยังไม่มีข้อมูล — กด "นำเข้าไฟล์ Excel" เพื่อโหลดตาราง Store-Url (คอลัมน์: Store No., Store Name, Type, Url)</p>
+
+  <div class="dash-link-row">
+    <input type="text" id="excel-link-input" class="mono" data-i18n-placeholder data-th="หรือวางลิงก์แชร์ไฟล์ Excel (Anyone with the link can view)" data-en="Or paste the Excel share link (Anyone with the link can view)" placeholder="หรือวางลิงก์แชร์ไฟล์ Excel (Anyone with the link can view)">
+    <button id="connect-link-btn" class="btn-import mono" data-th="เชื่อมต่อลิงก์" data-en="Connect Link">เชื่อมต่อลิงก์</button>
+  </div>
+  <p class="dash-note mono" id="link-status"></p>
+</section>
+
+<footer id="contact">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <div class="brand mono" style="margin-bottom:10px;">E-Merchant // by software</div>
+      <p data-th="ทีม Software ดูแลระบบ IT เครื่องบันทึกเงินสด เครื่องชั่งดิจิทัล และระบบบริหารร้านค้าให้ลูกค้าทุกสาขา" data-en="Our Software team manages IT systems, cash registers, digital scales, and store management systems for customers nationwide.">ทีม Software ดูแลระบบ IT เครื่องบันทึกเงินสด เครื่องชั่งดิจิทัล และระบบบริหารร้านค้าให้ลูกค้าทุกสาขา</p>
+    </div>
+    <div class="footer-col">
+      <h4 class="mono" data-th="ศูนย์บริการ (นนทบุรี)" data-en="Service Center (Nonthaburi)">ศูนย์บริการ (นนทบุรี)</h4>
+      <p data-th="168-169 หมู่ที่ 2 ถ.กาญจนาภิเษก" data-en="168-169 Moo 2, Kanchanaphisek Rd.">168-169 หมู่ที่ 2 ถ.กาญจนาภิเษก</p>
+      <p data-th="ต.บางคูเวียง อ.บางกรวย" data-en="Bang Khu Wiang, Bang Kruai">ต.บางคูเวียง อ.บางกรวย</p>
+      <p data-th="จ.นนทบุรี 11130" data-en="Nonthaburi 11130">จ.นนทบุรี 11130</p>
+    </div>
+    <div class="footer-col">
+      <h4 class="mono" data-th="ติดต่อทีม" data-en="Contact Us">ติดต่อทีม</h4>
+      <p><a href="tel:0202662990072" data-th="02-026-6299 ต่อ 0072" data-en="02-026-6299 ext. 0072">02-026-6299 ต่อ 0072</a></p>
+      <p><a href="mailto:software-team@company.internal">software-team@company.internal</a></p>
+    </div>
+  </div>
+  <div class="footer-bottom mono">
+    <span>E-Merchant by Software</span>
+    <span>Internal use only</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+  // Default dataset shipped with the page (from One_for_All_Serial_Activate_Fingerscan.xlsx)
+  // 4,643 unique serials / 4,684 records (duplicates removed). Overwritten once a newer
+  // Excel file is imported or a share link is connected.
+  const DEFAULT_NAS_DATA = [["5001","Seacon","Hyper","https://114.2.0.5"],["5002","Mahachai","Hyper","https://114.4.0.5"],["5003","Khonkaen","Hyper","https://114.6.0.5"],["5004","Pattaya","Hyper","https://114.8.0.5"],["5005","Saraburi","Hyper","https://114.10.0.5"],["5006","Phitsanulok","Hyper","https://114.12.0.5"],["5007","Supanburi","Extra","https://114.14.0.5"],["5008","Nakornsritammarat","Hyper","https://114.16.0.5"],["5009","Rama II","Hyper","https://114.18.0.5"],["5010","Minburi","Hyper","https://114.20.0.5"],["5011","Chiengmai","Hyper","https://114.22.0.5"],["5012","Sukhapibal","Hyper","https://114.24.0.5"],["5013","Suratthanee","Hyper","https://114.26.0.5"],["5014","Ayutthaya","Hyper","https://114.28.0.5"],["5015","Fortune","Hyper","https://114.30.0.5"],["5016","Srinakarin","Extra","https://114.32.0.5"],["5017","Phuket","Extra","https://114.34.0.5"],["5018","Ramindra","Extra","https://114.36.0.5"],["5019","Bangkae","Hyper","https://114.38.0.5"],["5020","Rama IV","Extra","https://114.40.0.5"],["5021","Chengwattana","Hyper","https://114.42.0.5"],["5022","Sukhumvit 50","Hyper","https://114.44.0.5"],["5023","Laksi","Hyper","https://114.46.0.5"],["5024","Korat","Hyper","https://114.48.0.5"],["5025","Chonburi","Hyper","https://114.50.0.5"],["5026","Ubon","Extra","https://114.52.0.5"],["5027","Rattanatibet","Hyper","https://114.54.0.5"],["5028","Rama III","Hyper","https://114.56.0.5"],["5029","Udon","Extra","https://114.58.0.5"],["5030","Prachachuen","Hyper","https://114.60.0.5"],["5031","Hadyai","Hyper","https://114.62.0.5"],["5032","Bangna-trad","Extra","https://114.64.0.5"],["5033","North-Pattaya","Hyper","https://114.66.0.5"],["5034","Chiengmai-Kumtheing","Hyper","https://114.68.0.5"],["5035","Trang","Extra","https://114.70.0.5"],["5036","BangPakok","Hyper","https://114.72.0.5"],["5037","Rangsit","Hyper","https://114.74.0.5"],["5038","Bangkapi","Hyper","https://114.76.0.5"],["5039","Rayong","Hyper","https://114.78.0.5"],["5040","Ladprao","Hyper","https://114.80.0.5"],["5041","Sa-mui","Hyper","https://114.82.0.5"],["5042","Kanchanaburi","Hyper","https://114.84.0.5"],["5043","Nakornpatom","Hyper","https://114.86.0.5"],["5044","Juntaburi","Hyper","https://114.88.0.5"],["5045","Bangyai","Extra","https://114.90.0.5"],["5046","Nongkai","Hyper","https://114.92.0.5"],["5047","Ratchaburi","Hyper","https://114.94.0.5"],["5048","Charansanitwong","Hyper","https://114.96.0.5"],["5049","RAMA I","Hyper","https://114.98.0.5"],["5050","Rangsit Nakornnayok","Hyper","https://114.100.0.5"],["5051","Jusco WangHin","Hyper","https://114.102.0.5"],["5052","Pathumthani","Hyper","https://114.104.0.5"],["5053","Chaiyapum","Hyper","https://114.106.0.5"],["5054","Bangplee","Hyper","https://114.108.0.5"],["5055","Home Pro - Hua Hin","Hyper","https://114.110.0.5"],["5056","Banfa","Hyper","https://114.112.0.5"],["5057","Lopburi","Hyper","https://114.114.0.5"],["5058","RangSit Klong 7","Hyper","https://114.116.0.5"],["5059","Sam Phan","Hyper","https://114.118.0.5"],["5060","Navanakon","Extra","https://114.120.0.5"],["5061","Bangplee CityPark","Hyper","https://114.122.0.5"],["5062","Fang","Hyper","https://114.124.0.5"],["5063","Nakornchaisri","Hyper","https://114.126.0.5"],["5064","Krabi","Hyper","https://114.128.0.5"],["5065","Bangpoo","Hyper","https://114.130.0.5"],["5066","Pakchong","Hyper","https://114.132.0.5"],["5067","Bangpa-In","Hyper","https://114.134.0.5"],["5068","PinKlao","Hyper","https://114.136.0.5"],["5069","Salaya","Hyper","https://114.138.0.5"],["5070","Baan Chang","Hyper","https://114.140.0.5"],["5071","Sena","Hyper","https://114.142.0.5"],["5072","Petchaboon","Hyper","https://114.144.0.5"],["5073","Singburi (Tavoung)","Hyper","https://114.146.0.5"],["5074","Ranong","Hyper","https://114.148.0.5"],["5075","Srisaket","Hyper","https://114.150.0.5"],["5076","Tungsong : Nakhon Si Thammarat","Hyper","https://114.152.0.5"],["5077","Bangpong: Ratchaburi","Hyper","https://114.154.0.5"],["5078","Pranburi:Prachuab","Hyper","https://114.156.0.5"],["5079","Pattalung","Hyper","https://114.158.0.5"],["5080","Leam Chabang","Hyper","https://114.160.0.5"],["5081","Lumlukka Klong2","Hyper","https://114.162.0.5"],["5082","Lamai","Hyper","https://114.164.0.5"],["5083","Amata","Hyper","https://114.166.0.5"],["5084","Nadee Udontani2","Hyper","https://114.168.0.5"],["5085","Satoon","Hyper","https://114.170.0.5"],["5086","Aranyaprathet","Department","https://114.172.0.5"],["5087","Hypermarket Sukhapibal3","Department","https://114.174.0.5"],["5088","Chumporn","Hyper","https://114.176.0.5"],["5089","Loei 2","Hyper","https://114.178.0.5"],["5090","Bor Win","Department","https://114.180.0.5"],["5091","Chumpae","Department","https://114.182.0.5"],["5092","Kalasin","Department","https://114.184.0.5"],["5093","Trat","Department","https://114.186.0.5"],["5094","Had Yai 2","Department","https://114.188.0.5"],["5095","Thalang","Department","https://114.190.0.5"],["5096","Tak","Hyper","https://114.192.0.5"],["5097","korat 2","Department","https://114.194.0.5"],["5098","Khonkaen 2","Extra","https://114.196.0.5"],["5099","Thayang Town","Department","https://114.198.0.5"],["5100","Prajinburi","Department","https://114.200.0.5"],["5101","Chaiya : Suratthani","Hyper","https://114.202.0.5"],["5102","Banbueng : Chonburi","Department","https://114.204.0.5"],["5103","Warinchumlarb : Ubol","Department","https://114.206.0.5"],["5104","Nakorn-In Bangkrauy : Nonthaburi","Department","https://114.208.0.5"],["5105","Nongrua : Khonkaen","Department","https://114.210.0.5"],["5106","Sa Dao","Department","https://114.212.0.5"],["5107","Kumpawapee","Department","https://114.214.0.5"],["5108","Sermthai","Department","https://114.216.0.5"],["5109","Nong Bua Lam Phu","Department","https://114.218.0.5"],["5110","Pisanulok 2","Extra","https://114.220.0.5"],["5111","Maesod","Extra","https://114.222.0.5"],["5112","Pattanakan","Department","https://114.224.0.5"],["5113","Nakhonsawan","Department","https://114.226.0.5"],["5114","Bangpakong : Chachoengsao","Department","https://114.228.0.5"],["5115","Chiang Khong","Department","https://114.230.0.5"],["5116","Chiangmai Ruam Choke","Department","https://114.232.0.5"],["5117","Klang : Rayong","Department","https://114.234.0.5"],["5118","Wieng Sa : Surat","Department","https://114.236.0.5"],["5119","Bua Yai","Department","https://114.238.0.5"],["5120","Songkla","Extra","https://114.240.0.5"],["5121","Phuket Chalong","Department","https://114.242.0.5"],["5122","Lomsak","Department","https://114.244.0.5"],["5123","Rojana : Ayutthaya","Department","https://114.246.0.5"],["5124","The Walk Nakornsawan","Department","https://114.248.0.5"],["5125","Nakornnayok","Hyper","https://114.250.0.5"],["5126","Mae Kri, Pattalung","Hyper","https://114.252.0.5"],["5127","Samutsakorn","Hyper","https://114.254.0.5"],["5128","Jana, Songkhla","Hyper","https://10.69.248.5"],["5129","Banglen, Nakronpathom","Hyper","https://10.70.0.5"],["5130","Klong luang","Hyper","https://10.70.8.5"],["5131","Sungkra","Hyper","https://10.70.16.5"],["5132","Chandee","Hyper","https://10.70.24.5"],["5133","Sichon","Hyper","https://10.70.32.5"],["5134","Prasart ,Surin","Hyper","https://10.70.40.5"],["5135","Tha Tum ,Surin","Hyper","https://10.70.48.5"],["5136","Chaturat,Chaiyaphum","Hyper","https://10.70.56.5"],["5137","Chiang Yuen, Mahasarakam","Hyper","https://10.70.64.5"],["5138","Bueng Sam Phan, Phetchabun","Hyper","https://10.70.72.5"],["5139","Kaengkhro, Chaiyaphum","Hyper","https://10.70.80.5"],["5140","Takli, Nakornsawan","Hyper","https://10.70.88.5"],["5141","Chok Chai, Nakorn Ratchasima","Hyper","https://10.70.96.5"],["5142","Phimai, Nakorn Ratchasrima","Hyper","https://10.70.104.5"],["5143","Satuek, Buriram","Hyper","https://10.70.112.5"],["5144","Phayakkhaphum Phisai, Mahasarakham","Hyper","https://10.70.120.5"],["5145","Nikompattana, Rayong","Hyper","https://10.70.128.5"],["5146","Jor Hor, Nakornratchasrima","Hyper","https://10.70.136.5"],["5147","Nang Rong, Buriram","Hyper","https://10.70.144.5"],["5148","Nong Chang","Hyper","https://10.70.152.5"],["5149","Kuchinarai : Kalasin","Hyper","https://10.70.160.5"],["5150","Yasothorn","Hyper","https://10.70.168.5"],["5151","Prakhonchai , Burirum","Hyper","https://10.70.176.5"],["5152","Lam Plai Mat","Hyper","https://10.70.184.5"],["5153","Pak Thong Chai","Hyper","https://10.70.192.5"],["5154","Dan Khun Thot","Hyper","https://10.70.200.5"],["5155","Ban Ta Khun, Surat Thani","Hyper","https://10.70.208.5"],["5156","Pichit-Thaluang","Hyper","https://10.70.216.5"],["5157","Kosumpisai, Mahasarakam","Hyper","https://10.70.224.5"],["5158","Phon Thong, Roi Et","Hyper","https://10.70.232.5"],["5159","U-Thong, Suphanburi","Hyper","https://10.70.240.5"],["5160","Somdet, Kalasin","Hyper","https://10.70.248.5"],["5161","Phanat Nikhom, Chonburi","Hyper","https://10.71.0.5"],["5162","Bang Kruay Sai Noi","Hyper","https://10.71.8.5"],["5163","Piboonmangsaharn","Hyper","https://10.71.16.5"],["5164","Pathai, Korat","Hyper","https://10.71.24.5"],["5165","Non Thai, Korat","Hyper","https://10.71.32.5"],["5166","U-Tapao","Hyper","https://10.71.40.5"],["5167","Maptaphut","Hyper","https://10.71.48.5"],["5168","Borabue","Hyper","https://10.71.56.5"],["5169","Ban Suan, Chonburi","Hyper","https://10.71.64.5"],["5170","Chom Thong","Hyper","https://10.71.72.5"],["5171","Angthong","Hyper","https://10.71.80.5"],["5172","Wapi Prathum","Hyper","https://10.71.88.5"],["5173","Sri Thep","Hyper","https://10.71.96.5"],["5174","Ongkarak-Nakornnayok","Hyper","https://10.71.104.5"],["5175","Bangkadi","Department","https://10.71.112.5"],["5176","Samut Prakan","Hyper","https://10.71.120.5"],["5177","Ladkrabang","Hyper","https://10.71.128.5"],["5178","Kaeng Khoi , Saraburi","Department","https://10.71.136.5"],["5180","Bang Bo","Hyper","https://10.71.152.5"],["5181","Cha-Am","Hyper","https://10.71.160.5"],["5182","Liab Klong Song, Bangkok","Hyper","https://10.71.168.5"],["5183","Tiwanon - Prakret","Hyper","https://10.71.176.5"],["5184","Ratchapruek Nuea","Hyper","https://10.71.184.5"],["5185","Icon Siam","Hyper","https://10.71.192.5"],["5186","Sihkio, Nakhon Ratchasima","Hyper","https://10.71.200.5"],["5501","Roi Ed","Hyper","https://114.2.92.5"],["5502","Uttaradit","Hyper","https://114.4.92.5"],["5503","Phrae","Hyper","https://114.6.92.5"],["5504","Lampang","Hyper","https://114.8.92.5"],["5505","Chai Nat","Hyper","https://114.10.92.5"],["5506","Mukdahan","Hyper","https://114.12.92.5"],["5507","Nan","Hyper","https://114.14.92.5"],["5508","Surin","Hyper","https://114.16.92.5"],["5509","Nakhonphanom","Hyper","https://114.18.92.5"],["5510","Samutsongkhram","Hyper","https://114.20.92.5"],["5511","Sakonnakhon","Hyper","https://114.22.92.5"],["5513","Mae-Sai","Hyper","https://114.26.92.5"],["5514","Payao","Hyper","https://114.28.92.5"],["5516","Sataheep","Hyper","https://114.32.92.5"],["5517","Sawang Dan Din","Hyper","https://114.34.92.5"],["5518","Tasala","Hyper","https://114.36.92.5"],["5519","Thabor","Hyper","https://114.38.92.5"],["5520","Det U Dom","Hyper","https://114.40.92.5"],["5521","Mae Chan","Hyper","https://114.42.92.5"],["5522","Srimahapol","Hyper","https://114.44.92.5"],["5523","Kantararat","Hyper","https://114.46.92.5"],["5524","Samchuk","Hyper","https://114.48.92.5"],["5525","Panomsarakarm","Hyper","https://114.50.92.5"],["5526","ChiangKam","Hyper","https://114.52.92.5"],["5527","Kampangsan","Hyper","https://114.54.92.5"],["5528","That Panom","Hyper","https://114.56.92.5"],["5529","Langsuan : Chumporn","Hyper","https://114.58.92.5"],["5530","Khu Khan : Srisaket","Hyper","https://114.60.92.5"],["5531","Uthumpornpisai : Srisaket","Hyper","https://114.62.92.5"],["5532","Kratumban","Department","https://114.64.92.5"],["5533","Nongjok","Hyper","https://114.66.92.5"],["5534","Prachuap","Department","https://114.68.92.5"],["5535","Kanuworaluk","Department","https://114.70.92.5"],["5536","Beungkarn","Department","https://114.72.92.5"],["5537","Kabinburi","Department","https://114.74.92.5"],["6424","Muang Pon","Hyper","https://114.48.100.5"],["6428","TraKarn Peutpon Ubon","Hyper","https://114.56.100.5"],["6440","Kok Samrong","Hyper","https://114.80.100.5"],["6442","Ban Pue : Udon","Hyper","https://114.84.100.5"],["6470","UD Town","Hyper","https://114.140.100.5"],["6564","Wangnamyen","Hyper","https://114.20.100.5"],["6621","On Nuch 80","Hyper","https://10.57.180.28"]];
+
+  function buildNasData(rows){
+    return rows
+      .map(r => ({
+        storeNo: (r[0] || '').toString().trim(),
+        storeName: (r[1] || '').toString().trim(),
+        storeType: (r[2] || '').toString().trim(),
+        url: (r[3] || '').toString().trim()
+      }))
+      .filter(r => r.storeNo);
+  }
+
+  if (new Date().getDay() === 3){
+    document.getElementById('wed-banner').style.display = 'flex';
+  }
+
+  let nasData = [];
+
+  function updateRecordCount(){
+    const el = document.getElementById('record-count');
+    const uniqueStores = new Set(nasData.map(r => r.storeNo)).size;
+    const isEn = document.documentElement.lang === 'en';
+    if (el) el.textContent = uniqueStores + (isEn ? ' stores in system' : ' สาขาในระบบ');
+  }
+
+  function setNasData(rows){
+    nasData = buildNasData(rows);
+    try{
+      localStorage.setItem('nasStoreData', JSON.stringify(rows));
+    } catch(e){ /* ignore */ }
+    updateRecordCount();
+    const note = document.getElementById('import-note');
+    if (note) note.textContent = L('* นำเข้าข้อมูลสำเร็จ (', '* Imported successfully (') + new Set(nasData.map(r=>r.storeNo)).size + L(' สาขา) — ค้นหาได้เลย', ' stores) — you can search now');
+  }
+
+  // Load: prefer a previously-imported file for this browser, otherwise use the
+  // default dataset shipped with the page (from Thinnaphat_NAS_.csv)
+  try{
+    const saved = localStorage.getItem('nasStoreData');
+    const rows = saved ? JSON.parse(saved) : DEFAULT_NAS_DATA;
+    nasData = buildNasData(rows);
+    if (!saved){
+      const note = document.getElementById('import-note');
+      if (note) note.textContent = L('* ใช้ข้อมูลตั้งต้นจากไฟล์ Thinnaphat_NAS (', '* Using the default dataset from Thinnaphat_NAS (') + new Set(nasData.map(r=>r.storeNo)).size + L(' สาขา) — นำเข้าไฟล์ใหม่เมื่อมีการอัปเดต', ' stores) — import a new file whenever it is updated');
+    }
+  } catch(e){
+    nasData = buildNasData(DEFAULT_NAS_DATA);
+  }
+  updateRecordCount();
+
+  function escapeHtml(str){
+    return str.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+
+  function L(th, en){
+    return document.documentElement.lang === 'en' ? en : th;
+  }
+
+  window.__onLangChange = function(){
+    updateRecordCount();
+    const input = document.getElementById('serial-input');
+    if (input && input.value.trim()) renderResult(input.value);
+  };
+
+  function renderStoreCard(r){
+    const typeLabel = r.storeType ? '<span class="r-type">' + escapeHtml(r.storeType) + '</span>' : '';
+    return (
+      '<div class="result-card">' +
+        '<div>' +
+          '<div class="r-serial mono">Store No. ' + escapeHtml(r.storeNo) + '</div>' +
+          '<div class="r-name">' + escapeHtml(r.storeName) + '</div>' +
+          typeLabel +
+          '<div class="r-url">' + (r.url ? '<a href="' + escapeHtml(r.url) + '" target="_blank" rel="noopener">' + escapeHtml(r.url) + '</a>' : L('ไม่มีข้อมูล URL', 'No URL on file')) + '</div>' +
+        '</div>' +
+        (r.url ? '<button class="btn btn-primary copy-url-btn" data-url="' + escapeHtml(r.url) + '">' + L('คัดลอก URL', 'Copy URL') + '</button>' : '') +
+      '</div>'
+    );
+  }
+
+  function attachCopyHandlers(box){
+    box.querySelectorAll('.copy-url-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const url = btn.getAttribute('data-url');
+        if (navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(url).then(() => {
+            const copiedLabel = L('คัดลอกแล้ว ✓', 'Copied ✓');
+            const defaultLabel = L('คัดลอก URL', 'Copy URL');
+            btn.textContent = copiedLabel;
+            setTimeout(() => { btn.textContent = defaultLabel; }, 1500);
+          }).catch(() => {});
+        }
+      });
+    });
+  }
+
+  function renderResult(query){
+    const box = document.getElementById('search-result');
+    const q = query.trim().toLowerCase();
+    if (!q){ box.innerHTML = ''; return; }
+
+    const matches = nasData.filter(r => r.storeNo.toLowerCase() === q);
+    if (matches.length){
+      box.innerHTML = matches.map(renderStoreCard).join('');
+      attachCopyHandlers(box);
+      return;
+    }
+
+    const partial = nasData.filter(r =>
+      r.storeNo.toLowerCase().includes(q) || r.storeName.toLowerCase().includes(q)
+    ).slice(0, 8);
+    if (partial.length){
+      box.innerHTML =
+        '<div class="result-empty">' + L('ไม่พบ Store No. ที่ตรงเป๊ะ แต่พบใกล้เคียง:', 'No exact match, but found similar stores:') + '</div>' +
+        partial.map(renderStoreCard).join('');
+      attachCopyHandlers(box);
+      return;
+    }
+
+    box.innerHTML = '<div class="result-empty">' + L('ไม่พบ Store No. นี้ในระบบ ลองตรวจสอบตัวเลขอีกครั้ง', 'This Store No. was not found. Please check the number and try again.') + '</div>';
+  }
+
+  const searchBtn = document.getElementById('search-btn');
+  const serialInput = document.getElementById('serial-input');
+  if (searchBtn && serialInput){
+    searchBtn.addEventListener('click', () => renderResult(serialInput.value));
+    serialInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') renderResult(serialInput.value);
+    });
+  }
+
+  const importBtn = document.getElementById('import-btn');
+  const excelInput = document.getElementById('excel-input');
+  if (importBtn && excelInput){
+    importBtn.addEventListener('click', () => excelInput.click());
+    excelInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        try{
+          const wb = XLSX.read(evt.target.result, { type: 'array' });
+          const sheet = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }).filter(r => r.length);
+          setNasData(rows);
+        } catch(err){
+          alert('อ่านไฟล์ไม่สำเร็จ ตรวจสอบว่าเป็นไฟล์ .xlsx หรือ .xls ที่ถูกต้อง');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  function shareUrlToDirectLink(shareUrl){
+    const b64 = btoa(shareUrl).replace(/=+$/, '').replace(/\//g, '_').replace(/\+/g, '-');
+    return 'https://api.onedrive.com/v1.0/shares/u!' + b64 + '/root/content';
+  }
+
+  async function fetchAndApplyFromLink(shareUrl, { silent } = {}){
+    const statusEl = document.getElementById('link-status');
+    try{
+      const directUrl = shareUrlToDirectLink(shareUrl);
+      const res = await fetch(directUrl);
+      if (!res.ok) throw new Error('bad response');
+      const buf = await res.arrayBuffer();
+      const wb = XLSX.read(buf, { type: 'array' });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }).filter(r => r.length);
+      setNasData(rows);
+      if (statusEl) statusEl.textContent = L('เชื่อมต่อสำเร็จ (', 'Connected successfully (') + nasData.length + L(' สาขา) — รีเฟรชอัตโนมัติทุก 5 นาที', ' stores) — auto-refreshes every 5 minutes');
+      return true;
+    } catch(err){
+      if (!silent && statusEl){
+        statusEl.textContent = L('เชื่อมต่อลิงก์นี้อัตโนมัติไม่สำเร็จ (มักเกิดกับไฟล์ในองค์กรที่จำกัดสิทธิ์การเข้าถึง) — ใช้ปุ่ม "นำเข้าไฟล์ Excel" ด้านบนแทนได้เลย', 'Could not connect to this link automatically (common with access-restricted organization files) — use the "Import Excel File" button above instead');
+      }
+      return false;
+    }
+  }
+
+  const connectBtn = document.getElementById('connect-link-btn');
+  const linkInput = document.getElementById('excel-link-input');
+  const savedLink = localStorage.getItem('nasExcelLink');
+  if (savedLink && linkInput){
+    linkInput.value = savedLink;
+    fetchAndApplyFromLink(savedLink, { silent: true });
+    setInterval(() => fetchAndApplyFromLink(savedLink, { silent: true }), 5 * 60 * 1000);
+  }
+  if (connectBtn && linkInput){
+    connectBtn.addEventListener('click', async () => {
+      const url = linkInput.value.trim();
+      if (!url) return;
+      const statusEl = document.getElementById('link-status');
+      if (statusEl) statusEl.textContent = L('กำลังเชื่อมต่อ...', 'Connecting...');
+      const ok = await fetchAndApplyFromLink(url);
+      if (ok){
+        localStorage.setItem('nasExcelLink', url);
+        setInterval(() => fetchAndApplyFromLink(url, { silent: true }), 5 * 60 * 1000);
+      }
+    });
+  }
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Dark mode toggle
+  (function(){
+    const root = document.documentElement;
+    const btn = document.getElementById('theme-toggle');
+    const icon = document.getElementById('theme-icon');
+    const sunPath = '<path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path>';
+    const moonPath = '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>';
+    function render(){
+      if (!icon) return;
+      icon.innerHTML = root.getAttribute('data-theme') === 'dark' ? moonPath : sunPath;
+    }
+    render();
+    if (btn){
+      btn.addEventListener('click', () => {
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        if (isDark){
+          root.removeAttribute('data-theme');
+          try{ localStorage.setItem('theme', 'light'); } catch(e){}
+        } else {
+          root.setAttribute('data-theme', 'dark');
+          try{ localStorage.setItem('theme', 'dark'); } catch(e){}
+        }
+        render();
+      });
+    }
+  })();
+
+  // Login gate
+  (function(){
+    const form = document.getElementById('login-form');
+    const errorEl = document.getElementById('login-error');
+    if (!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const user = document.getElementById('login-user').value.trim();
+      const pass = document.getElementById('login-pass').value;
+      if (user === 'admin' && pass === 'nex@dmin'){
+        try{ localStorage.setItem('authed', 'true'); } catch(err){}
+        document.documentElement.classList.add('authed');
+        if (errorEl) errorEl.style.display = 'none';
+      } else {
+        if (errorEl) errorEl.style.display = 'block';
+      }
+    });
+  })();
+
+  // Language toggle (TH default / EN)
+  (function(){
+    const btn = document.getElementById('lang-toggle');
+    function applyLang(lang){
+      document.querySelectorAll('[data-th]').forEach(el => {
+        const val = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-th');
+        if (val === null) return;
+        if (el.hasAttribute('data-i18n-placeholder')) el.setAttribute('placeholder', val);
+        else el.innerHTML = val;
+      });
+      document.documentElement.lang = lang === 'en' ? 'en' : 'th';
+      if (btn) btn.textContent = lang === 'en' ? 'TH' : 'EN';
+      try{ localStorage.setItem('lang', lang); } catch(e){}
+      if (typeof window.__onLangChange === 'function') window.__onLangChange(lang);
+    }
+    let lang = 'th';
+    try{ lang = localStorage.getItem('lang') || 'th'; } catch(e){}
+    applyLang(lang);
+    if (btn){
+      btn.addEventListener('click', () => {
+        lang = (btn.textContent === 'EN') ? 'en' : 'th';
+        applyLang(lang);
+      });
+    }
+  })();
+
+  // Mobile hamburger nav
+  (function(){
+    const toggle = document.getElementById('nav-toggle');
+    const nav = document.getElementById('site-nav');
+    if (!toggle || !nav) return;
+    toggle.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    nav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        nav.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 820){
+        nav.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  })();
+
+  // Logout (clears the session flag so the login gate shows again)
+  (function(){
+    const btn = document.getElementById('logout-btn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      try{ localStorage.removeItem('authed'); } catch(e){}
+      document.documentElement.classList.remove('authed');
+    });
+  })();
+</script>
+
+</body>
+</html>
