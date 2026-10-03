@@ -21,8 +21,8 @@
   })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Serial Activate — E-Merchant by Software</title>
-<meta name="description" content="ค้นหา Serial Number เพื่อดู Activation Code ที่ตรงกัน">
+<title>Finger Scan — E-Merchant by Software</title>
+<meta name="description" content="Finger Scan: ค้นหา Serial Number เพื่อดู Activation Code และแปลงข้อมูล Finger Scan Offline จากอีเมลให้พร้อมวางลง Excel">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNCIgZmlsbD0iIzBFMjExQSIvPgogIDxyZWN0IHg9IjIwIiB5PSIxNiIgd2lkdGg9IjciIGhlaWdodD0iMzIiIHJ4PSIzLjUiIGZpbGw9IiMyRkJFNzMiLz4KICA8cmVjdCB4PSIyMCIgeT0iMTYiIHdpZHRoPSIyNiIgaGVpZ2h0PSI3IiByeD0iMy41IiBmaWxsPSIjMkZCRTczIi8+CiAgPHJlY3QgeD0iMjAiIHk9IjI4LjUiIHdpZHRoPSIxOSIgaGVpZ2h0PSI3IiByeD0iMy41IiBmaWxsPSIjOUFEODRCIi8+CiAgPHJlY3QgeD0iMjAiIHk9IjQxIiB3aWR0aD0iMjYiIGhlaWdodD0iNyIgcng9IjMuNSIgZmlsbD0iIzJGQkU3MyIvPgo8L3N2Zz4K">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -418,6 +418,35 @@
     font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:11px; font-weight:600;
   }
   .lang-toggle:hover{border-color:var(--green); color:var(--green); transform:translateY(-2px);}
+  /* ---------- Finger Scan tool ---------- */
+  #fingerscan{scroll-margin-top:70px;}
+  .fs-stack{display:flex; flex-direction:column; gap:20px; max-width:1100px;}
+  .fs-card{border:1px solid var(--line); border-radius:14px; padding:24px 26px; background:var(--paper);}
+  .fs-card h3{font-size:16px; font-weight:600; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .fs-card h3 .idx{font-family:'IBM Plex Mono','IBM Plex Sans Thai',monospace; font-size:12px; color:var(--green); font-weight:500;}
+  .fs-card .dash-desc{margin:8px 0 14px;}
+  .fs-card textarea{
+    width:100%; height:150px; padding:12px 14px; border-radius:10px; resize:vertical;
+    border:1px solid var(--line); background:var(--paper); color:var(--ink);
+    font-family:'IBM Plex Mono','IBM Plex Sans Thai',monospace; font-size:12px; line-height:1.5;
+  }
+  .fs-card textarea:focus, .fs-card input:focus{outline:none; border-color:var(--green);}
+  .fs-row{display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-top:14px;}
+  .fs-row label{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted);}
+  .fs-row input{padding:8px 12px; border-radius:8px; border:1px solid var(--line); background:var(--paper); color:var(--ink); font:inherit; font-size:13px;}
+  .fs-row input[type=number]{width:70px;}
+  :root[data-theme="dark"] .fs-row input{color-scheme:dark;}
+  .fs-count{font-family:'IBM Plex Mono','IBM Plex Sans Thai',monospace; font-size:12px; color:var(--green); font-weight:500;}
+  .fs-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px;}
+  .fs-wrap table{border-collapse:collapse; width:100%; font-size:12px; font-family:'IBM Plex Mono','IBM Plex Sans Thai',monospace;}
+  .fs-wrap th, .fs-wrap td{padding:8px 12px; text-align:left; white-space:nowrap; border-bottom:1px solid var(--line);}
+  .fs-wrap th{background:var(--paper-dim); font-weight:600; position:sticky; top:0;}
+  .fs-wrap tr:last-child td{border-bottom:none;}
+  .fs-wrap tbody tr:hover td{background:var(--paper-dim);}
+  .fs-wrap{max-height:420px; overflow-y:auto;}
+  .fs-msg{font-size:13px; color:var(--green);}
+  .fs-card .btn:disabled{opacity:.4; cursor:default; transform:none; box-shadow:none;}
+  @media (max-width:820px){ .fs-card{padding:20px 18px;} }
 </style>
 </head>
 <body>
@@ -441,11 +470,11 @@
   <nav id="site-nav">
     <div class="nav-links">
       <a href="dashboard.html">Dashboard</a>
-      <a href="serial-activate.html" class="active">Serial Activate</a>
+      <a href="serial-activate.html" class="active">Finger Scan</a>
       <a href="nas.html">NAS</a>
       <a href="equipment.html" data-th="อุปกรณ์" data-en="Equipment">อุปกรณ์</a>
       <a href="index.html#customers" data-th="ลูกค้า" data-en="Customers">ลูกค้า</a>
-      <a href="index.html#business" data-th="ธุรกิจ" data-en="Business">ธุรกิจ</a>
+      <a href="index.html#business">ธุรกิจ</a>
       <a href="index.html#teams" data-th="ทีมงาน" data-en="Team">ทีมงาน</a>
     </div>
     <div class="nav-utils">
@@ -465,9 +494,9 @@
 </div>
 
 <section class="page-hero">
-  <div class="hero-tag mono">internal.serial.lookup</div>
-  <h1 data-th="ค้นหา Serial Number" data-en="Search Serial Number">ค้นหา Serial Number</h1>
-  <p data-th="พิมพ์ Serial Number เพื่อค้นหารหัส Activate ที่ตรงกัน ข้อมูลทั้งหมดประมวลผลอยู่ในเบราว์เซอร์ของคุณเท่านั้น ไม่ถูกส่งออกไปที่ใด" data-en="Enter a Serial Number to find its matching Activation Code. All data is processed in your browser only and never sent anywhere.">พิมพ์ Serial Number เพื่อค้นหารหัส Activate ที่ตรงกัน ข้อมูลทั้งหมดประมวลผลอยู่ในเบราว์เซอร์ของคุณเท่านั้น ไม่ถูกส่งออกไปที่ใด</p>
+  <div class="hero-tag mono">internal.fingerscan.tools</div>
+  <h1>Finger Scan</h1>
+  <p data-th="ค้นหา Activation Code จาก Serial Number และแปลงข้อมูล Finger Scan Offline จากอีเมลให้พร้อมวางลง Excel ข้อมูลทั้งหมดประมวลผลอยู่ในเบราว์เซอร์ของคุณเท่านั้น ไม่ถูกส่งออกไปที่ใด" data-en="Look up Activation Codes by Serial Number and convert Finger Scan Offline email data into Excel-ready rows. Everything is processed in your browser only and is never sent anywhere.">ค้นหา Activation Code จาก Serial Number และแปลงข้อมูล Finger Scan Offline จากอีเมลให้พร้อมวางลง Excel ข้อมูลทั้งหมดประมวลผลอยู่ในเบราว์เซอร์ของคุณเท่านั้น ไม่ถูกส่งออกไปที่ใด</p>
 </section>
 
 <section id="lookup">
@@ -494,6 +523,33 @@
     <button id="connect-link-btn" class="btn-import mono" data-th="เชื่อมต่อลิงก์" data-en="Connect Link">เชื่อมต่อลิงก์</button>
   </div>
   <p class="dash-note mono" id="link-status"></p>
+</section>
+
+<section id="fingerscan" style="padding-top:0;">
+  <div class="section-head reveal">
+    <h2 data-th="Finger Scan Offline → Excel" data-en="Finger Scan Offline → Excel">Finger Scan Offline → Excel</h2>
+    <span class="count mono" data-th="วางข้อมูลจากอีเมล แล้วคัดลอกไปวางใน Excel" data-en="Paste email data, then copy into Excel">วางข้อมูลจากอีเมล แล้วคัดลอกไปวางใน Excel</span>
+  </div>
+  <div class="fs-stack reveal">
+    <div class="fs-card">
+      <h3><span class="idx">01</span><span data-th="วางข้อมูลจากอีเมล" data-en="Paste data from email">วางข้อมูลจากอีเมล</span></h3>
+      <p class="dash-desc" data-th="คลุมข้อมูลทั้งหมดจากอีเมล แล้ววางในช่องด้านล่าง ระบบจะกรองให้เหลือเฉพาะคอลัมน์ที่ใช้" data-en="Select all the data in the email and paste it below. Only the required columns are kept.">คลุมข้อมูลทั้งหมดจากอีเมล แล้ววางในช่องด้านล่าง ระบบจะกรองให้เหลือเฉพาะคอลัมน์ที่ใช้</p>
+      <textarea id="fs-in" data-i18n-placeholder data-th="วางข้อมูลที่นี่ (Ctrl+V / Cmd+V)" data-en="Paste data here (Ctrl+V / Cmd+V)" placeholder="วางข้อมูลที่นี่ (Ctrl+V / Cmd+V)"></textarea>
+      <div class="fs-row">
+        <label><span>Date-Monitor</span><input type="date" id="fs-dt"></label>
+        <label><span data-th="คอลัมน์ว่างต่อท้าย" data-en="Trailing blank columns">คอลัมน์ว่างต่อท้าย</span><input type="number" id="fs-blank" min="0" max="20" value="0"></label>
+        <button type="button" class="btn-import" id="fs-clr" data-th="ล้าง" data-en="Clear">ล้าง</button>
+      </div>
+    </div>
+    <div class="fs-card">
+      <h3><span class="idx">02</span><span data-th="ตัวอย่างผลลัพธ์" data-en="Result preview">ตัวอย่างผลลัพธ์</span><span id="fs-cnt" class="fs-count"></span></h3>
+      <div class="fs-wrap" id="fs-out" style="margin-top:14px;"></div>
+      <div class="fs-row">
+        <button type="button" class="btn btn-primary" id="fs-cp" disabled data-th="คัดลอก" data-en="Copy">คัดลอก</button>
+        <span class="fs-msg" id="fs-msg"></span>
+      </div>
+    </div>
+  </div>
 </section>
 
 <footer id="contact">
@@ -770,7 +826,7 @@
       e.preventDefault();
       const user = document.getElementById('login-user').value.trim();
       const pass = document.getElementById('login-pass').value;
-      if (user === 'admin' && pass === 'nex@dmin'){
+      if (user === 'admin' && pass === 'admin'){
         try{ localStorage.setItem('authed', 'true'); } catch(err){}
         document.documentElement.classList.add('authed');
         if (errorEl) errorEl.style.display = 'none';
@@ -837,6 +893,71 @@
       try{ localStorage.removeItem('authed'); } catch(e){}
       document.documentElement.classList.remove('authed');
     });
+  })();
+
+  // Finger Scan Offline -> Excel
+  (function(){
+    const $ = id => document.getElementById(id);
+    if (!$('fs-in')) return;
+    const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const IP = /^\d{1,3}(\.\d{1,3}){3}$/, D = /^\d{4}-\d{2}-\d{2}(\s+\d{1,2}:\d{2}(:\d{2})?)?$/, T = /^\d{1,2}:\d{2}(:\d{2})?$/;
+    const L = (th, en) => document.documentElement.lang === 'en' ? en : th;
+    let rows = [];
+
+    const pad = n => String(n).padStart(2, '0');
+    const t = new Date();
+    $('fs-dt').value = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
+
+    function parse(text){
+      const tk = text.split(/[\t\r\n]+/).map(x => x.trim()).filter(Boolean), res = [];
+      for (let i = 4; i < tk.length; i++){
+        if (!IP.test(tk[i])) continue;
+        const branch = tk[i-4], store = tk[i-3];
+        if (!/^\d+/.test(branch)) continue;
+        let lc = tk[i+1] || '';
+        if (!D.test(lc)) continue;
+        if (!/\d:\d/.test(lc) && T.test(tk[i+2] || '')) lc += ' ' + tk[i+2];
+        res.push({branch, store, lc, ip: tk[i]});
+      }
+      return res;
+    }
+    function fmtDate(){
+      const v = $('fs-dt').value; if (!v) return ['', ''];
+      const [y, m, d] = v.split('-').map(Number);
+      return [d + '/' + m + '/' + String(y).slice(-2), MON[m-1]];
+    }
+    function lines(){
+      const [d, m] = fmtDate(), b = '\t'.repeat(+$('fs-blank').value || 0);
+      return rows.map(r => [d, m, r.branch, r.store, r.lc, r.ip].join('\t') + b);
+    }
+    function render(){
+      const [d, m] = fmtDate();
+      $('fs-cp').disabled = !rows.length;
+      $('fs-cnt').textContent = rows.length ? '(' + rows.length + L(' แถว', ' rows') + ')' : '';
+      if (!rows.length){
+        $('fs-out').innerHTML = '<div class="result-empty" style="padding:16px;">' + L('ยังไม่มีข้อมูล หรือไม่พบแถวที่ตรงรูปแบบ', 'No data yet, or no rows match the expected format') + '</div>';
+        return;
+      }
+      const esc = x => x.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+      let h = '<table><thead><tr><th>Date-Monitor</th><th>Month</th><th>Store No.</th><th>Store Name</th><th>Date-Time Last Connect</th><th>IP Address</th></tr></thead><tbody>';
+      rows.forEach(r => { h += '<tr><td>' + d + '</td><td>' + m + '</td><td>' + esc(r.branch) + '</td><td>' + esc(r.store) + '</td><td>' + esc(r.lc) + '</td><td>' + esc(r.ip) + '</td></tr>'; });
+      $('fs-out').innerHTML = h + '</tbody></table>';
+    }
+    function run(){ rows = parse($('fs-in').value); $('fs-msg').textContent = ''; render(); }
+
+    $('fs-in').addEventListener('input', run);
+    $('fs-dt').addEventListener('input', render);
+    $('fs-blank').addEventListener('input', render);
+    $('fs-clr').addEventListener('click', () => { $('fs-in').value = ''; run(); });
+    $('fs-cp').addEventListener('click', async () => {
+      const txt = lines().join('\n');
+      try { await navigator.clipboard.writeText(txt); }
+      catch(e){ const a = document.createElement('textarea'); a.value = txt; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove(); }
+      $('fs-msg').textContent = L('คัดลอกแล้ว ' + rows.length + ' แถว — ไปวางใน Excel ได้เลย', 'Copied ' + rows.length + ' rows — paste into Excel');
+    });
+    const lt = $('lang-toggle');
+    if (lt) lt.addEventListener('click', () => { $('fs-msg').textContent = ''; render(); });
+    render();
   })();
 </script>
 
