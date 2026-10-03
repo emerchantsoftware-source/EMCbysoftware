@@ -6,7 +6,7 @@
   (function(){
     try{
       // TEMP PREVIEW BYPASS: set to false (or delete this line) to bring the login gate back
-      var PREVIEW_BYPASS_LOGIN = true;
+      var PREVIEW_BYPASS_LOGIN = false;
       if (PREVIEW_BYPASS_LOGIN){ document.documentElement.classList.add('authed'); }
 
       var saved = localStorage.getItem('theme');
@@ -479,6 +479,7 @@
       <a href="dashboard.html">Dashboard</a>
       <a href="serial-activate.html">Serial Activate</a>
       <a href="nas.html">NAS</a>
+      <a href="finger-scan.html">Finger Scan</a>
       <a href="equipment.html" data-th="อุปกรณ์" data-en="Equipment">อุปกรณ์</a>
       <a href="#customers" data-th="ลูกค้า" data-en="Customers">ลูกค้า</a>
       <a href="#business">ธุรกิจ</a>
@@ -514,6 +515,8 @@
           <a href="serial-activate.html" data-th="ค้นหา Serial" data-en="Search Serial">ค้นหา Serial</a>
           <span class="divider"></span>
           <a href="nas.html" data-th="ค้นหา NAS" data-en="Search NAS">ค้นหา NAS</a>
+          <span class="divider"></span>
+          <a href="finger-scan.html">Finger Scan</a>
         </div>
       </div>
     </div>
