@@ -361,6 +361,24 @@
   .service .idx{font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:12px; color:var(--green); margin-bottom:14px; display:block;}
   .service h3{font-size:15px; font-weight:600; line-height:1.4;}
 
+  /* ---------- Photo show/hide toggle ---------- */
+  .photo-toggle{
+    display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+    font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:12px;
+    padding:7px 14px; border:1px solid var(--line); border-radius:999px;
+    background:transparent; color:var(--ink); transition:border-color .2s ease, color .2s ease, transform .2s ease;
+  }
+  .photo-toggle:hover{border-color:var(--green); color:#1B6B44; transform:translateY(-1px);}
+  .photo-toggle svg{width:16px; height:16px; flex:none;}
+  .photo-toggle .ic-off, .photo-toggle .lbl-show{display:none;}
+  #teams.photos-off .photo-toggle .ic-on, #teams.photos-off .photo-toggle .lbl-hide{display:none;}
+  #teams.photos-off .photo-toggle .ic-off{display:block;}
+  #teams.photos-off .photo-toggle .lbl-show{display:inline;}
+  .section-head .head-right{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  .avatar.has-photo svg{display:none;}
+  #teams.photos-off .avatar.has-photo img{display:none;}
+  #teams.photos-off .avatar.has-photo svg{display:block;}
+
   /* ---------- Team group ---------- */
   .team-group{margin-bottom:52px;}
   .team-group:last-child{margin-bottom:0;}
@@ -584,7 +602,15 @@
 <section id="teams" style="background:var(--paper-dim);">
   <div class="section-head reveal">
     <h2 data-th="ทีมงาน Software" data-en="Software Team">ทีมงาน Software</h2>
-    <span class="count mono">18 members / 4 teams</span>
+    <div class="head-right">
+      <button type="button" id="photo-toggle" class="photo-toggle" aria-pressed="false">
+        <svg class="ic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg class="ic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A10.9 10.9 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/></svg>
+        <span class="lbl-hide" data-th="ซ่อนรูป" data-en="Hide photos">ซ่อนรูป</span>
+        <span class="lbl-show" data-th="แสดงรูป" data-en="Show photos">แสดงรูป</span>
+      </button>
+      <span class="count mono">18 members / 4 teams</span>
+    </div>
   </div>
 
   <div class="team-group reveal">
@@ -614,8 +640,8 @@
   <div class="team-group reveal">
     <div class="team-group-head"><h3>Team CFW</h3><span class="n mono" data-th="4 คน" data-en="4 people">4 คน</span></div>
     <div class="team-grid">
-      <div class="member" data-photo="narawan"><div class="avatar"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="3.3"/><path d="M12 11 L17.5 21 L6.5 21 Z"/></svg></div><h3 data-th="นราวรรณ เฮงมี" data-en="Narawan Hengmee">นราวรรณ เฮงมี</h3><div class="role"><span data-th="ชื่อเล่น:" data-en="Nickname:">ชื่อเล่น:</span> <span data-th="เค้ก" data-en="Cake">เค้ก</span></div><span class="team-badge mono">CFW</span></div>
-      <div class="member" data-photo="jeerawan"><div class="avatar"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="3.3"/><path d="M12 11 L17.5 21 L6.5 21 Z"/></svg></div><h3 data-th="จีรวรรณ ปราบหนองบัว" data-en="Jeerawan Prabnongbua">จีรวรรณ ปราบหนองบัว</h3><div class="role"><span data-th="ชื่อเล่น:" data-en="Nickname:">ชื่อเล่น:</span> <span data-th="จี" data-en="Jee">จี</span></div><span class="team-badge mono">CFW</span></div>
+      <div class="member" data-photo="narawan"><div class="avatar"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="3.3"/><path d="M12 11 L17.5 21 L6.5 21 Z"/></svg></div><h3 data-th="นราวรรณ เฮงมี" data-en="Narawan Hengmee">นราวรรณ เฮงมี</h3><div class="role"><span data-th="ชื่อเล่น:" data-en="Nickname:">ชื่อเล่น:</span> <span data-th="เค้ก" data-en="Cake">เค้ก</span></div><span class="role-tag sen mono">Senior</span></div>
+      <div class="member" data-photo="jeerawan"><div class="avatar"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="3.3"/><path d="M12 11 L17.5 21 L6.5 21 Z"/></svg></div><h3 data-th="จีรวรรณ ปราบหนองบัว" data-en="Jeerawan Prabnongbua">จีรวรรณ ปราบหนองบัว</h3><div class="role"><span data-th="ชื่อเล่น:" data-en="Nickname:">ชื่อเล่น:</span> <span data-th="จี" data-en="Jee">จี</span></div><span class="role-tag sen mono">Senior</span></div>
       <div class="member" data-photo="taweelap"><div class="avatar"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="3.3"/><rect x="7.5" y="11.5" width="9" height="9.5" rx="2"/></svg></div><h3 data-th="ทวีลาภ บุญโพธิ์แก้ว" data-en="Taweelap Boonphokaew">ทวีลาภ บุญโพธิ์แก้ว</h3><div class="role"></div><span class="team-badge mono">CFW</span></div>
       <div class="member" data-photo="settawut"><div class="avatar"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="3.3"/><rect x="7.5" y="11.5" width="9" height="9.5" rx="2"/></svg></div><h3 data-th="เสฏฐวุฒิ คารมปราชญ์" data-en="Settawut Karompraj">เสฏฐวุฒิ คารมปราชญ์</h3><div class="role"></div><span class="team-badge mono">CFW</span></div>
     </div>
@@ -803,11 +829,25 @@
       let i = 0;
       const img = new Image();
       img.alt = m.querySelector('h3') ? m.querySelector('h3').textContent : key;
-      img.loading = 'lazy';
-      img.onload = () => { av.innerHTML = ''; av.appendChild(img); };
+      img.onload = () => { av.appendChild(img); av.classList.add('has-photo'); };
       img.onerror = () => { if (++i < exts.length) img.src = 'Teams/' + key + '.' + exts[i]; };
       img.src = 'Teams/' + key + '.' + exts[0];
     });
+  })();
+
+  // Show / hide team photos (remembers the choice)
+  (function(){
+    const btn = document.getElementById('photo-toggle'), sec = document.getElementById('teams');
+    if (!btn || !sec) return;
+    function set(off){
+      sec.classList.toggle('photos-off', off);
+      btn.setAttribute('aria-pressed', off ? 'true' : 'false');
+      try{ localStorage.setItem('photosOff', off ? '1' : '0'); }catch(e){}
+    }
+    let off = false;
+    try{ off = localStorage.getItem('photosOff') === '1'; }catch(e){}
+    set(off);
+    btn.addEventListener('click', () => set(!sec.classList.contains('photos-off')));
   })();
 
   // Logout (clears the session flag so the login gate shows again)
