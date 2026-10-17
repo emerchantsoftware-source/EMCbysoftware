@@ -898,6 +898,7 @@
     const $ = id => document.getElementById(id);
     if (!$('fs-in')) return;
     const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const NUL = /^NULL$/i;
     const IP = /^\d{1,3}(\.\d{1,3}){3}$/, D = /^\d{4}-\d{2}-\d{2}(\s+\d{1,2}:\d{2}(:\d{2})?)?$/, T = /^\d{1,2}:\d{2}(:\d{2})?$/;
     const L = (th, en) => document.documentElement.lang === 'en' ? en : th;
     let rows = [];
@@ -909,9 +910,9 @@
     function parse(text){
       const tk = text.split(/[\t\r\n]+/).map(x => x.trim()).filter(Boolean), res = [];
       for (let i = 4; i < tk.length; i++){
-        if (!IP.test(tk[i])) continue;
+        if (!IP.test(tk[i]) && !NUL.test(tk[i])) continue;
         const branch = tk[i-4], store = tk[i-3];
-        if (!/^\d+/.test(branch)) continue;
+        if (!/^\d+/.test(branch) && !NUL.test(branch)) continue;
         let lc = tk[i+1] || '';
         if (!D.test(lc)) continue;
         if (!/\d:\d/.test(lc) && T.test(tk[i+2] || '')) lc += ' ' + tk[i+2];
