@@ -1,0 +1,1096 @@
+{
+ "meta": {
+  "customer": "Central Pattana",
+  "generated": "2026-10-20",
+  "anydeskPassword": "nex@dmin01"
+ },
+ "stores": [
+  {
+   "code": "RTB",
+   "name": "CentralPlaza Rattanathibet",
+   "devices": [
+    {
+     "name": "CPNPOSRTBF001",
+     "anydesk": "1581102745"
+    },
+    {
+     "name": "CPNPOSRTBF002",
+     "anydesk": "207017552"
+    },
+    {
+     "name": "CPNPOSRTBF003",
+     "anydesk": "1050736740"
+    },
+    {
+     "name": "CPNPOSRTBF004",
+     "anydesk": "1988141686"
+    }
+   ]
+  },
+  {
+   "code": "SLY",
+   "name": "Central Plaza Salaya",
+   "devices": [
+    {
+     "name": "CPNPOSSLYF001",
+     "anydesk": "1537722044"
+    },
+    {
+     "name": "CPNPOSSLYF002",
+     "anydesk": "1537722044"
+    },
+    {
+     "name": "CPNPOSSLYF003",
+     "anydesk": "1847822780"
+    },
+    {
+     "name": "CPNPOSSLYF004",
+     "anydesk": "1419574532"
+    },
+    {
+     "name": "CPNPOSSLYF005",
+     "anydesk": "1094994100"
+    },
+    {
+     "name": "CPNPOSSLYF006",
+     "anydesk": "1835436518"
+    },
+    {
+     "name": "CPNPOSSLYF007",
+     "anydesk": "1372703185"
+    }
+   ]
+  },
+  {
+   "code": "CRI",
+   "name": "CentralPlaza Chiangrai",
+   "devices": [
+    {
+     "name": "CPNPOSCRIF001",
+     "anydesk": "1152849567"
+    },
+    {
+     "name": "CPNPOSCRIF002",
+     "anydesk": "1061401809"
+    },
+    {
+     "name": "CPNPOSCRIF003",
+     "anydesk": "1681049525"
+    },
+    {
+     "name": "CPNPOSCRIF004",
+     "anydesk": "1590082542"
+    },
+    {
+     "name": "CPNPOSCRIF005",
+     "anydesk": "1023940758"
+    },
+    {
+     "name": "CPNPOSCRIF006",
+     "anydesk": "1613760387"
+    },
+    {
+     "name": "CPNPOSCRIF008",
+     "anydesk": "838800748"
+    }
+   ]
+  },
+  {
+   "code": "CTW",
+   "name": "CentralWorld",
+   "devices": [
+    {
+     "name": "CPNPOSCTWF001",
+     "anydesk": "1336913935"
+    },
+    {
+     "name": "CPNPOSCTWF002",
+     "anydesk": "1821333557"
+    },
+    {
+     "name": "CPNPOSCTWF003",
+     "anydesk": "1066640984"
+    },
+    {
+     "name": "CPNPOSCTWF004",
+     "anydesk": "1948685641"
+    },
+    {
+     "name": "CPNPOSCTWF005",
+     "anydesk": "1381604886"
+    },
+    {
+     "name": "CPNPOSCTWF006",
+     "anydesk": "744103819"
+    },
+    {
+     "name": "CPNPOSCTWF007",
+     "anydesk": "748988202"
+    },
+    {
+     "name": "CPNPOSCTWF008",
+     "anydesk": "1482116861"
+    },
+    {
+     "name": "CPNPOSCTWF016",
+     "anydesk": "1283937775"
+    },
+    {
+     "name": "CPNPOSCTWF017",
+     "anydesk": "109090844"
+    },
+    {
+     "name": "CPNPOSCTWF019",
+     "anydesk": "1744539342"
+    },
+    {
+     "name": "CPNPOSCTWF021",
+     "anydesk": "1513364919"
+    }
+   ]
+  },
+  {
+   "code": "LPO",
+   "name": "CentraPlaza Lardprao",
+   "devices": [
+    {
+     "name": "CPNPOSLPOF001",
+     "anydesk": "1241410654"
+    },
+    {
+     "name": "CPNPOSLPOF002",
+     "anydesk": "1810120738"
+    },
+    {
+     "name": "CPNPOSLPOF003",
+     "anydesk": "1417530491"
+    },
+    {
+     "name": "CPNPOSLPOF004",
+     "anydesk": "1412367138"
+    },
+    {
+     "name": "CPNPOSLPOF005",
+     "anydesk": "1084111958"
+    },
+    {
+     "name": "CPNPOSLPOF006",
+     "anydesk": "1881062584"
+    }
+   ]
+  },
+  {
+   "code": "PKO",
+   "name": "CentralPlaza Pinklao",
+   "devices": [
+    {
+     "name": "CPNPOSPKOF001",
+     "anydesk": "1625145138"
+    },
+    {
+     "name": "CPNPOSPKOF002",
+     "anydesk": "1082135013"
+    },
+    {
+     "name": "CPNPOSPKOF003",
+     "anydesk": "1777246211"
+    },
+    {
+     "name": "CPNPOSPKOF004",
+     "anydesk": "462769898"
+    },
+    {
+     "name": "CPNPOSPKOF005",
+     "anydesk": "1507503903"
+    },
+    {
+     "name": "CPNPOSPKOF006",
+     "anydesk": "1603011202"
+    },
+    {
+     "name": "CPNPOSPKOF007",
+     "anydesk": "1426306517"
+    }
+   ]
+  },
+  {
+   "code": "CMA",
+   "name": "CentralPlaza Chiangmai Airport",
+   "devices": [
+    {
+     "name": "CPNPOSCMAF001",
+     "anydesk": "1542460817"
+    },
+    {
+     "name": "CPNPOSCMAF002",
+     "anydesk": "1640129718"
+    },
+    {
+     "name": "CPNPOSCMAF003",
+     "anydesk": "1736102114"
+    },
+    {
+     "name": "CPNPOSCMAF004",
+     "anydesk": "1213964759"
+    },
+    {
+     "name": "CPNPOSCMAF005",
+     "anydesk": "1889562727"
+    },
+    {
+     "name": "CPNPOSCMAF006",
+     "anydesk": "1604349327"
+    },
+    {
+     "name": "CPNPOSCMAF007",
+     "anydesk": "1084102225"
+    },
+    {
+     "name": "CPNPOSCMAF008",
+     "anydesk": "1393589524"
+    },
+    {
+     "name": "CPNPOSCMAF009",
+     "anydesk": "1873293625"
+    },
+    {
+     "name": "CPNPOSCMAF010",
+     "anydesk": "1986417342"
+    },
+    {
+     "name": "CPNPOSCMAF011",
+     "anydesk": "1617049441"
+    },
+    {
+     "name": "CPNPOSCMAF012",
+     "anydesk": "1513692238"
+    }
+   ]
+  },
+  {
+   "code": "CMI",
+   "name": "Central Festival Chiangmai",
+   "devices": [
+    {
+     "name": "CPNPOSCMIF001",
+     "anydesk": "1769857588"
+    },
+    {
+     "name": "CPNPOSCMIF002",
+     "anydesk": "1299299369"
+    },
+    {
+     "name": "CPNPOSCMIF003",
+     "anydesk": "1411498911"
+    },
+    {
+     "name": "CPNPOSCMIF004",
+     "anydesk": "879917068"
+    },
+    {
+     "name": "CPNPOSCMIF005",
+     "anydesk": "1495317424"
+    }
+   ]
+  },
+  {
+   "code": "BNA",
+   "name": "CentralPlaza Bangna",
+   "devices": [
+    {
+     "name": "CPNPOSBNAF001",
+     "anydesk": "1650527849"
+    },
+    {
+     "name": "CPNPOSBNAF004",
+     "anydesk": "1087953245"
+    }
+   ]
+  },
+  {
+   "code": "PDT",
+   "name": "CentralFestival Eastville",
+   "devices": [
+    {
+     "name": "CPNPOSPDTF001",
+     "anydesk": "1800000640"
+    },
+    {
+     "name": "CPNPOSPDTF002",
+     "anydesk": "1787732733"
+    },
+    {
+     "name": "CPNPOSPDTF005",
+     "anydesk": "1703937065"
+    }
+   ]
+  },
+  {
+   "code": "RID",
+   "name": "CentralPlaza Ramindra",
+   "devices": [
+    {
+     "name": "CPNPOSRIDF001",
+     "anydesk": "1054029095"
+    },
+    {
+     "name": "CPNPOSRIDF002",
+     "anydesk": "1616842805"
+    },
+    {
+     "name": "CPNPOSRIDF003",
+     "anydesk": "1103186542"
+    },
+    {
+     "name": "CPNPOSRIDF004",
+     "anydesk": "1622018958"
+    }
+   ]
+  },
+  {
+   "code": "RM3",
+   "name": "CentralPlaza Rama 3",
+   "devices": [
+    {
+     "name": "CPNPOSRM3F001",
+     "anydesk": "852402724"
+    },
+    {
+     "name": "CPNPOSRM3F002",
+     "anydesk": "1753259784"
+    },
+    {
+     "name": "CPNPOSRM3F003",
+     "anydesk": "1732114917"
+    },
+    {
+     "name": "CPNPOSRM3F004",
+     "anydesk": "1292568096"
+    }
+   ]
+  },
+  {
+   "code": "RM9",
+   "name": "CentralPlaza Rama 9",
+   "devices": [
+    {
+     "name": "CPNPOSRM9F001",
+     "anydesk": "1178525362"
+    },
+    {
+     "name": "CPNPOSRM9F002",
+     "anydesk": "1895019529"
+    },
+    {
+     "name": "CPNPOSRM9F003",
+     "anydesk": "1732114917"
+    },
+    {
+     "name": "CPNPOSRM9F010",
+     "anydesk": "207017552"
+    },
+    {
+     "name": "CPNPOSRM9F011",
+     "anydesk": "1050736740"
+    }
+   ]
+  },
+  {
+   "code": "CWG",
+   "name": "CentralPlaza WestGate",
+   "devices": [
+    {
+     "name": "CPNPOSCWGF001",
+     "anydesk": "1344557399"
+    },
+    {
+     "name": "CPNPOSCWGF002",
+     "anydesk": "1769593924"
+    },
+    {
+     "name": "CPNPOSCWGF003",
+     "anydesk": "1732559545"
+    },
+    {
+     "name": "CPNPOSCWGF004",
+     "anydesk": "1279567632"
+    },
+    {
+     "name": "CPNPOSCWGF005",
+     "anydesk": "1586411351"
+    },
+    {
+     "name": "CPNPOSCWGF006",
+     "anydesk": "1177355877"
+    },
+    {
+     "name": "CPNPOSCWGF007",
+     "anydesk": "1355368711"
+    },
+    {
+     "name": "CPNPOSCWGF008",
+     "anydesk": "1682925459"
+    }
+   ]
+  },
+  {
+   "code": "CWN",
+   "name": "CentralPlaza Chaengwattana",
+   "devices": [
+    {
+     "name": "CPNPOSCWNF001",
+     "anydesk": "1630099488"
+    },
+    {
+     "name": "CPNPOSCWNF002",
+     "anydesk": "1415251194"
+    },
+    {
+     "name": "CPNPOSCWNF003",
+     "anydesk": "1666449902"
+    },
+    {
+     "name": "CPNPOSCWNF003",
+     "anydesk": "1278267404"
+    },
+    {
+     "name": "CPNPOSCWNF004",
+     "anydesk": "1885825678"
+    }
+   ]
+  },
+  {
+   "code": "MHC",
+   "name": "CentralPlaza Mahachai",
+   "devices": [
+    {
+     "name": "CPNPOSMHCF001",
+     "anydesk": "1689922813"
+    },
+    {
+     "name": "CPNPOSMHCF002",
+     "anydesk": "1519564574"
+    },
+    {
+     "name": "CPNPOSMHCF003",
+     "anydesk": "1642179487"
+    },
+    {
+     "name": "CPNPOSMHCF004",
+     "anydesk": "1194792863"
+    },
+    {
+     "name": "CPNPOSMHCF005",
+     "anydesk": "1408300796"
+    },
+    {
+     "name": "CPNPOSMHCF006",
+     "anydesk": "1927252680"
+    },
+    {
+     "name": "CPNPOSMHCF007",
+     "anydesk": "1000191951"
+    },
+    {
+     "name": "CPNPOSMHCF008",
+     "anydesk": "1587058091"
+    }
+   ]
+  },
+  {
+   "code": "RM2",
+   "name": "CentralPlaza Rama 2",
+   "devices": [
+    {
+     "name": "CPNPOSRM2F001",
+     "anydesk": "1620023429"
+    },
+    {
+     "name": "CPNPOSRM2F002",
+     "anydesk": "1123565120"
+    },
+    {
+     "name": "CPNPOSRM2F003",
+     "anydesk": "1734352231"
+    },
+    {
+     "name": "CPNPOSRM2F004",
+     "anydesk": "1738427797"
+    },
+    {
+     "name": "CPNPOSRM2F005",
+     "anydesk": "1000191951"
+    },
+    {
+     "name": "CPNPOSRM2F005",
+     "anydesk": "1587058091"
+    }
+   ]
+  },
+  {
+   "code": "SVB",
+   "name": "Central Village (New branch)",
+   "devices": []
+  },
+  {
+   "code": "LPG",
+   "name": "CentralPlaza Lampang",
+   "devices": [
+    {
+     "name": "CPNPOSLPGF001",
+     "anydesk": "1940670972"
+    },
+    {
+     "name": "CPNPOSLPGF002",
+     "anydesk": "1727650998"
+    },
+    {
+     "name": "CPNPOSLPGF003",
+     "anydesk": "1598755699"
+    },
+    {
+     "name": "CPNPOSLPGF004",
+     "anydesk": "1072769338"
+    }
+   ]
+  },
+  {
+   "code": "PNL",
+   "name": "CentralPlaza Phitsanulok",
+   "devices": [
+    {
+     "name": "CPNPOSPNLF001",
+     "anydesk": "1605399025"
+    },
+    {
+     "name": "CPNPOSPNLF002",
+     "anydesk": "1803613129"
+    },
+    {
+     "name": "CPNPOSPNLF003",
+     "anydesk": "1011624992"
+    },
+    {
+     "name": "CPNPOSPNLF004",
+     "anydesk": "1748186288"
+    }
+   ]
+  },
+  {
+   "code": "KKN",
+   "name": "CentralPlaza Khonkaen",
+   "devices": [
+    {
+     "name": "CPNPOSKKNF001",
+     "anydesk": "1744638011"
+    },
+    {
+     "name": "CPNPOSKKNF002",
+     "anydesk": "1029227931"
+    },
+    {
+     "name": "CPNPOSKKNF003",
+     "anydesk": "1147700917"
+    },
+    {
+     "name": "CPNPOSKKNF004",
+     "anydesk": "1020000679"
+    },
+    {
+     "name": "CPNPOSKKNF005",
+     "anydesk": "1313234768"
+    },
+    {
+     "name": "CPNPOSKKNF006",
+     "anydesk": "1151926733"
+    },
+    {
+     "name": "CPNPOSKKNF007",
+     "anydesk": "1259205546"
+    },
+    {
+     "name": "CPNPOSKKNF008",
+     "anydesk": "1767584975"
+    },
+    {
+     "name": "CPNPOSKKNF021",
+     "anydesk": "1220549917"
+    }
+   ]
+  },
+  {
+   "code": "UDN",
+   "name": "CentralPlaza Udonthani",
+   "devices": [
+    {
+     "name": "CPNPOSUDNF001",
+     "anydesk": "1820488594"
+    },
+    {
+     "name": "CPNPOSUDNF003",
+     "anydesk": "1913872216"
+    },
+    {
+     "name": "CPNPOSUDNF004",
+     "anydesk": "1540535050"
+    },
+    {
+     "name": "CPNPOSUDNF005",
+     "anydesk": "1804137906"
+    },
+    {
+     "name": "CPNPOSUDNF006",
+     "anydesk": "1947659803"
+    }
+   ]
+  },
+  {
+   "code": "NKM",
+   "name": "CentralPlaza Nakhon Ratchasima",
+   "devices": [
+    {
+     "name": "CPNPOSNKMF001",
+     "anydesk": "1965343021"
+    },
+    {
+     "name": "CPNPOSNKMF002",
+     "anydesk": "1197385592"
+    },
+    {
+     "name": "CPNPOSNKMF003",
+     "anydesk": "1131120767"
+    },
+    {
+     "name": "CPNPOSNKMF004",
+     "anydesk": "1654194258"
+    }
+   ]
+  },
+  {
+   "code": "UBN",
+   "name": "CentralPlaza Ubonratchathani",
+   "devices": [
+    {
+     "name": "CPNPOSUBNF001",
+     "anydesk": "1976316359"
+    },
+    {
+     "name": "CPNPOSUBNF002",
+     "anydesk": "1718983596"
+    },
+    {
+     "name": "CPNPOSUBNF003",
+     "anydesk": "1481173811"
+    },
+    {
+     "name": "CPNPOSUBNF004",
+     "anydesk": "1233696214"
+    }
+   ]
+  },
+  {
+   "code": "CBR",
+   "name": "CentralPlaza Chonburi",
+   "devices": [
+    {
+     "name": "CPNPOSCBR1F001",
+     "anydesk": "1314947920"
+    },
+    {
+     "name": "CPNPOSCBR1F002",
+     "anydesk": "1238789362"
+    },
+    {
+     "name": "CPNPOSCBR1F003",
+     "anydesk": "1102307326"
+    },
+    {
+     "name": "CPNPOSCBR1F004",
+     "anydesk": "1541543662"
+    },
+    {
+     "name": "CPNPOSCBR1F005",
+     "anydesk": "1105654822"
+    },
+    {
+     "name": "CPNPOSCBR1F006",
+     "anydesk": "908942428"
+    }
+   ]
+  },
+  {
+   "code": "RYG",
+   "name": "CentralPlaza Rayong",
+   "devices": [
+    {
+     "name": "CPNPOSRYGF001",
+     "anydesk": "1898019695"
+    },
+    {
+     "name": "CPNPOSRYGF002",
+     "anydesk": "1567239909"
+    },
+    {
+     "name": "CPNPOSRYGF002",
+     "anydesk": "1979336420"
+    },
+    {
+     "name": "CPNPOSRYGF003",
+     "anydesk": "1359393083"
+    },
+    {
+     "name": "CPNPOSRYGF004",
+     "anydesk": "1816738044"
+    },
+    {
+     "name": "CPNPOSRYGF005",
+     "anydesk": "1016622141"
+    },
+    {
+     "name": "CPNPOSRYGF007",
+     "anydesk": "1957904197"
+    }
+   ]
+  },
+  {
+   "code": "PTB",
+   "name": "Central Festival Pattaya Beach",
+   "devices": [
+    {
+     "name": "CPNPOSPTBF001",
+     "anydesk": "1815761449"
+    },
+    {
+     "name": "CPNPOSPTBF002",
+     "anydesk": "1243588271"
+    },
+    {
+     "name": "CPNPOSPTBF003",
+     "anydesk": "1357388871"
+    },
+    {
+     "name": "CPNPOSPTBF005",
+     "anydesk": "1219438586"
+    },
+    {
+     "name": "CPNPOSPTBF006",
+     "anydesk": "1646548407"
+    }
+   ]
+  },
+  {
+   "code": "PTC",
+   "name": "Central Marina",
+   "devices": [
+    {
+     "name": "CPNPOSPTCF001",
+     "anydesk": "1303050054"
+    },
+    {
+     "name": "CPNPOSPTCF002",
+     "anydesk": "1173228829"
+    },
+    {
+     "name": "CPNPOSPTCF003",
+     "anydesk": "1636957382"
+    },
+    {
+     "name": "CPNPOSPTCF004",
+     "anydesk": "596842510"
+    },
+    {
+     "name": "CPNPOSPTCF005",
+     "anydesk": "1092465518"
+    }
+   ]
+  },
+  {
+   "code": "NKR",
+   "name": "CentralPlaza Nakhon Si Thammarat",
+   "devices": [
+    {
+     "name": "CPNPOSNKRF001",
+     "anydesk": "1936093121"
+    },
+    {
+     "name": "CPNPOSNKRF002",
+     "anydesk": "1963217033"
+    },
+    {
+     "name": "CPNPOSNKRF003",
+     "anydesk": "1647829372"
+    },
+    {
+     "name": "CPNPOSNKRF004",
+     "anydesk": "1440175637"
+    }
+   ]
+  },
+  {
+   "code": "SMI",
+   "name": "Central Festival Samui",
+   "devices": [
+    {
+     "name": "CPNPOSSMIF001",
+     "anydesk": "1146551693"
+    }
+   ]
+  },
+  {
+   "code": "SRT",
+   "name": "CentralPlaza Suratthane",
+   "devices": [
+    {
+     "name": "CPNPOSSRTF001",
+     "anydesk": "1931833746"
+    },
+    {
+     "name": "CPNPOSSRTF002",
+     "anydesk": "1814067005"
+    },
+    {
+     "name": "CPNPOSSRTF003",
+     "anydesk": "630806325"
+    }
+   ]
+  },
+  {
+   "code": "HYI",
+   "name": "Central Festival Hatyai",
+   "devices": [
+    {
+     "name": "CPNPOSHYIF001",
+     "anydesk": "1485083323"
+    },
+    {
+     "name": "CPNPOSHYIF002",
+     "anydesk": "1881184839"
+    },
+    {
+     "name": "CPNPOSHYIF003",
+     "anydesk": "1551415918"
+    },
+    {
+     "name": "CPNPOSHYIF004",
+     "anydesk": "667871283"
+    },
+    {
+     "name": "CPNPOSHYIF005",
+     "anydesk": "1021986529"
+    },
+    {
+     "name": "CPNPOSHYIF006",
+     "anydesk": "1805622722"
+    }
+   ]
+  },
+  {
+   "code": "PK1",
+   "name": "Central Phuket (Festival)",
+   "devices": [
+    {
+     "name": "CPNPOSPK1F001",
+     "anydesk": "1043663920"
+    },
+    {
+     "name": "CPNPOSPK1F002",
+     "anydesk": "1041029437"
+    }
+   ]
+  },
+  {
+   "code": "PKT",
+   "name": "Central Phuket (Floresta)",
+   "devices": [
+    {
+     "name": "CPNPOSPKTF002",
+     "anydesk": "1240998918"
+    }
+   ]
+  },
+  {
+   "code": "AYY",
+   "name": "CentralPlaza Ayutthaya",
+   "devices": [
+    {
+     "name": "CPNPOSAYYF001",
+     "anydesk": "1410508290"
+    },
+    {
+     "name": "CPNPOSAYYF002",
+     "anydesk": "1908783732"
+    },
+    {
+     "name": "CPNPOSAYYF003",
+     "anydesk": "236611468"
+    },
+    {
+     "name": "CPNPOSAYYF004",
+     "anydesk": "1668467931"
+    }
+   ]
+  },
+  {
+   "code": "GTW",
+   "name": "G Tower Grand Rama9",
+   "devices": [
+    {
+     "name": "CPNPOSGTWF001",
+     "anydesk": "1103300611"
+    }
+   ]
+  },
+  {
+   "code": "CTR",
+   "name": "Central Chanthaburi",
+   "devices": [
+    {
+     "name": "CPNPOSCTRF002",
+     "anydesk": "1535708926"
+    },
+    {
+     "name": "CPNPOSCTRF003",
+     "anydesk": "1573810321"
+    },
+    {
+     "name": "CPNPOSCTRF009",
+     "anydesk": "1104378376"
+    }
+   ]
+  },
+  {
+   "code": "NKT",
+   "name": "Central Nakhon Pathom",
+   "devices": [
+    {
+     "name": "CPNPOSNKTF001",
+     "anydesk": "1556420192"
+    },
+    {
+     "name": "CPNPOSNKTF002",
+     "anydesk": "1785796953"
+    },
+    {
+     "name": "CPNPOSNKTF003",
+     "anydesk": "1570319611"
+    }
+   ]
+  },
+  {
+   "code": "NKW",
+   "name": "Central Nakhon Sawan",
+   "devices": [
+    {
+     "name": "CPNPOSNKWF001",
+     "anydesk": "1147234245"
+    },
+    {
+     "name": "CPNPOSNKWF002",
+     "anydesk": "1753824802"
+    },
+    {
+     "name": "CPNPOSNKWF003",
+     "anydesk": "1405430094"
+    }
+   ]
+  },
+  {
+   "code": "SRC",
+   "name": "Central Sriracha",
+   "devices": [
+    {
+     "name": "CPNPOSSRCF001",
+     "anydesk": "1679950238"
+    },
+    {
+     "name": "CPNPOSSRCF002",
+     "anydesk": "1390924321"
+    },
+    {
+     "name": "CPNPOSSRCF003",
+     "anydesk": "1218733090"
+    },
+    {
+     "name": "CPNPOSSRCF004",
+     "anydesk": "1661013682"
+    }
+   ]
+  },
+  {
+   "code": "RCP",
+   "name": "Central Westville",
+   "devices": [
+    {
+     "name": "CPNPOSRCPF001",
+     "anydesk": "1559651990"
+    },
+    {
+     "name": "CPNPOSRCPF002",
+     "anydesk": "1121566583"
+    },
+    {
+     "name": "CPNPOSRCPF003",
+     "anydesk": "1280816662"
+    }
+   ]
+  },
+  {
+   "code": "ESP",
+   "name": "Esplanade Ratchada",
+   "devices": [
+    {
+     "name": "CPNPOSESPF001",
+     "anydesk": "1050736740"
+    }
+   ]
+  },
+  {
+   "code": "KKC",
+   "name": "Central Khonkaen Campus",
+   "devices": [
+    {
+     "name": "CPNPOSKKCF001",
+     "anydesk": "1055712351"
+    },
+    {
+     "name": "CPNPOSKKCF002",
+     "anydesk": "1569759186"
+    },
+    {
+     "name": "CPNPOSKKCF003",
+     "anydesk": "1508283423"
+    }
+   ]
+  }
+ ],
+ "unmatched": [
+  {
+   "code": "RM4",
+   "name": "RM4",
+   "devices": [
+    {
+     "name": "CPNPOSRM4F001",
+     "anydesk": "1675475470"
+    },
+    {
+     "name": "CPNPOSRM4F001",
+     "anydesk": "1418102783"
+    },
+    {
+     "name": "CPNPOSRM4F001",
+     "anydesk": "1513364919"
+    }
+   ]
+  },
+  {
+   "code": "UAT",
+   "name": "UAT",
+   "devices": [
+    {
+     "name": "UAT0001",
+     "anydesk": "1276399465"
+    }
+   ]
+  }
+ ]
+}
