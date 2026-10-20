@@ -30,6 +30,18 @@ NAME_OVERRIDES = {
     "KKC": "Central Khonkaen Campus",
 }
 
+# Codes used in Sheet1 that are not listed in Sheet3
+EXTRA_STORES = {
+    "RM4": "CentralPlaza Rama 4",
+    "UAT": "UAT (Test)",          # test machine
+}
+PIN_LAST = {"UAT"}                # keep these at the bottom of the list
+
+
+def sort_key(st):
+    # alphabetical by name, ignoring case and spaces; pinned codes go last
+    return (st["code"] in PIN_LAST, st["name"].lower().replace(" ", ""))
+
 
 def read_rows(path):
     with open(path, encoding="utf-8-sig", newline="") as f:
@@ -61,6 +73,12 @@ def main():
         stores.append(st)
         by_code[code] = st
 
+    for code, name in EXTRA_STORES.items():
+        if code not in by_code:
+            st = {"code": code, "name": name, "devices": []}
+            stores.append(st)
+            by_code[code] = st
+
     unmatched, seen = {}, set()
     skipped = dup = 0
     for r in s1:
@@ -82,6 +100,7 @@ def main():
 
     for st in stores + list(unmatched.values()):
         st["devices"].sort(key=lambda d: d["name"])
+    stores.sort(key=sort_key)
 
     out = {
         "meta": {
