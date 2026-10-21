@@ -65,57 +65,8 @@
     *{animation:none !important; transition:none !important;}
   }
 
-  header{
-    position:sticky; top:0; z-index:50;
-    background:var(--header-bg);
-    backdrop-filter:blur(10px);
-    transition:background .3s ease;
-    border-bottom:1px solid var(--line);
-    padding:18px 6vw;
-    display:flex; justify-content:space-between; align-items:center;
-  }
   .brand{font-weight:700; font-size:20px; letter-spacing:-0.01em; text-decoration:none; color:var(--ink); display:flex; align-items:center; gap:12px;}
   .brand span{color:var(--green); font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace;}
-  nav{display:flex; gap:28px; align-items:center;}
-  .nav-links{display:flex; align-items:center; gap:28px;}
-  .nav-utils{display:flex; align-items:center; gap:14px;}
-  .util-row{display:flex; align-items:center; gap:14px;}
-  .nav-toggle{
-    display:none; background:none; border:none; padding:6px; color:var(--ink);
-    cursor:pointer; align-items:center; justify-content:center; border-radius:8px;
-  }
-  .nav-toggle:hover{color:var(--green);}
-
-  @media (max-width:820px){
-    header{position:sticky;}
-    .nav-toggle{display:flex;}
-    #site-nav{
-      position:absolute; top:100%; left:0; right:0;
-      background:var(--paper); border-bottom:1px solid var(--line);
-      flex-direction:column; align-items:stretch; gap:0;
-      max-height:0; overflow:hidden; transition:max-height .3s ease;
-      box-shadow:0 16px 30px rgba(0,0,0,0.1);
-    }
-    #site-nav.open{max-height:600px;}
-    .nav-links{flex-direction:column; align-items:stretch; gap:0;}
-    .nav-links a{padding:16px 6vw; border-bottom:1px solid var(--line); opacity:1;}
-    .nav-utils{flex-direction:column; align-items:stretch; gap:12px; padding:16px 6vw;}
-    .nav-utils .nav-cta{width:100%; text-align:center; border-radius:8px; padding:14px;}
-  }
-  nav a{color:var(--ink); text-decoration:none; font-size:14px; font-weight:500; opacity:0.75; transition:opacity .2s;}
-  nav a:hover, nav a.active{opacity:1;}
-  .nav-cta{
-    background:var(--ink-fixed); color:var(--paper-fixed) !important; opacity:1 !important;
-    padding:9px 18px; border-radius:999px; font-size:13px !important; font-weight:600 !important;
-    transition:transform .2s ease, background .2s ease !important;
-  }
-  .nav-cta:hover{background:var(--green); transform:translateY(-2px);}
-  .theme-toggle{
-    width:36px; height:36px; border-radius:999px; border:1px solid var(--line);
-    background:transparent; color:var(--ink); display:flex; align-items:center; justify-content:center;
-    cursor:pointer; transition:border-color .2s ease, color .2s ease, transform .2s ease;
-  }
-  .theme-toggle:hover{border-color:var(--green); color:var(--green); transform:translateY(-2px);}
 
   @keyframes pulse{
     0%{box-shadow:0 0 0 0 rgba(47,190,115,0.55);}
@@ -446,14 +397,6 @@
   .login-error{color:#ff8a75; font-size:12px; margin-top:12px;}
   .login-note{color:rgba(244,247,242,0.4); font-size:11px; margin-top:18px; line-height:1.5;}
 
-  /* ---------- Language toggle ---------- */
-  .lang-toggle{
-    width:36px; height:36px; border-radius:999px; border:1px solid var(--line);
-    background:transparent; color:var(--ink); display:flex; align-items:center; justify-content:center;
-    cursor:pointer; transition:border-color .2s ease, color .2s ease, transform .2s ease;
-    font-family:'IBM Plex Mono','IBM Plex Sans Thai', monospace; font-size:11px; font-weight:600;
-  }
-  .lang-toggle:hover{border-color:var(--green); color:var(--green); transform:translateY(-2px);}
 
   /* ---------- Sushiro page ---------- */
   .crumbs{font-size:13px; color:rgba(244,247,242,0.6); margin-bottom:22px; display:flex; gap:8px; align-items:center;}
@@ -540,8 +483,9 @@
     .branches td.p{grid-column:2;}
   }
 </style>
+<script src="brand.js" defer></script>
 </head>
-<body>
+<body data-nav="customers">
 
 <div id="login-gate">
   <form id="login-form" class="login-card">
@@ -557,29 +501,7 @@
 
 
 
-<header>
-  <a href="index.html" class="brand"><svg width="36" height="36" viewBox="0 0 64 64" style="border-radius:8px; flex-shrink:0;"><rect width="64" height="64" rx="14" fill="#0E211A"/><rect x="20" y="16" width="7" height="32" rx="3.5" fill="#2FBE73"/><rect x="20" y="16" width="26" height="7" rx="3.5" fill="#2FBE73"/><rect x="20" y="28.5" width="19" height="7" rx="3.5" fill="#9AD84B"/><rect x="20" y="41" width="26" height="7" rx="3.5" fill="#2FBE73"/></svg>E-Merchant</a>
-  <button id="nav-toggle" class="nav-toggle" aria-label="Menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-  <nav id="site-nav">
-    <div class="nav-links">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="serial-activate.html">Finger Scan</a>
-      <a href="nas.html">NAS</a>
-      <a href="equipment.html" data-th="อุปกรณ์" data-en="Equipment">อุปกรณ์</a>
-      <a href="index.html#customers" class="active" data-th="ลูกค้า" data-en="Customers">ลูกค้า</a>
-      <a href="index.html#business">ธุรกิจ</a>
-      <a href="index.html#teams" data-th="ทีมงาน" data-en="Team">ทีมงาน</a>
-    </div>
-    <div class="nav-utils">
-      <div class="util-row">
-        <button id="lang-toggle" class="lang-toggle" aria-label="Switch language" title="EN / TH">EN</button>
-        <button id="theme-toggle" class="theme-toggle" aria-label="สลับโหมดมืด/สว่าง" title="สลับโหมดมืด/สว่าง"><svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg></button>
-        <button id="logout-btn" class="theme-toggle" aria-label="Logout" title="ออกจากระบบ / Logout"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
-      </div>
-      <a href="#contact" class="nav-cta" data-th="ติดต่อทีม" data-en="Contact Us">ติดต่อทีม</a>
-    </div>
-  </nav>
-</header>
+<script src="header.js"></script>
 
 <div id="wed-banner" class="wed-banner" style="display:none;">
   <span class="wed-dot"></span>
@@ -828,33 +750,6 @@
     window.addEventListener('load', render);
   })();
 
-  // Dark mode toggle
-  (function(){
-    const root = document.documentElement;
-    const btn = document.getElementById('theme-toggle');
-    const icon = document.getElementById('theme-icon');
-    const sunPath = '<path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path>';
-    const moonPath = '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>';
-    function render(){
-      if (!icon) return;
-      icon.innerHTML = root.getAttribute('data-theme') === 'dark' ? moonPath : sunPath;
-    }
-    render();
-    if (btn){
-      btn.addEventListener('click', () => {
-        const isDark = root.getAttribute('data-theme') === 'dark';
-        if (isDark){
-          root.removeAttribute('data-theme');
-          try{ localStorage.setItem('theme', 'light'); } catch(e){}
-        } else {
-          root.setAttribute('data-theme', 'dark');
-          try{ localStorage.setItem('theme', 'dark'); } catch(e){}
-        }
-        render();
-      });
-    }
-  })();
-
   // Login gate
   (function(){
     const form = document.getElementById('login-form');
@@ -871,64 +766,6 @@
       } else {
         if (errorEl) errorEl.style.display = 'block';
       }
-    });
-  })();
-
-  // Language toggle (TH default / EN)
-  (function(){
-    const btn = document.getElementById('lang-toggle');
-    function applyLang(lang){
-      document.querySelectorAll('[data-th]').forEach(el => {
-        const val = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-th');
-        if (val === null) return;
-        if (el.hasAttribute('data-i18n-placeholder')) el.setAttribute('placeholder', val);
-        else el.innerHTML = val;
-      });
-      document.documentElement.lang = lang === 'en' ? 'en' : 'th';
-      if (btn) btn.textContent = lang === 'en' ? 'TH' : 'EN';
-      try{ localStorage.setItem('lang', lang); } catch(e){}
-    }
-    let lang = 'th';
-    try{ lang = localStorage.getItem('lang') || 'th'; } catch(e){}
-    applyLang(lang);
-    if (btn){
-      btn.addEventListener('click', () => {
-        lang = (btn.textContent === 'EN') ? 'en' : 'th';
-        applyLang(lang);
-      });
-    }
-  })();
-
-  // Mobile hamburger nav
-  (function(){
-    const toggle = document.getElementById('nav-toggle');
-    const nav = document.getElementById('site-nav');
-    if (!toggle || !nav) return;
-    toggle.addEventListener('click', () => {
-      const isOpen = nav.classList.toggle('open');
-      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
-    nav.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        nav.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
-      });
-    });
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 820){
-        nav.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
-      }
-    });
-  })();
-
-  // Logout (clears the session flag so the login gate shows again)
-  (function(){
-    const btn = document.getElementById('logout-btn');
-    if (!btn) return;
-    btn.addEventListener('click', () => {
-      try{ localStorage.removeItem('authed'); } catch(e){}
-      document.documentElement.classList.remove('authed');
     });
   })();
 
