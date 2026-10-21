@@ -14,7 +14,8 @@
       if (saved === 'dark' || (!saved && prefersDark)){
         document.documentElement.setAttribute('data-theme', 'dark');
       }
-      if (localStorage.getItem('authed') === 'true'){
+      try{ localStorage.removeItem('authed'); }catch(e){}   // old persistent login (before: stayed logged in forever)
+      if (sessionStorage.getItem('authed') === 'true'){
         document.documentElement.classList.add('authed');
       }
     } catch(e){ /* ignore */ }
@@ -663,7 +664,7 @@
       const user = document.getElementById('login-user').value.trim();
       const pass = document.getElementById('login-pass').value;
       if (user === 'admin' && pass === 'admin'){
-        try{ localStorage.setItem('authed', 'true'); } catch(err){}
+        try{ sessionStorage.setItem('authed', 'true'); } catch(err){}
         document.documentElement.classList.add('authed');
         if (errorEl) errorEl.style.display = 'none';
       } else {

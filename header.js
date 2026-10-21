@@ -198,7 +198,7 @@
     var btn = document.getElementById('logout-btn');
     if (!btn) return;
     btn.addEventListener('click', function () {
-      try { localStorage.removeItem('authed'); } catch (e) {}
+      try { sessionStorage.removeItem('authed'); localStorage.removeItem('authed'); } catch (e) {}
       document.documentElement.classList.remove('authed');
       // pages without a login gate -> go back to index.html where the gate lives
       if (!document.getElementById('login-gate')) location.href = 'index.html';
