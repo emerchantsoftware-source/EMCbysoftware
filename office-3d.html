@@ -22,6 +22,9 @@ canvas{display:block;touch-action:none;cursor:grab}
 .pill.on{background:var(--green);color:var(--ink);border-color:var(--green)}
 @media(max-width:700px){.btns{width:100%;grid-template-columns:repeat(3,1fr)}.pill{padding:0 6px;font-size:12px;gap:5px}}
 
+#views{position:fixed;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:min(62vw,560px)}
+#views .pill{height:34px;padding:0 12px;font-size:12px}
+@media(max-width:700px){#views{left:14px;right:14px;max-width:none;bottom:calc(64px + env(safe-area-inset-bottom,0px));justify-content:flex-start}}
 #legend{position:fixed;left:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;font:12px 'IBM Plex Mono',monospace;flex-wrap:wrap;background:rgba(14,33,26,.8);padding:8px 12px;border-radius:12px;border:1px solid rgba(244,247,242,.14)}
 #legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
 .tag{position:fixed;left:0;top:0;pointer-events:none;font:600 11px 'IBM Plex Sans Thai',sans-serif;background:rgba(14,33,26,.85);border:1px solid rgba(244,247,242,.2);padding:1px 8px 1px 6px;border-radius:999px;white-space:nowrap;display:flex;align-items:center;gap:5px;transform:translate(-50%,-100%)}
@@ -39,6 +42,7 @@ canvas{display:block;touch-action:none;cursor:grab}
   <button id="bReset" class="pill" type="button"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg><span>รีเซ็ตที่นั่ง</span></button>
  </div>
 </div>
+<div id="views"><button class="pill" type="button" data-v="all">ภาพรวม</button><button class="pill" type="button" data-v="top">มุมบน</button><button class="pill" type="button" data-v="eye">ระดับสายตา</button><button class="pill" type="button" data-v="door">ฝั่งกระจก</button><button id="bSnd" class="pill" type="button">🔊 เสียง</button></div>
 <div id="legend"></div><div id="tip"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="office-3d.js"></script>
