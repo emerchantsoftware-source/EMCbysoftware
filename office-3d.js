@@ -108,12 +108,14 @@ tile.wrapS=tile.wrapT=THREE.RepeatWrapping;tile.repeat.set(4,8);
 add(S,box(X1-X0+.4,.2,WL),mat(0xffffff,{map:tile}),0,-.1,ZC);
 const CUT=[];   // ผนังทึบ: จางลงเมื่อกล้องอยู่นอกห้อง จะได้ยังมองเข้ามาได้
 const cutMat=(c,test)=>{const m=mat(c,{transparent:true});m.userData.test=test;CUT.push(m);return m};
-const WM=cutMat(0x5b5f5e,()=>C.position.z<ZB-.3),WR=cutMat(0x4c504f,()=>C.position.x>X1+.3),WLF=cutMat(0x555a59,()=>C.position.x<X0-.3),FR=mat(0x1b1d1c);
+const WM=cutMat(0x5b5f5e,()=>C.position.z<ZB-.3),WR=cutMat(0x4c504f,()=>C.position.x>X1+.3),FR=mat(0x1b1d1c);
 add(S,box(X1-X0+.4,3.4,.2),WM,0,1.7,ZB);
 const seg=(x,m,a,b)=>add(S,box(.2,3.4,b-a),m,x,1.7,(a+b)/2);
-seg(X1,WR,ZB,ZF);seg(X0,WLF,ZB,D0);seg(X0,WLF,D1,ZF);add(S,box(.2,.2,D1-D0),WLF,X0,3.3,DZ);const GL=mat(0xa8e0d8,{transparent:true,opacity:.16,roughness:.05,metalness:.2,depthWrite:false,side:THREE.DoubleSide}),GF=mat(0x2b3331,{roughness:.5}),FZ=mat(0xffffff,{transparent:true,opacity:.35,depthWrite:false});
+seg(X1,WR,ZB,ZF);const GL=mat(0xa8e0d8,{transparent:true,opacity:.16,roughness:.05,metalness:.2,depthWrite:false,side:THREE.DoubleSide}),GF=mat(0x2b3331,{roughness:.5}),FZ=mat(0xffffff,{transparent:true,opacity:.35,depthWrite:false});
 const gl=(w,h,d,x,y,z,m)=>{const o=add(S,box(w,h,d),m,x,y,z);o.castShadow=o.receiveShadow=false;return o};
-/* ผนังซ้ายเป็นผนังทึบแล้ว (เหลือช่องประตู) */
+[[ZB,D0],[D1,ZF]].forEach(([a,b])=>{const L=b-a,c=(a+b)/2,n=Math.max(1,Math.round(L/2.2));
+ gl(.06,3.2,L,X0,1.7,c,GL);gl(.1,.07,L,X0,3.35,c,GF);gl(.1,.07,L,X0,.04,c,GF);gl(.08,.3,L,X0,1.25,c,FZ);
+ for(let i=0;i<=n;i++)gl(.1,3.4,.06,X0,1.7,a+L*i/n,GF)});
 {const W=X1-X0+.2;gl(W,3.2,.06,0,1.7,ZF,GL);gl(W,.07,.1,0,3.35,ZF,GF);gl(W,.07,.1,0,.04,ZF,GF);gl(W,.3,.08,0,1.25,ZF,FZ);
  for(let i=0;i<=4;i++)gl(.06,3.4,.1,X0-.1+W*i/4,1.7,ZF,GF)}
 [D0,D1].forEach(z=>add(S,box(.25,3.2,.12),FR,X0,1.6,z));add(S,box(.25,.2,D1-D0+.12),FR,X0,3.1,(D0+D1)/2);add(S,box(.1,.1,D1-D0),new THREE.MeshBasicMaterial({color:0x2FBE73}),X0,2.9,(D0+D1)/2);
@@ -401,23 +403,77 @@ const BEH={
 
 /* ---------- camera / input ---------- */
 let az=.3,pol=.9,dist_=22,tAz=az,tPol=pol,tD=dist_;const tgt=new THREE.Vector3(0,.8,-1.5),tTgt=tgt.clone();
-function cam(dt){const k=1-Math.exp(-dt*8);az+=(tAz-az)*k;pol+=(tPol-pol)*k;dist_+=(tD-dist_)*k;tgt.lerp(tTgt,k);C.position.set(tgt.x+dist_*Math.sin(pol)*Math.sin(az),tgt.y+dist_*Math.cos(pol),tgt.z+dist_*Math.sin(pol)*Math.cos(az));C.lookAt(tgt)}
+function cam(dt){const k=1-Math.exp(-dt*8);az+=(tAz-az)*k;pol+=(tPol-pol)*k;dist_+=(tD-dist_)*k;tgt.lerp(tTgt,k);C.position.set(tgt.x+dist_*Math.sin(pol)*Math.sin(az),tgt.y+dist_*Math.cos(pol),tgt.z+dist_*Math.sin(pol)*Math.cos(az));C.lookAt(tgt);fpsBlend(dt)}
 function size(){R.setSize(innerWidth,innerHeight);C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix();if(innerWidth<700){tD=Math.max(tD,30);dist_=Math.max(dist_,30)}}
 addEventListener('resize',size);size();
 const rc=new THREE.Raycaster(),mv=new THREE.Vector2(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0),hit=new THREE.Vector3();
 let drag=null,off=new THREE.Vector3(),orb=null;const cv=R.domElement,tip=document.getElementById('tip');
 function ray(e){mv.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);rc.setFromCamera(mv,C)}
 function pickSeat(e){ray(e);const h=rc.intersectObjects(seats,true).find(x=>x.object.userData.seat&&x.object.visible!==false&&(x.object.parent?x.object.parent.visible!==false:true));return h&&h.object.userData.seat}
-cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);const s=pickSeat(e);
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);const s=fps.on?null:pickSeat(e);
  if(s){cancelAct(s.userData.p);drag=s;s.userData.drag=1;ray(e);rc.ray.intersectPlane(plane,hit);off.copy(s.position).sub(hit);cv.style.cursor='grabbing';tip.style.display='none'}
  else{orb={x:e.clientX,y:e.clientY}}});
 cv.addEventListener('pointermove',e=>{
  if(drag){ray(e);if(rc.ray.intersectPlane(plane,hit)){const x=hit.x+off.x,z=hit.z+off.z;drag.userData.tx=clampN(x,-4.4,4.4);drag.userData.tz=clampN(z,-10.2,7)}}
- else if(orb){tAz-=(e.clientX-orb.x)*.006;tPol=clampN(tPol-(e.clientY-orb.y)*.005,.35,1.45);orb={x:e.clientX,y:e.clientY}}
- else if(e.pointerType==='mouse'){const s=pickSeat(e);cv.style.cursor=s?'grab':'default';if(s&&s.userData.p.d){const d=s.userData.p.d;tip.innerHTML=`<b>${d[2]}</b>${d[1]} · ${d[3]} · ${d[4]}`;tip.style.display='block';tip.style.left=e.clientX+14+'px';tip.style.top=e.clientY+14+'px'}else tip.style.display='none'}});
+ else if(orb){if(fps.on){fps.tYaw-=(e.clientX-orb.x)*.0045;fps.tPitch=clampN(fps.tPitch-(e.clientY-orb.y)*.0045,-1.25,1.25)}else{tAz-=(e.clientX-orb.x)*.006;tPol=clampN(tPol-(e.clientY-orb.y)*.005,.35,1.45)}orb={x:e.clientX,y:e.clientY}}
+ else if(e.pointerType==='mouse'&&!fps.on){const s=pickSeat(e);cv.style.cursor=s?'grab':'default';if(s&&s.userData.p.d){const d=s.userData.p.d;tip.innerHTML=`<b>${d[2]}</b>${d[1]} · ${d[3]} · ${d[4]}`;tip.style.display='block';tip.style.left=e.clientX+14+'px';tip.style.top=e.clientY+14+'px'}else tip.style.display='none'}});
 const up=()=>{if(drag){snap(drag);drag.userData.drag=0;drag=null;save()}orb=null;cv.style.cursor='grab'};
 cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
-cv.addEventListener('wheel',e=>{e.preventDefault();tD=clampN(tD*Math.exp(clampN(e.deltaY,-120,120)*.0009),8,38)},{passive:false});
+cv.addEventListener('wheel',e=>{e.preventDefault();if(fps.on)return;tD=clampN(tD*Math.exp(clampN(e.deltaY,-120,120)*.0009),8,38)},{passive:false});
+
+
+/* ---------- มุมมอง FPS (บุคคลที่หนึ่ง) ---------- */
+const EYE=1.6,COARSE=matchMedia('(pointer:coarse)').matches;
+const fps={on:false,x:0,z:6.2,yaw:0,pitch:0,tYaw:0,tPitch:0,vx:0,vz:0,ph:0,bob:0,blend:0,keys:{},joy:{x:0,y:0}};
+const FBLK=SLOTS.map(([x,z])=>[x-.85,x+.85,z-.5,z+1.2]),FRAD=.28;     // โต๊ะ+เก้าอี้+คนนั่ง
+const fHit=(x,z)=>x<X0+.35||x>X1-.35||z<ZB+.35||z>ZF-.35||FBLK.some(b=>{const dx=x-clampN(x,b[0],b[1]),dz=z-clampN(z,b[2],b[3]);return dx*dx+dz*dz<FRAD*FRAD});
+const K=k=>fps.keys[k]?1:0;
+const _po=new THREE.Vector3(),_pf=new THREE.Vector3(),_qo=new THREE.Quaternion(),_qf=new THREE.Quaternion(),_ef=new THREE.Euler(0,0,0,'YXZ');
+function fpsUpdate(dt){
+ const kl=1-Math.exp(-dt*14);fps.yaw+=(fps.tYaw-fps.yaw)*kl;fps.pitch+=(fps.tPitch-fps.pitch)*kl;
+ let sp=0;
+ if(fps.on){
+  fps.tYaw+=(K('arrowleft')-K('arrowright'))*dt*1.8;
+  const f=K('w')+K('arrowup')-K('s')-K('arrowdown')-fps.joy.y,r=K('d')-K('a')+fps.joy.x,l=Math.hypot(f,r),sc=l>1?1/l:1,speed=K('shift')?3.6:2.1;
+  const sn=Math.sin(fps.yaw),cs=Math.cos(fps.yaw),wx=(-sn*f+cs*r)*sc*speed,wz=(-cs*f-sn*r)*sc*speed,kv=1-Math.exp(-dt*9);
+  fps.vx+=(wx-fps.vx)*kv;fps.vz+=(wz-fps.vz)*kv;
+  const nx=fps.x+fps.vx*dt,nz=fps.z+fps.vz*dt;
+  if(!fHit(nx,fps.z))fps.x=nx;else fps.vx=0;
+  if(!fHit(fps.x,nz))fps.z=nz;else fps.vz=0;
+  sp=Math.hypot(fps.vx,fps.vz);
+ }
+ fps.ph+=sp*dt*3.2;fps.bob=Math.sin(fps.ph)*.022*Math.min(1,sp/1.5);
+}
+function fpsBlend(dt){            // เลื่อนกล้องเข้า/ออกจากมุม FPS แบบนุ่ม
+ const tg=fps.on?1:0;fps.blend+=(tg-fps.blend)*(1-Math.exp(-dt*4.5));if(Math.abs(tg-fps.blend)<.003)fps.blend=tg;
+ const b=fps.blend,e=b*b*(3-2*b);
+ if(b>0){_po.copy(C.position);_qo.copy(C.quaternion);_ef.set(fps.pitch,fps.yaw,0);_qf.setFromEuler(_ef);_pf.set(fps.x,EYE+fps.bob,fps.z);
+  C.position.lerpVectors(_po,_pf,e);C.quaternion.copy(_qo).slerp(_qf,e)}
+ const fv=45+27*e;if(Math.abs(C.fov-fv)>.01){C.fov=fv;C.updateProjectionMatrix()}
+}
+const hintEl=document.querySelector('.sub'),hint0=hintEl.textContent,bFps=document.getElementById('bFps');
+const joy=document.createElement('div');joy.style.cssText='position:fixed;left:22px;bottom:calc(150px + env(safe-area-inset-bottom,0px));width:110px;height:110px;border-radius:50%;background:rgba(21,51,42,.55);border:1px solid rgba(244,247,242,.25);display:none;touch-action:none;z-index:4';
+const knob=document.createElement('div');knob.style.cssText='position:absolute;left:35px;top:35px;width:40px;height:40px;border-radius:50%;background:rgba(47,190,115,.85);pointer-events:none';
+joy.appendChild(knob);document.body.appendChild(joy);
+let jid=null;
+const jset=e=>{const r=joy.getBoundingClientRect();let dx=(e.clientX-r.left-r.width/2)/(r.width/2),dy=(e.clientY-r.top-r.height/2)/(r.height/2);const l=Math.hypot(dx,dy);if(l>1){dx/=l;dy/=l}fps.joy.x=dx;fps.joy.y=dy;knob.style.transform=`translate(${dx*35}px,${dy*35}px)`};
+const jend=e=>{if(e.pointerId!==jid)return;jid=null;fps.joy.x=fps.joy.y=0;knob.style.transform='translate(0,0)'};
+joy.addEventListener('pointerdown',e=>{jid=e.pointerId;joy.setPointerCapture(e.pointerId);jset(e);e.stopPropagation()});
+joy.addEventListener('pointermove',e=>{if(e.pointerId===jid)jset(e)});
+joy.addEventListener('pointerup',jend);joy.addEventListener('pointercancel',jend);
+function fpsEnter(){
+ if(fps.on)return;fps.on=true;fps.x=0;fps.z=6.2;fps.yaw=fps.tYaw=0;fps.pitch=fps.tPitch=-.06;fps.vx=fps.vz=0;
+ bFps.classList.add('on');tip.style.display='none';joy.style.display=COARSE?'block':'none';
+ hintEl.textContent=COARSE?'มุม FPS: จอยสติ๊กซ้ายล่างเพื่อเดิน · ลากหน้าจอเพื่อมองรอบๆ':'มุม FPS: W A S D เดิน · ลากเมาส์เพื่อมอง · ←/→ หมุนตัว · Shift วิ่ง · Esc ออก';
+}
+function fpsExit(){
+ if(!fps.on)return;fps.on=false;fps.vx=fps.vz=0;fps.joy.x=fps.joy.y=0;knob.style.transform='translate(0,0)';
+ bFps.classList.remove('on');joy.style.display='none';hintEl.textContent=hint0;
+}
+bFps.onclick=()=>fps.on?fpsExit():fpsEnter();
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();fps.keys[k]=1;if(fps.on&&['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k))e.preventDefault();if(k==='escape')fpsExit()});
+addEventListener('keyup',e=>{fps.keys[e.key.toLowerCase()]=0});
+addEventListener('blur',()=>{fps.keys={}});
 
 /* ---------- per-person update ---------- */
 const DOWN=new THREE.Vector3(0,-1,0),_d=new THREE.Vector3(),vp=new THREE.Vector3(),_q=new THREE.Quaternion(),_e=new THREE.Euler();
@@ -577,32 +633,57 @@ function drift(){if(LIVE)return;const x=TK[pick(Object.keys(TK))];if(Math.random
  resp=clampN(resp+rnd(-.4,.4),1.5,9);HIST.push(Object.values(TK).reduce((s,v)=>s+v.o,0));HIST.shift()}
 const DASH=[];
 function dashboard(x,y,z,ry,w,h,kind,title){
- const cv=document.createElement('canvas');cv.width=512;cv.height=288;const tx=new THREE.CanvasTexture(cv);
+ const cv=document.createElement('canvas');const pt=h>w;cv.width=pt?288:512;cv.height=pt?512:288;const tx=new THREE.CanvasTexture(cv);
  const gr=new THREE.Group();gr.position.set(x,y,z);gr.rotation.y=ry;S.add(gr);add(gr,box(w+.1,h+.1,.05),FR,0,0,0);
  const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tx}));m.position.z=.03;gr.add(m);
- DASH.push({g:cv.getContext('2d'),tx,kind,title});
+ DASH.push({g:cv.getContext('2d'),tx,kind,title,W:cv.width,H:cv.height});
 }
 dashboard(3.55,1.9,ZB+.125,0,2.0,1.15,'tickets','Tickets วันนี้');            // ผนังหลังห้อง 1 เครื่อง
-dashboard(X1-.125,2.15,-7.4,-Math.PI/2,2.2,1.25,'sla','SLA & Response');      // ผนังขวา 2 เครื่อง
-dashboard(X1-.125,2.15,-3.6,-Math.PI/2,2.2,1.25,'team','สถานะทีม');
+// ผนังขวา: คู่แนวตั้งข้าง Teen (z≈-5.6) · คู่แนวนอนระหว่าง Bas กับ Ying (z≈4.6)
+dashboard(X1-.125,2.2,-6.115,-Math.PI/2,.95,1.69,'sla','SLA วันนี้');
+dashboard(X1-.125,2.2,-5.085,-Math.PI/2,.95,1.69,'team','สถานะทีม');
+dashboard(X1-.125,2.2,3.81,-Math.PI/2,1.5,.85,'trend','แนวโน้ม Ticket ค้าง');
+dashboard(X1-.125,2.2,5.39,-Math.PI/2,1.5,.85,'open','ค้างแยกตามทีม');
 function drawDash(D){
- const g=D.g,tot=Object.values(TK).reduce((a,v)=>({o:a.o+v.o,d:a.d+v.d}),{o:0,d:0}),sla=Math.round(tot.d/Math.max(1,tot.o+tot.d)*100),F="'IBM Plex Sans Thai',sans-serif";
+ const g=D.g,W=D.W,H=D.H,PT=W<H,tot=Object.values(TK).reduce((a,v)=>({o:a.o+v.o,d:a.d+v.d}),{o:0,d:0}),sla=Math.round(tot.d/Math.max(1,tot.o+tot.d)*100),F="'IBM Plex Sans Thai',sans-serif",scol=sla>=85?'#2FBE73':'#F5B83D';
  const T=(s,x,y,sz,c,al)=>{g.font=`600 ${sz}px ${F}`;g.fillStyle=c;g.textAlign=al||'left';g.textBaseline='middle';g.fillText(s,x,y)};
- g.fillStyle='#0E211A';g.fillRect(0,0,512,288);g.fillStyle='#15332A';g.fillRect(0,0,512,44);g.fillStyle='#2FBE73';g.fillRect(0,0,8,44);
- T(D.title,22,23,22,'#F4F7F2');T(clockStr(),496,23,18,'#9AD84B','right');
+ const line=(x0,x1,yb,hh)=>{const lo=Math.min(...HIST),hi=Math.max(...HIST)+1;g.strokeStyle='#2FBE73';g.lineWidth=3;g.lineJoin='round';g.beginPath();HIST.forEach((v,i)=>{const x=x0+i*(x1-x0)/(HIST.length-1),y=yb-(v-lo)/(hi-lo)*hh;i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke()};
+ g.fillStyle='#0E211A';g.fillRect(0,0,W,H);g.fillStyle='#15332A';g.fillRect(0,0,W,44);g.fillStyle='#2FBE73';g.fillRect(0,0,8,44);
+ T(D.title,22,23,22,'#F4F7F2');T(clockStr(),W-16,23,18,'#9AD84B','right');
  if(D.kind==='tickets'){
   Object.entries(TK).forEach(([k,v],i)=>{const y=62+i*50,f=v.d/Math.max(1,v.d+v.o);
-   T(k,22,y+12,20,TEAM[k]);g.fillStyle='#1f3d33';g.fillRect(150,y+2,240,20);g.fillStyle=TEAM[k];g.fillRect(150,y+2,240*f,20);T(v.d+' / '+v.o,496,y+12,20,'#F4F7F2','right')});
-  T('รวม ปิด '+tot.d+' · ค้าง '+tot.o,22,268,16,'#F4F7F2');T('ปิดแล้ว / ค้าง',496,268,14,'#93A398','right');
+   T(k,22,y+12,20,TEAM[k]);g.fillStyle='#1f3d33';g.fillRect(150,y+2,240,20);g.fillStyle=TEAM[k];g.fillRect(150,y+2,240*f,20);T(v.d+' / '+v.o,W-16,y+12,20,'#F4F7F2','right')});
+  T('รวม ปิด '+tot.d+' · ค้าง '+tot.o,22,268,16,'#F4F7F2');T('ปิดแล้ว / ค้าง',W-16,268,14,'#93A398','right');
  }else if(D.kind==='sla'){
-  T('SLA วันนี้',256,70,18,'#93A398','center');T(sla+'%',256,120,84,sla>=85?'#2FBE73':'#F5B83D','center');
-  T('ตอบกลับเฉลี่ย '+resp.toFixed(1)+' นาที',256,176,20,'#F4F7F2','center');
-  const lo=Math.min(...HIST),hi=Math.max(...HIST)+1;g.strokeStyle='#2FBE73';g.lineWidth=3;g.beginPath();
-  HIST.forEach((v,i)=>{const x=30+i*(452/(HIST.length-1)),y=262-(v-lo)/(hi-lo)*52;i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke();T('Ticket ค้างล่าสุด',22,278,12,'#93A398');
+  if(PT){
+   T('SLA วันนี้',W/2,84,18,'#93A398','center');T(sla+'%',W/2,170,88,scol,'center');
+   T('ตอบกลับเฉลี่ย',W/2,248,18,'#F4F7F2','center');T(resp.toFixed(1)+' นาที',W/2,282,28,'#F4F7F2','center');
+   line(22,W-22,462,120);T('Ticket ค้างล่าสุด',22,490,13,'#93A398');
+  }else{
+   T('SLA วันนี้',W/2,70,18,'#93A398','center');T(sla+'%',W/2,120,84,scol,'center');
+   T('ตอบกลับเฉลี่ย '+resp.toFixed(1)+' นาที',W/2,176,20,'#F4F7F2','center');
+   line(30,W-30,262,52);T('Ticket ค้างล่าสุด',22,278,12,'#93A398');
+  }
+ }else if(D.kind==='trend'){
+  g.strokeStyle='#1f3d33';g.lineWidth=1;for(let k=0;k<4;k++){const y=70+k*50;g.beginPath();g.moveTo(24,y);g.lineTo(W-24,y);g.stroke()}
+  line(24,W-24,220,150);
+  T('Ticket ค้างล่าสุด '+Math.round(HIST[HIST.length-1]),22,262,16,'#F4F7F2');
+  T('สูงสุด '+Math.round(Math.max(...HIST))+' · ต่ำสุด '+Math.round(Math.min(...HIST)),W-22,262,14,'#93A398','right');
+ }else if(D.kind==='open'){
+  Object.entries(TK).forEach(([k,v],i)=>{const x=22+i*118;g.fillStyle='#15332A';g.fillRect(x,64,106,150);
+   T(k,x+53,86,16,TEAM[k],'center');T(String(v.o),x+53,138,58,'#F4F7F2','center');T('ค้าง',x+53,184,14,'#93A398','center');T('ปิด '+v.d,x+53,203,13,TEAM[k],'center')});
+  T('Ticket ค้างแยกตามทีม รวม '+tot.o,22,258,16,'#F4F7F2');
  }else{
   const t=now(),c={w:0,c:0,a:0,b:0};P.forEach(p=>{if(p.mode==='act'&&!p.sit)c.a++;else if(p.mode==='sleep'||p.mode==='music')c.b++;else if(t<p.callUntil)c.c++;else c.w++});
-  [['ทำงาน',c.w,'#2FBE73'],['สายเข้า',c.c,'#5BB8F5'],['ไม่อยู่โต๊ะ',c.a,'#F5B83D'],['พัก',c.b,'#93A398']].forEach(([n,v,col],i)=>{const x=22+i*118;g.fillStyle='#15332A';g.fillRect(x,60,106,86);T(v,x+53,92,40,col,'center');T(n,x+53,130,15,'#F4F7F2','center')});
-  P.forEach((p,i)=>{const x=36+(i%9)*52,y=185+((i/9)|0)*52,away=p.mode==='act'&&!p.sit;g.beginPath();g.arc(x,y,16,0,7);g.fillStyle=away?'#2a3a34':TEAM[p.team];g.fill();T(p.nick.slice(0,3),x,y+1,11,away?'#6c7a72':'#0E211A','center')});
+  const cells=[['ทำงาน',c.w,'#2FBE73'],['สายเข้า',c.c,'#5BB8F5'],['ไม่อยู่โต๊ะ',c.a,'#F5B83D'],['พัก',c.b,'#93A398']];
+  const dot=(p,x,y)=>{const away=p.mode==='act'&&!p.sit;g.beginPath();g.arc(x,y,16,0,7);g.fillStyle=away?'#2a3a34':TEAM[p.team];g.fill();T(p.nick.slice(0,3),x,y+1,11,away?'#6c7a72':'#0E211A','center')};
+  if(PT){
+   cells.forEach(([n,v,col],i)=>{const x=22+(i%2)*133,y=62+((i/2)|0)*104;g.fillStyle='#15332A';g.fillRect(x,y,111,92);T(v,x+55,y+36,40,col,'center');T(n,x+55,y+72,15,'#F4F7F2','center')});
+   P.forEach((p,i)=>dot(p,36+(i%5)*54,290+((i/5)|0)*56));
+  }else{
+   cells.forEach(([n,v,col],i)=>{const x=22+i*118;g.fillStyle='#15332A';g.fillRect(x,60,106,86);T(v,x+53,92,40,col,'center');T(n,x+53,130,15,'#F4F7F2','center')});
+   P.forEach((p,i)=>dot(p,36+(i%9)*52,185+((i/9)|0)*52));
+  }
  }
 }
 
@@ -623,7 +704,7 @@ function sfxRing(){if(!snd.on||!snd.ctx)return;const c=snd.ctx,t=c.currentTime;
 /* ---------- มุมกล้องสำเร็จรูป ---------- */
 const VIEWS={all:{az:.3,pol:.9,d:()=>innerWidth<700?30:22,t:[0,.8,-1.5]},top:{az:0,pol:.36,d:26,t:[0,0,-1.5]},
  eye:{az:.25,pol:1.4,d:7.5,t:[0,1.1,-1]},door:{az:-1.25,pol:1.05,d:20,t:[0,.8,-1.5]}};
-function goView(k){const v=VIEWS[k];tAz=az+wrap(v.az-az);tPol=v.pol;tD=typeof v.d==='function'?v.d():v.d;tTgt.set(...v.t)}
+function goView(k){if(fps.on)fpsExit();const v=VIEWS[k];tAz=az+wrap(v.az-az);tPol=v.pol;tD=typeof v.d==='function'?v.d():v.d;tTgt.set(...v.t)}
 document.querySelectorAll('#views [data-v]').forEach(b=>b.onclick=()=>goView(b.dataset.v));
 document.getElementById('bSnd').onclick=e=>sndToggle(e.currentTarget);
 
@@ -641,9 +722,9 @@ function extras(t){
 let next=4,last=0;
 function loop(ms){requestAnimationFrame(loop);const t=ms/1000,dt=Math.min(.05,Math.max(0,t-last));last=t;
  if(chatOn&&t>next){next=t+5+Math.random()*4;convo()}
+ fpsUpdate(dt);cam(dt);C.updateMatrixWorld();
+ {const k=1-Math.exp(-dt*6);CUT.forEach(m=>{const tg=m.userData.test()?.1:1;m.opacity+=(tg-m.opacity)*k;m.depthWrite=m.opacity>.95})}
  P.forEach(p=>tickP(p,t,dt));
  extras(t);
- cam(dt);
- {const k=1-Math.exp(-dt*6);CUT.forEach(m=>{const tg=m.userData.test()?.1:1;m.opacity+=(tg-m.opacity)*k;m.depthWrite=m.opacity>.95})}
  R.render(S,C)}
 requestAnimationFrame(loop);
