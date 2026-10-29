@@ -97,6 +97,10 @@ Object.assign(sun.shadow.camera,{left:-18,right:18,top:18,bottom:-18,near:1,far:
 
 const mat=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.7},o));
 const box=(w,h,d)=>new THREE.BoxGeometry(w,h,d);
+const SM=true;   // true = ตัวละครโค้งมน (smooth) · false = แบบกล่องเดิม
+const cyl=(rt,rb,h,s=14)=>new THREE.CylinderGeometry(rt,rb,h,s);
+const sph=(r,w=14,h=10)=>new THREE.SphereGeometry(r,w,h);
+const TORSO=new THREE.LatheGeometry([[0,-.25],[.14,-.25],[.165,-.15],[.17,0],[.19,.15],[.205,.22],[.17,.27],[.08,.29],[0,.29]].map(a=>new THREE.Vector2(a[0],a[1])),20);
 function add(par,geo,m,x,y,z,seat){const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.castShadow=o.receiveShadow=true;if(seat)o.userData.seat=seat;par.add(o);return o}
 function canvasTex(w,h,fn){const c=document.createElement('canvas');c.width=w;c.height=h;fn(c.getContext('2d'),w,h);return new THREE.CanvasTexture(c)}
 
@@ -159,16 +163,36 @@ function person(d,i){
  // เก้าอี้ (แยกกลุ่มเพื่อให้เลื่อนออกเวลาลุก)
  const chair=new THREE.Group();g.add(chair);p.chair=chair;
  const Ch=(geo,m,x,y,z)=>add(chair,geo,m,x,y,z,g);
- Ch(box(.5,.06,.5),M.black,0,.48,.85);Ch(box(.5,.55,.06),M.black,0,.82,1.12);Ch(new THREE.CylinderGeometry(.04,.04,.4,8),M.black,0,.25,.85);
+ if(SM){const cm=mat(0x161818,{side:THREE.DoubleSide});
+  Ch(cyl(.27,.25,.07,24),M.black,0,.48,.85);
+  Ch(new THREE.CylinderGeometry(.27,.27,.46,20,1,true,-Math.PI*.4,Math.PI*.8),cm,0,.8,.85);
+  Ch(cyl(.04,.04,.4,10),M.black,0,.25,.85);Ch(cyl(.24,.24,.03,20),M.black,0,.03,.85)}
+ else{Ch(box(.5,.06,.5),M.black,0,.48,.85);Ch(box(.5,.55,.06),M.black,0,.82,1.12);Ch(new THREE.CylinderGeometry(.04,.04,.4,8),M.black,0,.25,.85)}
  // ตัวคน (กลุ่ม bd ย้าย/หมุนได้อิสระ)
  const bd=new THREE.Group();bd.position.set(0,0,.8);bd.rotation.order='YXZ';g.add(bd);p.bd=bd;
  const B=(geo,m,x,y,z)=>add(bd,geo,m,x,y,z,g);
- p.torso=B(box(.42,.5,.24),M.shirt,0,.8,0);
+ if(SM){
+  p.torso=B(TORSO,M.shirt,0,.8,0);p.torso.scale.z=.7;
+  B(sph(.2),M.pants,0,.6,0).scale.set(1,.55,.72);
+  B(cyl(.055,.06,.12,12),skin,0,1.08,0);
+ }else p.torso=B(box(.42,.5,.24),M.shirt,0,.8,0);
  const ls=new THREE.Group();bd.add(ls);p.legsSit=ls;
- [-1,1].forEach(s=>{add(ls,box(.16,.14,.5),M.pants,s*.1,.6,-.25,g);add(ls,box(.14,.5,.14),M.pants,s*.1,.3,-.5,g)});
+ [-1,1].forEach(s=>{
+  if(SM){
+   const th=add(ls,cyl(.085,.075,.5),M.pants,s*.1,.6,-.25,g);th.rotation.x=Math.PI/2;
+   add(ls,sph(.077),M.pants,s*.1,.6,-.5,g);
+   add(ls,cyl(.07,.055,.5),M.pants,s*.1,.3,-.5,g);
+   add(ls,sph(.07),M.black,s*.1,.05,-.55,g).scale.set(1,.55,1.7);
+  }else{add(ls,box(.16,.14,.5),M.pants,s*.1,.6,-.25,g);add(ls,box(.14,.5,.14),M.pants,s*.1,.3,-.5,g)}});
  const lt=new THREE.Group();lt.visible=false;bd.add(lt);p.legsStand=lt;
- p.legPv=[-1,1].map(s=>{const pv=new THREE.Group();pv.position.set(s*.1,.58,0);add(pv,box(.14,.58,.14),M.pants,0,-.29,0,g);lt.add(pv);return pv});
- p.arms=[-1,1].map(s=>{const pv=new THREE.Group();pv.position.set(s*.27,1.02,0);add(pv,box(.09,.55,.09),M.shirt,0,-.275,0,g);add(pv,new THREE.SphereGeometry(.05,8,6),skin,0,-.56,0,g);bd.add(pv);return pv});
+ p.legPv=[-1,1].map(s=>{const pv=new THREE.Group();pv.position.set(s*.1,.58,0);
+  if(SM){add(pv,cyl(.085,.058,.58),M.pants,0,-.29,0,g);add(pv,sph(.06),M.pants,0,-.58,0,g);add(pv,sph(.07),M.black,0,-.56,-.05,g).scale.set(1,.55,1.7)}
+  else add(pv,box(.14,.58,.14),M.pants,0,-.29,0,g);
+  lt.add(pv);return pv});
+ p.arms=[-1,1].map(s=>{const pv=new THREE.Group();pv.position.set(s*.27,1.02,0);
+  if(SM){add(pv,sph(.062),M.shirt,0,0,0,g);add(pv,cyl(.058,.05,.3,12),M.shirt,0,-.15,0,g);add(pv,cyl(.045,.038,.27,12),skin,0,-.43,0,g);add(pv,sph(.054),skin,0,-.57,0,g)}
+  else{add(pv,box(.09,.55,.09),M.shirt,0,-.275,0,g);add(pv,new THREE.SphereGeometry(.05,8,6),skin,0,-.56,0,g)}
+  bd.add(pv);return pv});
  // ของในมือ (ถุงข้าว / แก้วน้ำ)
  const bag=new THREE.Group();bag.position.set(0,-.6,0);bag.visible=false;p.arms[1].add(bag);p.bagG=bag;
  add(bag,box(.16,.18,.08),mat(0xffffff),0,-.1,0,g);add(bag,new THREE.TorusGeometry(.045,.008,6,10),mat(0xd0d0d0),0,.02,0,g);
@@ -184,9 +208,10 @@ function person(d,i){
  p.led=new THREE.Mesh(new THREE.SphereGeometry(.016,6,6),new THREE.MeshBasicMaterial({color:0x333333}));p.led.position.set(.04,.05,.07);ph.add(p.led);
  p.hs=add(g,box(.05,.03,.17),M.black||mat(0x1b1f1e),.58,.83,-.2,g);
  const head=new THREE.Group();head.position.set(0,1.22,0);bd.add(head);
- add(head,new THREE.SphereGeometry(.17,16,14),skin,0,0,0,g);
+ const hd=add(head,new THREE.SphereGeometry(.17,SM?24:16,SM?20:14),skin,0,0,0,g);
+ if(SM){hd.scale.set(1,1.08,1);add(head,sph(.024,8,6),skin,0,-.01,-.168,g);[-1,1].forEach(s=>add(head,sph(.035,8,6),skin,s*.168,0,0,g).scale.set(.5,1,.8))}
  const hm=mat(hair);
- if(fem){add(head,box(.36,.36,.1),hm,0,-.06,.12,g);add(head,new THREE.SphereGeometry(.185,14,8,0,6.3,0,1.5),hm,0,.01,.01,g)}
+ if(fem){if(SM)add(head,sph(.19,16,12),hm,0,-.1,.1,g).scale.set(1,1.55,.62);else add(head,box(.36,.36,.1),hm,0,-.06,.12,g);add(head,new THREE.SphereGeometry(.185,14,8,0,6.3,0,1.5),hm,0,.01,.01,g)}
  else add(head,new THREE.SphereGeometry(.18,14,8,0,6.3,0,1.35),hm,0,.02,.02,g);
  const eye=mat(0x111111);[-1,1].forEach(s=>add(head,new THREE.SphereGeometry(.022,6,6),eye,s*.06,.02,-.155,g));
  const mouth=add(head,box(.06,.012,.01),mat(0x8a2f2f),0,-.07,-.165,g);
