@@ -1,11 +1,12 @@
 /* Lotus's Express — store directory interactions
-   Expects: global DATA = [[storeNo, storeName, node, hours, range], ...] */
+   Expects: global DATASETS = {express:[..], hyper:[..], talad:[..]}, rows = [storeNo, storeName, node, hours, range] */
 (function () {
   'use strict';
   const $ = id => document.getElementById(id);
   const PAGE = 100;
-  const state = { q: '', node: '', range: '', openOnly: false, sortCol: -1, sortDir: 1, shown: PAGE };
-  const nodes = [...new Set(DATA.map(r => r[2]).filter(Boolean))].sort();
+  const state = { type: 'express', q: '', node: '', range: '', openOnly: false, sortCol: -1, sortDir: 1, shown: PAGE };
+  let DATA = DATASETS.express;
+  let nodes = [];
 
   /* ---------- helpers ---------- */
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -79,9 +80,6 @@
   }
 
   /* ---------- setup ---------- */
-  $('node').insertAdjacentHTML('beforeend', nodes.map(n => `<option>${esc(n)}</option>`).join(''));
-
-  // count-up stats
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   function countUp(el, to) {
     if (reduce) { el.textContent = to.toLocaleString(); return; }
@@ -92,11 +90,26 @@
       if (p < 1) requestAnimationFrame(tick);
     })(t0);
   }
-  countUp($('s-total'), DATA.length);
-  countUp($('s-24'), DATA.filter(r => r[4] === '24 Hours').length);
-  countUp($('s-node'), nodes.length);
-  const openCount = DATA.filter(r => isOpen(r) === true).length;
-  $('s-open').dataset.v = openCount; countUp($('s-open'), openCount);
+  const TITLES = { express: 'Express', hyper: 'Hyper', talad: 'Talad' };
+  function refreshStats() {
+    countUp($('s-total'), DATA.length);
+    countUp($('s-24'), DATA.filter(r => r[4] === '24 Hours').length);
+    countUp($('s-node'), nodes.length);
+    countUp($('s-open'), DATA.filter(r => isOpen(r) === true).length);
+  }
+  function setType(type, first) {
+    state.type = type; DATA = DATASETS[type];
+    nodes = [...new Set(DATA.map(r => r[2]).filter(Boolean))].sort();
+    Object.assign(state, { q: '', node: '', range: '', openOnly: false, sortCol: -1, sortDir: 1 });
+    $('q').value = ''; $('range').value = '';
+    $('node').innerHTML = '<option value="">ทุก Node</option>' + nodes.map(n => `<option>${esc(n)}</option>`).join('');
+    $('listTitle').textContent = 'รายชื่อสาขา ' + TITLES[type];
+    document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.type === type));
+    if (!first) toast('สลับไปประเภท ' + TITLES[type]);
+    refreshStats(); update();
+  }
+  Object.keys(DATASETS).forEach(k => { $('tc-' + k).textContent = DATASETS[k].length.toLocaleString(); });
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { if (t.dataset.type !== state.type) setType(t.dataset.type); }));
 
   // inputs
   $('q').addEventListener('input', debounce(e => { state.q = e.target.value.trim().toLowerCase(); update(); }, 120));
@@ -142,7 +155,7 @@
     const csv = '\ufeff' + [['Store No.', 'Store Name', 'Node', 'Operating Hours', 'Range'], ...list].map(r => r.map(cell).join(',')).join('\r\n');
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
-    a.download = 'lotus-express-stores.csv'; document.body.appendChild(a); a.click(); a.remove();
+    a.download = 'lotus-' + state.type + '-stores.csv'; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     toast(`ส่งออก ${list.length.toLocaleString()} สาขาแล้ว`);
   });
@@ -162,5 +175,5 @@
     if (n !== nowMin) { nowMin = n; render(); countUp($('s-open'), DATA.filter(r => isOpen(r) === true).length); }
   }, 60000);
 
-  render();
+  setType('express', true);
 })();
