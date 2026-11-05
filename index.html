@@ -379,122 +379,27 @@
 
   /* ---------- Login gate ---------- */
   #login-gate{
-    position:fixed; inset:0; z-index:9999;
-    display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
-    background:var(--paper-fixed); color:var(--ink-fixed);
-    transition:opacity .45s ease;
+    position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center;
+    background:var(--ink-fixed); padding:24px;
   }
   html.authed #login-gate{display:none;}
-  #login-gate.lg-leaving{opacity:0; pointer-events:none;}
-
-  /* left: dark panel with a receipt that prints itself */
-  .lg-side{
-    position:relative; isolation:isolate; overflow:hidden;
-    display:flex; flex-direction:column; padding:36px 44px;
-    background:radial-gradient(rgba(244,247,242,0.05) 1px, transparent 1.4px) 0 0/26px 26px, var(--ink-fixed);
-    color:var(--paper-fixed);
+  .login-card{
+    width:100%; max-width:340px; background:rgba(244,247,242,0.05);
+    border:1px solid rgba(244,247,242,0.14); border-radius:18px; padding:32px 28px;
+    backdrop-filter:blur(8px); text-align:center;
   }
-  .lg-side::before{
-    content:''; position:absolute; z-index:-1; width:480px; height:480px; border-radius:50%;
-    background:radial-gradient(circle, var(--green), transparent 70%); filter:blur(70px); opacity:.45;
-    top:-200px; right:-160px; animation:drift1 16s ease-in-out infinite;
+  .login-brand{color:var(--green); font-size:13px; margin-bottom:18px;}
+  .login-card h2{color:var(--paper-fixed); font-size:20px; font-weight:700; margin-bottom:20px;}
+  .login-card input{
+    width:100%; padding:12px 14px; margin-bottom:12px; border-radius:8px;
+    border:1px solid rgba(244,247,242,0.2); background:rgba(244,247,242,0.06); color:var(--paper-fixed);
+    font-size:14px;
   }
-  .lg-brand{display:flex; align-items:center; gap:12px; font-weight:700; font-size:18px; letter-spacing:-0.01em;}
-  .lg-brand .lg-by{color:var(--green); font-family:'IBM Plex Mono','IBM Plex Sans Thai',monospace; font-weight:500; font-size:15px;}
-  .lg-printer{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px 0 24px;}
-  .lg-printer-in{width:100%; max-width:340px;}
-  .lg-slot{
-    position:relative; z-index:2; height:16px; border-radius:8px; background:#06110C;
-    box-shadow:inset 0 -3px 0 rgba(244,247,242,0.07), 0 12px 30px rgba(0,0,0,0.35);
-  }
-  .lg-receipt{
-    position:relative; margin:-6px 14px 0; padding:24px 20px 26px;
-    background:#F6F8F2; color:var(--ink-fixed);
-    font-family:'IBM Plex Mono','IBM Plex Sans Thai',monospace; font-size:12.5px; line-height:1.75;
-    transform:rotate(-1.2deg); transform-origin:50% 0; box-shadow:0 22px 44px rgba(0,0,0,0.38);
-  }
-  .lg-receipt::after{
-    content:''; position:absolute; left:0; right:0; top:100%; height:7px;
-    background:
-      linear-gradient(135deg,#F6F8F2 25%,transparent 25%) -7px 0/14px 14px,
-      linear-gradient(225deg,#F6F8F2 25%,transparent 25%) -7px 0/14px 14px;
-  }
-  .lg-line{min-height:1.75em; animation:lgPrint .18s steps(4) both;}
-  @keyframes lgPrint{from{clip-path:inset(0 0 100% 0);} to{clip-path:inset(0 0 0 0);}}
-  .lg-c{text-align:center;}
-  .lg-b{font-weight:600; font-size:15px;}
-  .lg-dim{color:#6B7268;}
-  .lg-rule{min-height:0; margin:7px 0; border-top:1px dashed rgba(14,33,26,0.35);}
-  .lg-kv{display:flex; align-items:baseline; gap:6px;}
-  .lg-dots{flex:1; min-width:10px; border-bottom:1px dotted rgba(14,33,26,0.45); transform:translateY(-3px);}
-  .lg-v{max-width:55%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:500;}
-  .lg-note{background:rgba(154,216,75,0.35); padding:1px 6px; margin:0 -6px;}
-  .lg-status{font-weight:500;}
-  .lg-status[data-state="wait"]::after{content:'▌'; margin-left:4px; animation:lgBlink 1s steps(1) infinite;}
-  .lg-status[data-state="error"]{color:#B3261E;}
-  .lg-status[data-state="ok"]{color:#167A45;}
-  @keyframes lgBlink{50%{opacity:0;}}
-
-  /* right: the form */
-  .lg-main{display:flex; align-items:center; justify-content:center; padding:40px 32px; overflow-y:auto; background:var(--paper-fixed);}
-  .lg-card{width:100%; max-width:380px; text-align:left;}
-  .lg-card.lg-shake{animation:lgShake .4s ease;}
-  @keyframes lgShake{20%{transform:translateX(-7px);} 40%{transform:translateX(6px);} 60%{transform:translateX(-4px);} 80%{transform:translateX(3px);}}
-  .lg-card h2{font-size:30px; font-weight:700; line-height:1.4; letter-spacing:-0.01em; color:var(--ink-fixed);}
-  .lg-sub{margin:4px 0 26px; font-size:15px; color:#5A6258;}
-  .lg-error{
-    display:flex; gap:10px; align-items:flex-start; margin:0 0 18px; padding:11px 14px;
-    border-radius:10px; border-left:4px solid #B3261E; background:#FCEDEA; color:#8C1D18; font-size:14px; line-height:1.5;
-  }
-  .lg-error[hidden]{display:none;}
-  .lg-error svg{flex:none; margin-top:2px;}
-  .lg-field{margin-bottom:16px;}
-  .lg-field label{display:block; margin-bottom:6px; font-size:14px; font-weight:500; color:var(--ink-fixed);}
-  .lg-field input[type="text"], .lg-field input[type="password"]{
-    display:block; width:100%; height:48px; padding:0 14px; border-radius:10px;
-    border:1px solid rgba(14,33,26,0.3); background:#fff; color:var(--ink-fixed); font:inherit; font-size:16px;
-    transition:border-color .15s ease, box-shadow .15s ease;
-  }
-  .lg-field input:focus{outline:2px solid transparent; border-color:#1E8F55; box-shadow:0 0 0 3px rgba(47,190,115,0.3);}
-  .lg-field input[aria-invalid="true"]{border-color:#B3261E;}
-  .lg-field input[aria-invalid="true"]:focus{box-shadow:0 0 0 3px rgba(179,38,30,0.2);}
-  .lg-pw{position:relative;}
-  .lg-pw input{padding-right:50px !important;}
-  .lg-eye{
-    position:absolute; right:4px; top:4px; width:40px; height:40px; display:grid; place-items:center;
-    border:none; border-radius:8px; background:none; color:#55604F; cursor:pointer;
-  }
-  .lg-eye:hover{background:rgba(14,33,26,0.07);}
-  .lg-eye:focus-visible{outline:2px solid #1E8F55; outline-offset:0;}
-  .lg-eye .off{display:none;}
-  .lg-eye[aria-pressed="true"] .on{display:none;}
-  .lg-eye[aria-pressed="true"] .off{display:block;}
-  .lg-hint{margin-top:6px; font-size:13px; color:#8A5A00;}
-  .lg-hint[hidden]{display:none;}
-  .lg-check{display:flex; align-items:center; gap:10px; margin:4px 0 22px; font-size:14px; cursor:pointer; user-select:none;}
-  .lg-check input{width:18px; height:18px; accent-color:#1E8F55; cursor:pointer;}
-  .lg-submit{width:100%; justify-content:center; height:50px; padding:0 24px; font-family:inherit; font-size:15px;}
-  .lg-submit:focus-visible{outline:3px solid var(--ink-fixed); outline-offset:3px;}
-  .lg-submit.is-busy{cursor:progress;}
-  .lg-submit.is-ok{background:var(--lime);}
-  .lg-spin{display:none; width:16px; height:16px; border-radius:50%; border:2px solid rgba(14,33,26,0.25); border-top-color:var(--ink-fixed); animation:lgSpin .7s linear infinite;}
-  .lg-submit.is-busy .lg-spin{display:inline-block;}
-  @keyframes lgSpin{to{transform:rotate(360deg);}}
-  .lg-help{margin-top:18px; font-size:13px; color:#5A6258;}
-  .lg-help a{color:#1E7A4B; text-decoration:underline; text-underline-offset:3px;}
-  .lg-help a:hover{color:var(--ink-fixed);}
-
-  @media (max-width:860px){
-    #login-gate{grid-template-columns:1fr; grid-template-rows:auto 1fr; overflow-y:auto;}
-    .lg-side{padding:18px 22px;}
-    .lg-printer{display:none;}
-    .lg-main{align-items:flex-start; padding:30px 22px 44px; overflow:visible;}
-  }
-  @media (min-width:861px) and (max-height:720px){
-    .lg-side{padding:22px 36px;}
-    .lg-receipt{font-size:11px; line-height:1.6; padding:16px 16px 20px;}
-    .lg-b{font-size:13px;}
-  }
+  .login-card input::placeholder{color:rgba(244,247,242,0.4);}
+  .login-card input:focus{outline:none; border-color:var(--green);}
+  .login-card .btn-primary{width:100%; justify-content:center; margin-top:6px;}
+  .login-error{color:#ff8a75; font-size:12px; margin-top:12px;}
+  .login-note{color:rgba(244,247,242,0.4); font-size:11px; margin-top:18px; line-height:1.5;}
 
 </style>
 <script src="brand.js" defer></script>
@@ -502,64 +407,15 @@
 <body>
 
 <div id="login-gate">
-  <aside class="lg-side" aria-hidden="true">
-    <div class="lg-brand">
-      <svg width="34" height="34" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#15332A"/><rect x="20" y="16" width="7" height="32" rx="3.5" fill="#2FBE73"/><rect x="20" y="16" width="26" height="7" rx="3.5" fill="#2FBE73"/><rect x="20" y="28.5" width="19" height="7" rx="3.5" fill="#9AD84B"/><rect x="20" y="41" width="26" height="7" rx="3.5" fill="#2FBE73"/></svg>
-      <span>E-Merchant <span class="lg-by">by Software</span></span>
-    </div>
-    <div class="lg-printer">
-      <div class="lg-printer-in">
-        <div class="lg-slot"></div>
-        <div class="lg-receipt"><div id="lg-paper"></div></div>
-      </div>
-    </div>
-  </aside>
-
-  <main class="lg-main">
-    <form id="login-form" class="lg-card" novalidate aria-labelledby="login-title">
-      <h2 id="login-title" data-th="เข้าสู่ระบบ" data-en="Sign in">เข้าสู่ระบบ</h2>
-      <p class="lg-sub" data-th="สำหรับพนักงานภายในทีม Software เท่านั้น" data-en="For internal Software team members only">สำหรับพนักงานภายในทีม Software เท่านั้น</p>
-
-      <div role="alert">
-        <div id="login-error" class="lg-error" hidden>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 7.5v5.5"/><path d="M12 16.5h.01"/></svg>
-          <span id="login-error-text"></span>
-        </div>
-      </div>
-
-      <div class="lg-field">
-        <label for="login-user" data-th="ชื่อผู้ใช้" data-en="Username">ชื่อผู้ใช้</label>
-        <input type="text" id="login-user" autocomplete="username" autocapitalize="none" spellcheck="false">
-      </div>
-
-      <div class="lg-field">
-        <label for="login-pass" data-th="รหัสผ่าน" data-en="Password">รหัสผ่าน</label>
-        <div class="lg-pw">
-          <input type="password" id="login-pass" autocomplete="current-password" aria-describedby="login-caps">
-          <button type="button" id="pass-toggle" class="lg-eye" aria-pressed="false" aria-label="แสดงรหัสผ่าน">
-            <svg class="on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
-            <svg class="off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 6.1A10.7 10.7 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.5 6.9C3.8 8.7 2 12 2 12s3.6 7 10 7c1.6 0 3-.4 4.3-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
-          </button>
-        </div>
-        <p id="login-caps" class="lg-hint" hidden data-th="เปิด Caps Lock อยู่" data-en="Caps Lock is on">เปิด Caps Lock อยู่</p>
-      </div>
-
-      <label class="lg-check">
-        <input type="checkbox" id="login-remember">
-        <span data-th="จำชื่อผู้ใช้ในเครื่องนี้" data-en="Remember my username on this device">จำชื่อผู้ใช้ในเครื่องนี้</span>
-      </label>
-
-      <button type="submit" id="login-submit" class="btn btn-primary lg-submit">
-        <span class="lg-spin" aria-hidden="true"></span>
-        <span id="login-btn-label" data-th="เข้าสู่ระบบ" data-en="Sign in">เข้าสู่ระบบ</span>
-      </button>
-
-      <p class="lg-help">
-        <span data-th="ลืมรหัสผ่าน?" data-en="Forgot your password?">ลืมรหัสผ่าน?</span>
-        <a href="mailto:emerchantsoftware@gmail.com" data-th="ติดต่อทีม Software" data-en="Contact the Software team">ติดต่อทีม Software</a>
-      </p>
-    </form>
-  </main>
+  <form id="login-form" class="login-card">
+    <div class="login-brand mono">E-MERCHANT // BY SOFTWARE</div>
+    <h2 data-th="เข้าสู่ระบบ" data-en="Sign in">เข้าสู่ระบบ</h2>
+    <input type="text" id="login-user" autocomplete="username" data-i18n-placeholder data-th="ชื่อผู้ใช้" data-en="Username" placeholder="ชื่อผู้ใช้">
+    <input type="password" id="login-pass" autocomplete="current-password" data-i18n-placeholder data-th="รหัสผ่าน" data-en="Password" placeholder="รหัสผ่าน">
+    <button type="submit" class="btn btn-primary" data-th="เข้าสู่ระบบ" data-en="Sign in">เข้าสู่ระบบ</button>
+    <div id="login-error" class="login-error" style="display:none;" data-th="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" data-en="Incorrect username or password">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</div>
+    <div class="login-note mono" data-th="สำหรับพนักงานภายในทีม Software เท่านั้น" data-en="For internal Software team members only">สำหรับพนักงานภายในทีม Software เท่านั้น</div>
+  </form>
 </div>
 
 
@@ -776,200 +632,21 @@
 
   // Login gate
   (function(){
-    const gate = document.getElementById('login-gate');
     const form = document.getElementById('login-form');
-    const root = document.documentElement;
-    if (!gate || !form || root.classList.contains('authed')) return;
-
-    const $ = id => document.getElementById(id);
-    const user = $('login-user'), pass = $('login-pass'), eye = $('pass-toggle'),
-          remember = $('login-remember'), submit = $('login-submit'), btnLabel = $('login-btn-label'),
-          err = $('login-error'), errText = $('login-error-text'), caps = $('login-caps'),
-          paper = $('lg-paper'), probe = $('login-title');
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const wait = ms => new Promise(r => setTimeout(r, ms));
-
-    // Language: read it from the (statically translated) heading so we follow whatever the site's switcher did
-    const lang = () => (probe.dataset.en && probe.dataset.en !== probe.dataset.th &&
-                        probe.textContent.trim() === probe.dataset.en.trim()) ? 'en' : 'th';
-    const say = el => { el.textContent = el.dataset[lang()] || el.dataset.th || ''; };
-    const setText = (el, th, en) => { el.dataset.th = th; el.dataset.en = en; say(el); };
-
-    // Keep keyboard focus inside the gate while it is up
-    const locked = [];
-    Array.from(document.body.children).forEach(el => {
-      if (el !== gate && !/^(SCRIPT|STYLE)$/.test(el.tagName) && !el.inert){ el.inert = true; locked.push(el); }
-    });
-    const unlock = () => { locked.forEach(el => { el.inert = false; }); locked.length = 0; };
-
-    // ---------- Receipt that prints itself ----------
-    const counts = Array.from(document.querySelectorAll('.num[data-count]')).map(n => n.dataset.count);
-    const now = new Date();
-    const stamp = () => now.toLocaleString(lang() === 'en' ? 'en-GB' : 'th-TH',
-      { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit', hour12:false });
-    const staffName = () => user.value.trim() || '—';
-
-    function line(cls, th, en){
-      const d = document.createElement('div');
-      d.className = 'lg-line ' + cls;
-      if (th != null){ d.dataset.th = th; d.dataset.en = en; say(d); }
-      return d;
-    }
-    const rule = () => line('lg-rule');
-    function kv(th, en, fn){
-      const d = line('lg-kv');
-      const k = document.createElement('span'); k.dataset.th = th; k.dataset.en = en; say(k);
-      const dots = document.createElement('span'); dots.className = 'lg-dots';
-      const v = document.createElement('span'); v.className = 'lg-v';
-      d.append(k, dots, v);
-      d._fn = fn; v.textContent = fn();
-      d.setValue = f => { d._fn = f; v.textContent = f(); };
-      return d;
-    }
-
-    const STATUS = {
-      wait:  ['รอเข้าสู่ระบบ', 'Waiting to sign in'],
-      busy:  ['กำลังตรวจสอบ…', 'Checking…'],
-      error: ['ข้อมูลไม่ตรง ลองอีกครั้ง', 'Details don’t match, try again'],
-      ok:    ['เข้าสู่ระบบสำเร็จ ✓', 'Signed in ✓']
-    };
-    let state = 'wait', statusEl = null, staff = null;
-    function setStatus(s){
-      state = s;
-      if (!statusEl) return;
-      statusEl.dataset.state = s;
-      setText(statusEl, STATUS[s][0], STATUS[s][1]);
-    }
-
-    const items = [
-      () => line('lg-c lg-b', 'Software Hub', 'Software Hub'),
-      () => line('lg-c', 'ศูนย์รวมข้อมูลทีม', 'Team information hub'),
-      rule,
-      () => kv('วันที่', 'Date', stamp),
-      () => (staff = kv('พนักงาน', 'Staff', staffName)),
-      rule,
-      () => line('', 'Dashboard', 'Dashboard'),
-      () => line('', 'Serial Activate', 'Serial Activate'),
-      () => line('', 'NAS', 'NAS'),
-      () => line('', 'ทีมงานและลูกค้า', 'Teams and customers'),
-      rule,
-      () => kv('สมาชิกทีม', 'Team members', () => counts[0] || '—'),
-      () => kv('ทีมย่อย', 'Sub-teams', () => counts[1] || '—'),
-      () => kv('ลูกค้าหลัก', 'Key customers', () => counts[2] || '—'),
-      rule
-    ];
-    if (now.getDay() === 3){   // same Wednesday reminder as the banner on the main page
-      items.push(() => line('lg-note', 'วันนี้วันพุธ — ส่ง Report ประจำสัปดาห์', 'Wednesday — send the weekly report'), rule);
-    }
-    items.push(
-      () => { statusEl = line('lg-status', STATUS[state][0], STATUS[state][1]); statusEl.dataset.state = state; return statusEl; },
-      () => line('lg-c lg-dim', 'Internal use only', 'Internal use only')
-    );
-
-    async function printReceipt(){
-      if (!reduce) await wait(300);
-      for (const make of items){
-        const el = make();
-        paper.appendChild(el);
-        if (!reduce) await wait(el.classList.contains('lg-rule') ? 70 : 120);
-      }
-    }
-
-    // ---------- Form helpers ----------
-    const BTN = {
-      idle: ['เข้าสู่ระบบ', 'Sign in'],
-      busy: ['กำลังตรวจสอบ…', 'Checking…'],
-      ok:   ['เข้าสู่ระบบสำเร็จ', 'Signed in']
-    };
-    function setBtn(s){
-      setText(btnLabel, BTN[s][0], BTN[s][1]);
-      submit.classList.toggle('is-busy', s === 'busy');
-      submit.classList.toggle('is-ok', s === 'ok');
-      submit.setAttribute('aria-busy', s === 'busy' ? 'true' : 'false');
-    }
-    function showError(th, en, fields){
-      setText(errText, th, en);
-      err.hidden = false;
-      [user, pass].forEach(f => f.removeAttribute('aria-invalid'));
-      fields.forEach(f => f.setAttribute('aria-invalid', 'true'));
-      form.classList.remove('lg-shake'); void form.offsetWidth; form.classList.add('lg-shake');
-    }
-    function clearError(){
-      err.hidden = true;
-      user.removeAttribute('aria-invalid'); pass.removeAttribute('aria-invalid');
-      if (state === 'error') setStatus('wait');
-    }
-
-    // Show / hide password
-    const EYE = { show:['แสดงรหัสผ่าน', 'Show password'], hide:['ซ่อนรหัสผ่าน', 'Hide password'] };
-    const eyeLabel = () => eye.setAttribute('aria-label', EYE[pass.type === 'password' ? 'show' : 'hide'][lang() === 'en' ? 1 : 0]);
-    eye.addEventListener('click', () => {
-      const show = pass.type === 'password';
-      pass.type = show ? 'text' : 'password';
-      eye.setAttribute('aria-pressed', show ? 'true' : 'false');
-      eyeLabel();
-    });
-
-    // Caps Lock hint
-    const capsCheck = e => { if (e.getModifierState) caps.hidden = !e.getModifierState('CapsLock'); };
-    pass.addEventListener('keydown', capsCheck);
-    pass.addEventListener('keyup', capsCheck);
-    pass.addEventListener('blur', () => { caps.hidden = true; });
-
-    // Typing clears the error; username is mirrored onto the receipt
-    [user, pass].forEach(f => f.addEventListener('input', () => { if (!err.hidden) clearError(); }));
-    user.addEventListener('input', () => { if (staff) staff.setValue(staffName); });
-
-    // Re-render dynamic text when the site language switches
-    function renderDyn(){
-      paper.querySelectorAll('[data-th]').forEach(say);
-      paper.querySelectorAll('.lg-kv').forEach(r => { r.querySelector('.lg-v').textContent = r._fn(); });
-      say(errText); say(btnLabel); eyeLabel();
-    }
-    new MutationObserver(renderDyn).observe(probe, { childList:true, characterData:true, subtree:true });
-
-    // ---------- Submit ----------
-    let busy = false;
-    form.addEventListener('submit', async e => {
+    const errorEl = document.getElementById('login-error');
+    if (!form) return;
+    form.addEventListener('submit', function(e){
       e.preventDefault();
-      if (busy) return;
-      const u = user.value.trim(), p = pass.value;
-      clearError();
-      const missing = [!u && user, !p && pass].filter(Boolean);
-      if (missing.length){
-        showError('กรอกชื่อผู้ใช้และรหัสผ่านให้ครบ', 'Enter both your username and password', missing);
-        missing[0].focus();
-        return;
-      }
-      busy = true; setBtn('busy'); setStatus('busy');
-      await wait(reduce ? 0 : 450);
-
-      if (u === 'admin' && p === 'admin'){
-        try{ sessionStorage.setItem('authed', 'true'); } catch(_){}
-        try{ remember.checked ? localStorage.setItem('loginUser', u) : localStorage.removeItem('loginUser'); } catch(_){}
-        setBtn('ok'); setStatus('ok');
-        await wait(reduce ? 150 : 900);
-        gate.classList.add('lg-leaving');
-        await wait(reduce ? 0 : 450);
-        root.classList.add('authed');
-        unlock();
+      const user = document.getElementById('login-user').value.trim();
+      const pass = document.getElementById('login-pass').value;
+      if (user === 'admin' && pass === 'admin'){
+        try{ sessionStorage.setItem('authed', 'true'); } catch(err){}
+        document.documentElement.classList.add('authed');
+        if (errorEl) errorEl.style.display = 'none';
       } else {
-        busy = false; setBtn('idle'); setStatus('error');
-        showError('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง ตรวจสอบแล้วลองอีกครั้ง',
-                  'Incorrect username or password. Check them and try again.', [user, pass]);
-        pass.focus(); pass.select();
+        if (errorEl) errorEl.style.display = 'block';
       }
     });
-
-    // ---------- Start ----------
-    try{
-      const saved = localStorage.getItem('loginUser');
-      if (saved){ user.value = saved; remember.checked = true; }
-    } catch(_){}
-    printReceipt();
-    if (!window.matchMedia('(pointer: coarse)').matches){
-      (user.value ? pass : user).focus({ preventScroll:true });
-    }
   })();
 
   // Team photos: Teams/<firstname>.jpg|jpeg|png|webp (lowercase English first name)
