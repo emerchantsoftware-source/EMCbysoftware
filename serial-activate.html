@@ -745,15 +745,14 @@
     const t = new Date();
     $('fs-dt').value = t.getFullYear() + '-' + pad(t.getMonth() + 1) + '-' + pad(t.getDate());
 
-    // ตัด 0 นำหน้าเฉพาะหลักแรกและหลักสุดท้ายของ IP (010.054.179.049 -> 10.054.179.49)
+    // ตัด 0 นำหน้าทุกหลักของ IP (010.054.047.049 -> 10.54.47.49)
     // 0.0.0.0 และ NULL คงเดิม
     function fmtIp(ip){
       if (!IP.test(ip)) return ip;
       const o = ip.split('.');
       if (o.every(x => +x === 0)) return ip;
       const strip = x => x.replace(/^0+(?=\d)/, '');
-      o[0] = strip(o[0]); o[3] = strip(o[3]);
-      return o.join('.');
+      return o.map(strip).join('.');
     }
     function parse(text){
       const tk = text.split(/[\t\r\n]+/).map(x => x.trim()).filter(Boolean), res = [];
