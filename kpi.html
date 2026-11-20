@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<script>
+  (function(){
+    try{
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) document.documentElement.setAttribute('data-theme','dark');
+      if (sessionStorage.getItem('authed') !== 'true') location.replace('index.html');
+    }catch(e){}
+  })();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KPI ทีม Software · E-Merchant by Software</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E211A; --panel:#15332A; --paper:#F4F7F2; --paper-dim:#E6ECE1;
+    --green:#2FBE73; --lime:#9AD84B;
+    --line:rgba(14,33,26,0.12); --ink-fixed:#0E211A; --paper-fixed:#F4F7F2; --muted:#6B7268;
+    --g1:#2FBE73; --g2:#9AD84B; --g3:#E8C547; --g4:#F0974B; --g5:#E5564B;
+  }
+  :root[data-theme="dark"]{
+    --ink:#E9F2EC; --paper:#0F1D17; --paper-dim:#182A21;
+    --line:rgba(233,242,236,0.14); --muted:#93A398;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'IBM Plex Sans Thai',sans-serif; background:var(--paper); color:var(--ink); line-height:1.6; overflow-x:hidden;}
+  .mono{font-family:'IBM Plex Mono','IBM Plex Sans Thai',monospace;}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important; transition:none!important;}}
+  :focus-visible{outline:2px solid var(--green); outline-offset:2px;}
+
+  .hero{
+    background:radial-gradient(rgba(244,247,242,0.05) 1px,transparent 1.4px) 0 0/26px 26px, var(--ink-fixed);
+    color:var(--paper-fixed); padding:8vw 6vw 5vw; position:relative; overflow:hidden; isolation:isolate;
+  }
+  .hero::before{content:''; position:absolute; width:480px; height:480px; border-radius:50%; filter:blur(70px); opacity:.5; z-index:-1;
+    background:radial-gradient(circle,var(--green),transparent 70%); top:-220px; right:-120px;}
+  .hero-tag{font-size:13px; color:var(--green); margin-bottom:18px; display:flex; align-items:center; gap:10px;}
+  .hero-tag::before{content:''; width:8px; height:8px; border-radius:50%; background:var(--green); animation:pulse 2s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(47,190,115,.55);}70%{box-shadow:0 0 0 9px rgba(47,190,115,0);}100%{box-shadow:0 0 0 0 rgba(47,190,115,0);}}
+  .hero h1{font-size:clamp(34px,5vw,60px); font-weight:700; letter-spacing:-0.02em; line-height:1.12;}
+  .hero .lead{max-width:60ch; margin-top:16px; color:rgba(244,247,242,.72); font-size:16px;}
+  .hero-top{display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap;}
+  .stats{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; margin-top:44px; background:var(--line-dark,rgba(244,247,242,.14)); border:1px solid rgba(244,247,242,.14); border-radius:18px; overflow:hidden;}
+  .stat{background:var(--panel); padding:22px 24px;}
+  .stat .num{font-size:36px; font-weight:500; line-height:1.1;}
+  .stat .label{font-size:13px; color:rgba(244,247,242,.65); margin-top:4px;}
+  .stat .delta{font-size:12px; margin-top:8px; color:rgba(244,247,242,.65);}
+  .up{color:var(--green);} .down{color:#FF7B72;}
+
+  .pill{
+    display:inline-flex; align-items:center; gap:8px; cursor:pointer; text-decoration:none;
+    font-family:'IBM Plex Mono','IBM Plex Sans Thai',monospace; font-size:12px;
+    padding:7px 14px; border:1px solid var(--line); border-radius:999px; background:transparent; color:var(--ink);
+    transition:border-color .2s ease,color .2s ease,transform .2s ease,background .2s ease;
+  }
+  .pill:hover{border-color:var(--green); color:#1B6B44; transform:translateY(-1px);}
+  .pill svg{width:16px; height:16px; flex:none;}
+  .pill.on{background:var(--green); border-color:var(--green); color:var(--ink-fixed);}
+  .pill[disabled]{opacity:.4; cursor:not-allowed; transform:none;}
+  .hero .pill{border-color:rgba(244,247,242,.22); color:var(--paper-fixed);}
+  .hero .pill:hover{border-color:var(--green); color:var(--green);}
+  .hero .pill.on{color:var(--ink-fixed);}
+  .months{display:flex; flex-wrap:wrap; gap:8px; margin-top:32px;}
+
+  section{padding:64px 6vw;}
+  .alt{background:var(--paper-dim);}
+  .section-head{display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--line); padding-bottom:18px; margin-bottom:32px; flex-wrap:wrap; gap:12px;}
+  .section-head h2{font-size:28px; font-weight:700; letter-spacing:-0.01em;}
+  .section-head .count{font-size:13px; color:var(--muted);}
+
+  .wrap{overflow-x:auto; border:1px solid var(--line); border-radius:18px; background:var(--paper);}
+  table{border-collapse:collapse; width:100%; min-width:860px;}
+  th,td{padding:10px 8px; text-align:center; font-size:13px; border-bottom:1px solid var(--line);}
+  th{font-weight:500; color:var(--muted); cursor:pointer; white-space:nowrap;}
+  th.sel{color:var(--ink); box-shadow:inset 0 -2px 0 var(--green);}
+  td.nm,th.nm{text-align:left; padding-left:20px; position:sticky; left:0; background:var(--paper); white-space:nowrap; font-size:14px; z-index:1; cursor:default;}
+  tbody tr:last-child td{border-bottom:0;}
+  td.hc{background:color-mix(in srgb,var(--c) 30%,var(--paper)); border-left:1px solid var(--paper);}
+  td.hc.sel{box-shadow:inset 0 0 0 2px var(--ink);}
+  td.pend{color:var(--muted);}
+  td.av{font-weight:600; background:var(--paper-dim);}
+  .g1{--c:var(--g1);} .g2{--c:var(--g2);} .g3{--c:var(--g3);} .g4{--c:var(--g4);} .g5{--c:var(--g5);}
+  .legend{display:flex; flex-wrap:wrap; gap:16px; margin-top:16px; font-size:12px; color:var(--muted);}
+  .legend i{display:inline-block; width:12px; height:12px; border-radius:3px; background:var(--c); margin-right:6px; vertical-align:-1px;}
+
+  .two{display:grid; grid-template-columns:1.6fr 1fr; gap:32px;}
+  .box{border:1px solid var(--line); border-radius:18px; padding:24px; background:var(--paper);}
+  .box h3{font-size:19px; font-weight:700;}
+  .box .sub{font-size:12px; color:var(--muted); margin:2px 0 16px;}
+  svg.chart{width:100%; height:auto; display:block;}
+  svg.chart text{font-family:'IBM Plex Mono',monospace; font-size:11px; fill:var(--muted);}
+  .row{display:grid; grid-template-columns:96px 1fr 44px; gap:12px; align-items:center; margin:12px 0; font-size:14px;}
+  .row .bar{height:10px; border-radius:99px; background:var(--paper-dim); overflow:hidden;}
+  .row .bar b{display:block; height:100%; border-radius:99px; background:var(--c,var(--green));}
+  .row .v{text-align:right; font-size:13px;}
+  .group-t{font-size:12px; color:var(--muted); margin-top:18px;}
+  .items{display:grid; grid-template-columns:1fr 1fr; gap:32px;}
+
+  .team-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:18px; overflow:hidden;}
+  .member{background:var(--paper); padding:24px 22px;}
+  .avatar{width:56px; height:56px; border-radius:14px; background:var(--paper-dim); color:var(--ink); display:grid; place-items:center; overflow:hidden; margin-bottom:16px;}
+  .avatar img{width:100%; height:100%; object-fit:cover; display:block;}
+  .member h3{font-size:16px; font-weight:700; line-height:1.35;}
+  .member .role{font-size:13px; color:var(--muted);}
+  .score{display:flex; align-items:baseline; gap:10px; margin-top:14px;}
+  .score .t{font-size:30px; font-weight:500; line-height:1;}
+  .score .d{font-size:12px;}
+  .tag{display:inline-block; font-size:11px; padding:2px 8px; border-radius:4px; margin-top:10px; background:color-mix(in srgb,var(--c) 30%,var(--paper)); color:var(--ink);}
+  .mini{display:grid; grid-template-columns:18px 1fr; gap:8px; align-items:center; margin-top:10px; font-size:11px; color:var(--muted);}
+  .mini .bar{height:5px; border-radius:99px; background:var(--paper-dim); overflow:hidden;}
+  .mini .bar b{display:block; height:100%; background:var(--green);}
+  .mini + .mini .bar b{background:var(--lime);}
+  .note{font-size:12px; color:var(--muted); margin-top:16px; max-width:90ch;}
+
+  @media (max-width:860px){
+    .stats{grid-template-columns:1fr 1fr;} .two,.items{grid-template-columns:1fr;} section{padding:48px 5vw;}
+  }
+</style>
+<script src="brand.js" defer></script>
+</head>
+<body>
+<script src="header.js"></script>
+
+<header class="hero">
+  <div class="hero-top">
+    <div>
+      <div class="hero-tag mono">internal.software.kpi</div>
+      <h1 data-th="KPI ทีม Software" data-en="Software Team KPI">KPI ทีม Software</h1>
+      <p class="lead" data-th="ผลประเมินรายเดือนของทีม Software คิดจากคะแนน Performance และ Competency รวมกัน" data-en="Monthly assessment results for the Software team, combining Performance and Competency scores">ผลประเมินรายเดือนของทีม Software คิดจากคะแนน Performance และ Competency รวมกัน</p>
+    </div>
+    <a href="index.html#teams" class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span data-th="กลับหน้าทีมงาน" data-en="Back to team">กลับหน้าทีมงาน</span></a>
+  </div>
+  <div class="months" id="months" role="group" aria-label="เลือกเดือน"></div>
+  <div class="stats mono" id="stats"></div>
+</header>
+
+<section>
+  <div class="section-head">
+    <h2 data-th="ผลรายเดือนรายบุคคล" data-en="Monthly results by person">ผลรายเดือนรายบุคคล</h2>
+    <span class="count mono" id="hm-count"></span>
+  </div>
+  <div class="wrap"><table id="hm"></table></div>
+  <div class="legend" id="legend"></div>
+</section>
+
+<section class="alt">
+  <div class="section-head">
+    <h2 data-th="แนวโน้มและการกระจายผล" data-en="Trend and distribution">แนวโน้มและการกระจายผล</h2>
+    <span class="count mono" id="sel-label"></span>
+  </div>
+  <div class="two">
+    <div class="box">
+      <h3 data-th="คะแนนรวมเฉลี่ยของทีม" data-en="Team average total score">คะแนนรวมเฉลี่ยของทีม</h3>
+      <div class="sub" data-th="เส้นคือค่าเฉลี่ย แถบคือช่วงต่ำสุดถึงสูงสุดของแต่ละเดือน" data-en="Line is the average; band is the monthly min–max range">เส้นคือค่าเฉลี่ย แถบคือช่วงต่ำสุดถึงสูงสุดของแต่ละเดือน</div>
+      <svg class="chart" id="trend" viewBox="0 0 640 260" role="img" aria-label="แนวโน้มคะแนนรวมเฉลี่ยรายเดือน"></svg>
+    </div>
+    <div class="box">
+      <h3 data-th="การกระจายผลประเมิน" data-en="Grade distribution">การกระจายผลประเมิน</h3>
+      <div class="sub" id="dist-sub"></div>
+      <div id="dist"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <h2 data-th="คะแนนรายหัวข้อ" data-en="Scores by item">คะแนนรายหัวข้อ</h2>
+    <span class="count mono" id="items-label"></span>
+  </div>
+  <div class="items">
+    <div><div class="group-t mono">Performance</div><div id="items-p"></div></div>
+    <div><div class="group-t mono">Competency</div><div id="items-c"></div></div>
+  </div>
+  <p class="note" data-th="ความยาวแท่งเทียบกับคะแนนสูงสุดของหัวข้อนั้นที่พบในข้อมูลทุกเดือน หัวข้อ QA, คู่มือ และพี่เลี้ยงยังไม่มีคะแนนจึงไม่แสดง" data-en="Bars compare against the highest score seen for that item across all months. QA, Manual and Mentor have no scores yet and are hidden.">ความยาวแท่งเทียบกับคะแนนสูงสุดของหัวข้อนั้นที่พบในข้อมูลทุกเดือน หัวข้อ QA, คู่มือ และพี่เลี้ยงยังไม่มีคะแนนจึงไม่แสดง</p>
+</section>
+
+<section class="alt">
+  <div class="section-head">
+    <h2 data-th="อันดับรายบุคคล" data-en="Ranking">อันดับรายบุคคล</h2>
+    <span class="count mono" id="rank-label"></span>
+  </div>
+  <div class="team-grid" id="rank"></div>
+  <p class="note" data-th="ผลประเมินคิดจากคะแนนรวม: 95 ขึ้นไปดีเด่น, 90–94 ดีมาก, 80–89 ดี, 70–79 พอใช้, ต่ำกว่า 70 ต้องปรับปรุง · ข้อมูลจาก Assessment Summary" data-en="Grades use the total score: 95+ Outstanding, 90–94 Very good, 80–89 Good, 70–79 Fair, below 70 Needs improvement · Source: Assessment Summary">ผลประเมินคิดจากคะแนนรวม: 95 ขึ้นไปดีเด่น, 90–94 ดีมาก, 80–89 ดี, 70–79 พอใช้, ต่ำกว่า 70 ต้องปรับปรุง · ข้อมูลจาก Assessment Summary</p>
+</section>
+
+<script>
+/* m[month-1] = [KPI,SLA,SOP,VOC, ทัศนคติ,รับผิดชอบ,สื่อสาร,วินัย,ทรัพย์สิน, P,C,รวม] หรือ null = รอประเมิน */
+const PEOPLE = [{"n":"พีรภัทร แตงอ่อน","lv":"Level 2","tn":"2 - 5 ปี","m":[[35.0,14.0,5.0,4.0,10.0,3.0,2.5,6.5,1.0,58.0,23.0,81.0],[45.0,11.0,5.0,4.0,10.0,3.0,2.5,5.5,1.0,65.0,22.0,87.0],[45.0,11.0,5.0,4.0,10.0,2.5,2.5,6.5,1.0,65.0,22.5,87.5],[40.0,13.0,5.0,4.0,6.0,3.5,1.0,3.5,1.0,62.0,15.0,77.0],[30.0,11.0,3.0,4.0,6.0,3.5,1.0,3.5,1.0,48.0,15.0,63.0],[25.0,14.0,3.0,4.0,6.0,2.0,1.0,3.5,1.0,46.0,13.5,59.5],[25.0,12.0,3.0,4.0,0.0,2.0,1.0,3.5,1.0,44.0,7.5,51.5],[25.0,15.0,4.0,4.0,6.0,2.5,2.5,3.5,1.0,48.0,15.5,63.5],[25.0,15.0,5.0,4.0,6.0,2.0,2.5,3.5,1.0,49.0,15.0,64.0],[25.0,14.0,5.0,4.0,6.0,3.5,2.5,3.5,1.0,48.0,16.5,64.5],null,null]},{"n":"ภาณุ แก้ววงษ์วาล","lv":"Level 1","tn":"< 2 ปี","m":[[45.0,14.0,5.0,4.0,12.0,4.5,3.5,7.0,1.0,68.0,28.0,96.0],[45.0,13.0,5.0,4.0,12.0,4.5,3.5,5.5,1.0,67.0,26.5,93.5],[45.0,15.0,5.0,4.0,12.0,4.5,3.5,5.5,1.0,69.0,26.5,95.5],[45.0,15.0,5.0,4.0,10.0,4.5,3.5,7.0,1.0,69.0,26.0,95.0],[45.0,15.0,5.0,4.0,10.0,4.5,3.5,7.0,1.0,69.0,26.0,95.0],[30.0,15.0,5.0,4.0,12.0,4.5,3.5,7.0,1.0,54.0,28.0,82.0],[25.0,14.0,5.0,4.0,10.0,4.5,3.5,7.0,1.0,48.0,26.0,74.0],[45.0,14.0,5.0,4.0,12.0,4.5,3.5,6.0,1.0,68.0,27.0,95.0],[45.0,15.0,5.0,4.0,12.0,4.5,3.5,6.5,1.0,69.0,27.5,96.5],[45.0,15.0,5.0,4.0,12.0,5.0,4.5,5.5,1.0,69.0,28.0,97.0],null,null]},{"n":"จิฏติพัฒน์ วิทยาฉายแสง","lv":"Level 1","tn":"< 2 ปี","m":[[45.0,14.0,5.0,4.0,12.0,3.5,2.5,3.5,1.0,68.0,22.5,90.5],[45.0,15.0,5.0,4.0,12.0,2.5,1.5,4.0,1.0,69.0,21.0,90.0],[45.0,15.0,5.0,4.0,12.0,2.5,1.5,4.0,1.0,69.0,21.0,90.0],[40.0,13.0,5.0,4.0,8.0,2.0,3.0,4.0,1.0,62.0,18.0,80.0],[30.0,13.0,5.0,4.0,10.0,2.0,1.5,4.0,1.0,52.0,18.5,70.5],[25.0,11.0,5.0,4.0,12.0,4.0,4.0,4.0,1.0,45.0,25.0,70.0],[25.0,15.0,5.0,4.0,10.0,3.5,3.5,4.0,1.0,49.0,22.0,71.0],[25.0,15.0,4.0,4.0,10.0,4.0,3.5,3.5,1.0,48.0,22.0,70.0],[25.0,15.0,5.0,4.0,10.0,4.0,3.5,3.5,1.0,49.0,22.0,71.0],[25.0,15.0,5.0,4.0,12.0,4.5,4.5,4.5,1.0,49.0,26.5,75.5],null,null]},{"n":"ธนกร เตชเกรียงไกรกุล","lv":"Level 1","tn":"< 2 ปี","m":[[45.0,14.0,5.0,4.0,12.0,4.5,3.5,6.5,1.0,68.0,27.5,95.5],[45.0,15.0,5.0,4.0,12.0,4.5,3.5,6.5,1.0,69.0,27.5,96.5],[45.0,15.0,5.0,4.0,12.0,4.5,3.5,6.5,1.0,69.0,27.5,96.5],[45.0,15.0,5.0,4.0,12.0,5.0,4.0,5.5,1.0,69.0,27.5,96.5],[40.0,4.0,5.0,4.0,12.0,5.0,4.0,5.5,1.0,53.0,27.5,80.5],[40.0,14.0,5.0,4.0,12.0,5.0,4.0,5.5,1.0,63.0,27.5,90.5],[25.0,15.0,5.0,4.0,12.0,5.0,4.0,5.5,1.0,49.0,27.5,76.5],[30.0,15.0,5.0,5.0,12.0,4.0,4.5,3.5,1.0,55.0,25.0,80.0],[35.0,15.0,5.0,4.0,12.0,5.0,4.0,3.5,1.0,59.0,25.5,84.5],[25.0,15.0,5.0,4.0,12.0,5.0,4.5,3.5,1.0,49.0,26.0,75.0],null,null]},{"n":"สิทธิพร บุญเฟื่อง","lv":"Level 1","tn":"< 2 ปี","m":[null,null,[25.0,15.0,5.0,4.0,10.0,4.5,2.0,6.0,1.0,49.0,23.5,72.5],[25.0,15.0,5.0,4.0,10.0,3.0,1.5,7.0,1.0,49.0,22.5,71.5],[25.0,15.0,5.0,4.0,8.0,2.5,1.0,5.5,1.0,49.0,18.0,67.0],[25.0,12.0,3.0,4.0,10.0,2.5,1.0,7.0,1.0,44.0,21.5,65.5],[25.0,14.0,4.0,4.0,10.0,3.5,2.0,7.0,1.0,47.0,23.5,70.5],[25.0,15.0,4.0,4.0,10.0,4.5,2.0,4.0,1.0,48.0,21.5,69.5],[25.0,15.0,5.0,4.0,10.0,3.5,3.0,6.0,1.0,49.0,23.5,72.5],[25.0,14.0,5.0,4.0,10.0,4.0,3.5,3.5,1.0,48.0,22.0,70.0],null,null]},{"n":"ทินภัทร ชอบค้า","lv":"Senior","tn":"2 - 5 ปี","m":[[40.0,13.0,5.0,4.0,10.0,4.5,2.5,5.5,1.0,62.0,23.5,85.5],[45.0,14.0,5.0,4.0,10.0,4.0,2.5,6.5,1.0,68.0,24.0,92.0],[45.0,14.0,5.0,4.0,10.0,3.0,2.5,6.5,1.0,68.0,23.0,91.0],[25.0,10.0,5.0,4.0,10.0,4.0,5.5,5.5,1.0,44.0,26.0,70.0],[25.0,15.0,3.0,4.0,10.0,4.0,4.0,5.5,1.0,47.0,24.5,71.5],[25.0,13.0,3.0,4.0,10.0,4.5,4.0,5.5,1.0,45.0,25.0,70.0],[25.0,15.0,3.0,4.0,10.0,3.5,3.5,5.5,1.0,47.0,23.5,70.5],[25.0,15.0,3.0,4.0,10.0,3.5,4.0,4.5,1.0,47.0,23.0,70.0],[25.0,15.0,5.0,4.0,6.0,4.5,4.0,6.5,1.0,49.0,22.0,71.0],[25.0,15.0,3.0,4.0,10.0,4.5,4.0,7.0,1.0,47.0,26.5,73.5],null,null]},{"n":"ปฏิพล ว่องประเสริฐ","lv":"Level 2","tn":"2 - 5 ปี","m":[[25.0,15.0,5.0,4.0,10.0,3.5,2.5,6.0,1.0,49.0,23.0,72.0],[45.0,15.0,5.0,4.0,10.0,3.5,2.5,7.0,1.0,69.0,24.0,93.0],[25.0,15.0,5.0,4.0,10.0,3.0,1.75,6.0,1.0,49.0,21.75,70.75],[25.0,15.0,5.0,4.0,8.0,3.5,1.5,7.0,1.0,49.0,21.0,70.0],[25.0,15.0,5.0,4.0,8.0,4.0,1.5,7.0,1.0,49.0,21.5,70.5],[25.0,15.0,5.0,4.0,8.0,4.0,2.5,7.0,1.0,49.0,22.5,71.5],[25.0,15.0,5.0,4.0,8.0,2.5,1.5,6.5,1.0,49.0,19.5,68.5],[25.0,15.0,5.0,4.0,10.0,3.0,2.5,6.0,1.0,49.0,22.5,71.5],[25.0,15.0,5.0,4.0,10.0,3.0,2.5,6.5,1.0,49.0,23.0,72.0],[25.0,15.0,5.0,4.0,12.0,5.0,2.5,5.0,1.0,49.0,25.5,74.5],null,null]},{"n":"ภัคจิรา เอี่ยมชัย","lv":"Level 2","tn":"2 - 5 ปี","m":[[40.0,15.0,5.0,4.0,10.0,4.5,2.5,7.0,1.0,64.0,25.0,89.0],[45.0,15.0,5.0,4.0,10.0,4.5,2.5,5.5,1.0,69.0,23.5,92.5],[25.0,15.0,5.0,4.0,10.0,4.5,2.5,7.0,1.0,49.0,25.0,74.0],[45.0,15.0,5.0,4.0,8.0,4.5,1.5,4.0,1.0,69.0,19.0,88.0],[25.0,15.0,5.0,4.0,6.0,3.0,1.5,3.5,1.0,49.0,15.0,64.0],[25.0,15.0,5.0,4.0,6.0,4.0,2.5,3.5,1.0,49.0,17.0,66.0],[25.0,15.0,5.0,4.0,6.0,2.5,2.5,3.5,1.0,49.0,15.5,64.5],[25.0,15.0,5.0,4.0,10.0,3.0,2.5,4.0,1.0,49.0,20.5,69.5],[25.0,15.0,5.0,4.0,10.0,3.5,2.5,4.0,1.0,49.0,21.0,70.0],[25.0,15.0,5.0,4.0,12.0,5.0,2.5,4.0,1.0,49.0,24.5,73.5],null,null]},{"n":"กฤติยา นาสืบ","lv":"Level 1","tn":"2 - 5 ปี","m":[[45.0,15.0,5.0,4.0,10.0,4.5,2.5,4.0,1.0,69.0,22.0,91.0],[45.0,15.0,5.0,4.0,10.0,4.5,2.5,3.5,1.0,69.0,21.5,90.5],[25.0,15.0,5.0,4.0,10.0,3.5,2.5,3.5,1.0,49.0,20.5,69.5],[45.0,15.0,5.0,4.0,8.0,3.5,1.5,4.0,1.0,69.0,18.0,87.0],[25.0,15.0,5.0,4.0,6.0,3.5,1.5,3.5,1.0,49.0,15.5,64.5],[25.0,15.0,5.0,4.0,6.0,4.0,2.5,3.5,1.0,49.0,17.0,66.0],[25.0,15.0,5.0,4.0,6.0,2.5,2.5,3.5,1.0,49.0,15.5,64.5],[25.0,15.0,5.0,4.0,10.0,2.5,2.5,3.5,1.0,49.0,19.5,68.5],[25.0,15.0,5.0,4.0,10.0,3.5,2.5,3.5,1.0,49.0,20.5,69.5],[25.0,15.0,5.0,4.0,12.0,3.5,2.5,3.5,1.0,49.0,22.5,71.5],null,null]},{"n":"ไกรยุทธ แก้วขจร","lv":"Level 2","tn":"2 - 5 ปี","m":[[25.0,15.0,5.0,4.0,10.0,5.0,3.0,6.0,1.0,49.0,25.0,74.0],[35.0,15.0,5.0,4.0,10.0,4.0,3.0,6.5,1.0,59.0,24.5,83.5],[35.0,15.0,5.0,4.0,10.0,4.0,3.0,6.5,1.0,59.0,24.5,83.5],[25.0,15.0,5.0,4.0,8.0,4.5,1.5,7.0,1.0,49.0,22.0,71.0],[35.0,15.0,5.0,4.0,10.0,3.5,1.5,7.0,1.0,59.0,23.0,82.0],[25.0,15.0,5.0,4.0,10.0,4.0,2.5,7.0,1.0,49.0,24.5,73.5],[25.0,15.0,5.0,4.0,10.0,4.0,2.5,7.0,1.0,49.0,24.5,73.5],[25.0,15.0,5.0,4.0,10.0,4.5,2.5,7.0,1.0,49.0,25.0,74.0],[25.0,15.0,5.0,4.0,10.0,4.0,2.5,6.0,1.0,49.0,23.5,72.5],[25.0,15.0,5.0,4.0,12.0,4.5,3.5,6.5,1.0,49.0,27.5,76.5],null,null]},{"n":"ปวีณา โตเทียน","lv":"Level 1","tn":"2 - 5 ปี","m":[[25.0,15.0,5.0,4.0,10.0,4.5,2.5,5.5,1.0,49.0,23.5,72.5],[35.0,15.0,5.0,4.0,10.0,4.5,2.5,6.5,1.0,59.0,24.5,83.5],[45.0,15.0,5.0,4.0,10.0,4.5,2.5,6.5,1.0,69.0,24.5,93.5],[40.0,15.0,5.0,4.0,8.0,4.5,1.5,6.5,1.0,64.0,21.5,85.5],[30.0,15.0,5.0,4.0,8.0,4.0,1.5,7.0,1.0,54.0,21.5,75.5],[25.0,15.0,5.0,4.0,8.0,4.0,2.5,6.5,1.0,49.0,22.0,71.0],[25.0,15.0,5.0,4.0,8.0,4.0,2.5,7.0,1.0,49.0,22.5,71.5],[25.0,15.0,5.0,4.0,10.0,4.5,2.5,5.5,1.0,49.0,23.5,72.5],[25.0,15.0,5.0,4.0,10.0,4.5,3.5,6.5,1.0,49.0,25.5,74.5],[25.0,15.0,5.0,4.0,12.0,4.5,3.5,5.0,1.0,49.0,26.0,75.0],null,null]},{"n":"นราวรรณ เฮงมี","lv":"Senior","tn":">5 - 10 ปี","m":[[45.0,15.0,5.0,4.0,12.0,4.0,4.0,4.0,1.0,69.0,25.0,94.0],[40.0,15.0,5.0,4.0,10.0,4.0,4.0,4.0,1.0,64.0,23.0,87.0],[45.0,15.0,5.0,4.0,12.0,3.5,4.0,5.0,1.0,69.0,25.5,94.5],[40.0,15.0,5.0,4.0,10.0,4.0,5.0,5.0,1.0,64.0,25.0,89.0],[45.0,15.0,5.0,4.0,10.0,4.5,5.0,6.0,1.0,69.0,26.5,95.5],[45.0,15.0,5.0,4.0,10.0,4.0,4.0,4.0,1.0,69.0,23.0,92.0],[30.0,15.0,5.0,4.0,12.0,4.0,4.0,4.0,1.0,54.0,25.0,79.0],[45.0,15.0,5.0,4.0,12.0,4.0,4.0,6.0,1.0,69.0,27.0,96.0],[45.0,15.0,5.0,4.0,12.0,4.0,4.0,6.0,1.0,69.0,27.0,96.0],[45.0,15.0,5.0,4.0,10.0,3.0,4.0,4.0,1.0,69.0,22.0,91.0],null,null]},{"n":"เสฏฐวุฒิ คารมปราชญ์","lv":"Level 2","tn":"2 - 5 ปี","m":[[45.0,15.0,5.0,4.0,12.0,3.5,4.0,3.0,1.0,69.0,23.5,92.5],[45.0,15.0,5.0,4.0,10.0,4.0,4.0,3.0,1.0,69.0,22.0,91.0],[45.0,15.0,5.0,4.0,12.0,3.5,4.0,5.0,1.0,69.0,25.5,94.5],[45.0,15.0,5.0,4.0,10.0,3.5,5.0,5.0,1.0,69.0,24.5,93.5],[45.0,15.0,5.0,4.0,10.0,4.5,4.0,6.0,1.0,69.0,25.5,94.5],[45.0,15.0,5.0,4.0,8.0,4.0,4.0,4.0,1.0,69.0,21.0,90.0],[45.0,15.0,5.0,4.0,12.0,4.0,3.5,5.0,1.0,69.0,25.5,94.5],[45.0,15.0,5.0,4.0,12.0,4.0,4.0,6.0,1.0,69.0,27.0,96.0],[40.0,15.0,5.0,4.0,12.0,4.0,4.0,6.0,1.0,64.0,27.0,91.0],[45.0,15.0,5.0,4.0,10.0,4.0,4.0,6.0,1.0,69.0,25.0,94.0],null,null]},{"n":"ทวีลาภ บุญโพธิ์แก้ว","lv":"Level 2","tn":"2 - 5 ปี","m":[[45.0,15.0,5.0,4.0,12.0,3.5,5.0,5.0,1.0,69.0,26.5,95.5],[45.0,15.0,5.0,4.0,10.0,4.0,2.0,5.0,1.0,69.0,22.0,91.0],[45.0,15.0,5.0,4.0,12.0,3.5,4.0,5.0,1.0,69.0,25.5,94.5],[45.0,15.0,5.0,4.0,10.0,4.0,2.0,5.0,1.0,69.0,22.0,91.0],[45.0,15.0,5.0,4.0,10.0,4.5,5.0,6.0,1.0,69.0,26.5,95.5],[45.0,15.0,5.0,4.0,8.0,4.0,3.0,4.0,1.0,69.0,20.0,89.0],[45.0,15.0,5.0,4.0,12.0,4.0,3.0,5.0,1.0,69.0,25.0,94.0],[45.0,15.0,5.0,4.0,12.0,4.0,3.0,6.0,1.0,69.0,26.0,95.0],[40.0,15.0,5.0,4.0,12.0,4.0,3.0,6.0,1.0,64.0,26.0,90.0],[45.0,15.0,5.0,4.0,10.0,2.5,4.0,6.0,1.0,69.0,23.5,92.5],null,null]},{"n":"จีรวรรณ ปราบหนองบัว","lv":"Level 2","tn":"2 - 5 ปี","m":[[45.0,15.0,5.0,4.0,12.0,2.5,2.5,2.0,1.0,69.0,20.0,89.0],[45.0,15.0,5.0,4.0,10.0,4.0,2.5,2.0,1.0,69.0,19.5,88.5],[45.0,15.0,5.0,4.0,12.0,3.5,2.5,5.0,1.0,69.0,24.0,93.0],[40.0,15.0,5.0,4.0,10.0,1.5,5.0,5.0,1.0,64.0,22.5,86.5],[45.0,15.0,5.0,4.0,10.0,4.5,2.5,6.0,1.0,69.0,24.0,93.0],[40.0,15.0,5.0,4.0,8.0,3.0,2.5,3.0,1.0,64.0,17.5,81.5],[40.0,15.0,5.0,4.0,12.0,3.0,2.5,5.0,1.0,64.0,23.5,87.5],[40.0,15.0,5.0,4.0,12.0,3.0,2.5,6.0,1.0,64.0,24.5,88.5],[45.0,15.0,5.0,4.0,12.0,3.0,2.5,6.0,1.0,69.0,24.5,93.5],[45.0,15.0,5.0,4.0,10.0,4.0,4.0,5.0,1.0,69.0,24.0,93.0],null,null]}];
+const PHOTO = {"พีรภัทร แตงอ่อน": "peerapat", "ภาณุ แก้ววงษ์วาล": "phanu", "จิฏติพัฒน์ วิทยาฉายแสง": "jittiphat", "ธนกร เตชเกรียงไกรกุล": "thanakorn", "สิทธิพร บุญเฟื่อง": "sittiporn", "ทินภัทร ชอบค้า": "thinnaphat", "ปฏิพล ว่องประเสริฐ": "patipol", "ภัคจิรา เอี่ยมชัย": "phakjira", "กฤติยา นาสืบ": "krittiya", "ไกรยุทธ แก้วขจร": "kraiyut", "ปวีณา โตเทียน": "paweena", "นราวรรณ เฮงมี": "narawan", "เสฏฐวุฒิ คารมปราชญ์": "settawut", "ทวีลาภ บุญโพธิ์แก้ว": "taweelap", "จีรวรรณ ปราบหนองบัว": "jeerawan"};
+const MN=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const MF=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const GR=['ดีเด่น','ดีมาก','ดี','พอใช้','ต้องปรับปรุง'];
+const PI=[[0,'KPI'],[1,'SLA'],[2,'SOP'],[3,'VOC']], CI=[[4,'ทัศนคติ'],[5,'รับผิดชอบ'],[6,'สื่อสาร'],[7,'วินัย'],[8,'ทรัพย์สิน']];
+const gi=t=>t>=95?0:t>=90?1:t>=80?2:t>=70?3:4;
+const f=n=>n==null?'–':String(+(+n).toFixed(1));
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const avg=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:null;
+const done=[...Array(12).keys()].filter(i=>PEOPLE.some(p=>p.m[i]));
+let sel=done[done.length-1];
+const rowsOf=i=>PEOPLE.filter(p=>p.m[i]);
+const mean=(i,k)=>avg(rowsOf(i).map(p=>p.m[i][k]));
+const maxOf=k=>Math.max(...PEOPLE.flatMap(p=>p.m.filter(Boolean).map(r=>r[k])));
+const delta=(v,d=1)=>v==null?'':`<span class="${v>0?'up':v<0?'down':''}">${v>0?'▲':v<0?'▼':'■'} ${f(Math.abs(v))}</span>`;
+
+function renderMonths(){
+  $('months').innerHTML=MF.map((n,i)=>done.includes(i)
+    ?`<button class="pill${i===sel?' on':''}" data-m="${i}" aria-pressed="${i===sel}">${n}</button>`
+    :`<button class="pill" disabled title="รอประเมิน">${n}</button>`).join('');
+}
+function renderStats(){
+  const prev=done[done.indexOf(sel)-1], d=k=>prev==null?'':delta(mean(sel,k)-mean(prev,k));
+  const S=[[mean(sel,11),'คะแนนรวมเฉลี่ย',d(11)],[mean(sel,9),'Performance เฉลี่ย',d(9)],[mean(sel,10),'Competency เฉลี่ย',d(10)],[rowsOf(sel).length,'คนที่ได้รับการประเมิน','จากทั้งหมด '+PEOPLE.length+' คน']];
+  $('stats').innerHTML=S.map(([v,l,x],i)=>`<div class="stat"><div class="num">${i<3?f(v):v}</div><div class="label">${l}</div><div class="delta">${x?(prev!=null&&i<3?x+' จาก'+MF[prev]:x):'&nbsp;'}</div></div>`).join('');
+}
+function renderHeat(){
+  const avgs=PEOPLE.map(p=>avg(p.m.filter(Boolean).map(r=>r[11])));
+  $('hm').innerHTML='<thead><tr><th class="nm">พนักงาน</th>'+MN.map((n,i)=>`<th class="${i===sel?'sel':''}" ${done.includes(i)?`data-m="${i}"`:''}>${n}</th>`).join('')+'<th>เฉลี่ย</th></tr></thead><tbody>'+
+    PEOPLE.map((p,pi)=>`<tr><td class="nm">${esc(p.n)}</td>`+p.m.map((r,i)=>r?`<td data-m="${i}" class="hc g${gi(r[11])+1}${i===sel?' sel':''}" title="${GR[gi(r[11])]}">${f(r[11])}</td>`:`<td class="pend">–</td>`).join('')+`<td class="av">${f(avgs[pi])}</td></tr>`).join('')+'</tbody>';
+  $('hm-count').textContent=PEOPLE.length+' คน / '+done.length+' เดือนที่ประเมินแล้ว';
+  $('legend').innerHTML=GR.map((g,i)=>`<span class="g${i+1}"><i></i>${g}</span>`).join('')+'<span>– รอประเมิน</span>';
+}
+function renderTrend(){
+  const W=640,H=260,L=36,R=12,T=14,B=28,lo=50,hi=100,x=i=>L+(W-L-R)*i/11,y=v=>T+(H-T-B)*(hi-v)/(hi-lo);
+  let s='';
+  [[95,'95'],[90,'90'],[80,'80'],[70,'70']].forEach(([v,l])=>s+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-dasharray="3 4"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${l}</text>`);
+  s+=MN.map((n,i)=>`<text x="${x(i)}" y="${H-8}" text-anchor="middle"${i===sel?' style="fill:var(--ink)"':''}>${n}</text>`).join('');
+  const pts=done.map(i=>{const v=rowsOf(i).map(p=>p.m[i][11]);return{i,a:avg(v),mn:Math.min(...v),mx:Math.max(...v)}});
+  s+=`<polygon fill="var(--green)" opacity=".16" points="${pts.map(p=>x(p.i)+','+y(p.mx)).join(' ')} ${pts.slice().reverse().map(p=>x(p.i)+','+y(p.mn)).join(' ')}"/>`;
+  s+=`<polyline fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linejoin="round" points="${pts.map(p=>x(p.i)+','+y(p.a)).join(' ')}"/>`;
+  s+=pts.map(p=>`<circle cx="${x(p.i)}" cy="${y(p.a)}" r="${p.i===sel?6:3.5}" fill="${p.i===sel?'var(--green)':'var(--paper)'}" stroke="var(--green)" stroke-width="2"><title>${MF[p.i]}: เฉลี่ย ${f(p.a)} (ต่ำสุด ${f(p.mn)}, สูงสุด ${f(p.mx)})</title></circle>`).join('');
+  $('trend').innerHTML=s;
+}
+function renderDist(){
+  const rs=rowsOf(sel),n=rs.length;
+  $('dist-sub').textContent=MF[sel]+' · '+n+' คน';
+  $('dist').innerHTML=GR.map((g,i)=>{const c=rs.filter(p=>gi(p.m[sel][11])===i).length;return `<div class="row g${i+1}"><span>${g}</span><div class="bar"><b style="width:${n?c/n*100:0}%"></b></div><span class="v mono">${c}</span></div>`}).join('');
+}
+function renderItems(){
+  $('items-label').textContent=MF[sel]+' · ค่าเฉลี่ยทีม';
+  const mk=list=>list.map(([k,l])=>{const v=mean(sel,k),m=maxOf(k);return `<div class="row"><span>${l}</span><div class="bar"><b style="width:${Math.min(100,v/m*100)}%"></b></div><span class="v mono">${f(v)}/${f(m)}</span></div>`}).join('');
+  $('items-p').innerHTML=mk(PI);$('items-c').innerHTML=mk(CI);
+  $('sel-label').textContent='เดือนที่เลือก: '+MF[sel];
+}
+function renderRank(){
+  const prev=done[done.indexOf(sel)-1],mp=maxOf(9),mc=maxOf(10);
+  const rs=PEOPLE.slice().sort((a,b)=>(b.m[sel]?b.m[sel][11]:-1)-(a.m[sel]?a.m[sel][11]:-1));
+  $('rank-label').textContent=MF[sel];
+  $('rank').innerHTML=rs.map(p=>{
+    const r=p.m[sel],pr=prev!=null?p.m[prev]:null,k=PHOTO[p.n];
+    const av=`<div class="avatar"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="3.3"/><rect x="7.5" y="11.5" width="9" height="9.5" rx="2"/></svg></div>`;
+    if(!r)return `<div class="member" data-k="${k||''}">${av}<h3>${esc(p.n)}</h3><div class="role">${p.lv} · ${esc(p.tn)}</div><div class="score"><span class="t mono">–</span></div><span class="tag" style="--c:var(--muted)">รอประเมิน</span></div>`;
+    const g=gi(r[11]);
+    return `<div class="member g${g+1}" data-k="${k||''}">${av}<h3>${esc(p.n)}</h3><div class="role">${p.lv} · ${esc(p.tn)}</div>
+      <div class="score"><span class="t mono">${f(r[11])}</span>${pr?`<span class="d mono">${delta(r[11]-pr[11])}</span>`:''}</div>
+      <span class="tag">${GR[g]}</span>
+      <div class="mini mono"><span>P</span><div class="bar"><b style="width:${r[9]/mp*100}%"></b></div></div>
+      <div class="mini mono"><span>C</span><div class="bar"><b style="width:${r[10]/mc*100}%"></b></div></div></div>`}).join('');
+  document.querySelectorAll('#rank .member[data-k]').forEach(m=>{
+    const key=m.dataset.k,av=m.querySelector('.avatar'),ex=['jpg','jpeg','png','webp'];if(!key)return;
+    let i=0;const img=new Image();img.alt=m.querySelector('h3').textContent;
+    img.onload=()=>{av.textContent='';av.appendChild(img)};
+    img.onerror=()=>{if(++i<ex.length)img.src='Teams/'+key+'.'+ex[i]};
+    img.src='Teams/'+key+'.'+ex[0];
+  });
+}
+function render(){renderMonths();renderStats();renderHeat();renderTrend();renderDist();renderItems();renderRank()}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-m]');if(!t)return;sel=+t.dataset.m;render()});
+render();
+</script>
+</body>
+</html>
